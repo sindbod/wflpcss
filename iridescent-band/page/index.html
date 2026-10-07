@@ -1,0 +1,306 @@
+<title>Iridescent Band Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one working column. Masthead, the photo evidence, then the lab (stage + control rail),
+   the active approach's card, the comparison matrix and the training recipe. */
+:root {
+	--bg: #f1f2ee;
+	--surface: #ffffff;
+	--surface-2: #e8eae5;
+	--ink: #161917;
+	--ink-2: #444b46;
+	--muted: #69716b;
+	--line: #d3d8d1;
+	--accent: #4f705d;
+	--accent-ink: #ffffff;
+	--focus: #2f6fd6;
+	--stage: #1b1b1a;
+	--stage-ink: #e6e9e4;
+	--stage-muted: #a1a8a2;
+	--chip-live: #2f7350;
+	--chip-progressive: #8a5e12;
+	--chip-offline: #4d55a3;
+	--font-display: 'Archivo', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+	--font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	--radius: 10px;
+	--gutter: clamp(16px, 4vw, 40px);
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #0f1110; --surface: #171a18; --surface-2: #1f2320; --ink: #e7eae5; --ink-2: #c2c8c3;
+		--muted: #8e978f; --line: #2b302c; --accent: #9dc2ad; --accent-ink: #0d120f; --focus: #7fb0ff;
+		--chip-live: #7fcf9f; --chip-progressive: #e3b260; --chip-offline: #a8adf0;
+		color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--bg: #0f1110; --surface: #171a18; --surface-2: #1f2320; --ink: #e7eae5; --ink-2: #c2c8c3;
+	--muted: #8e978f; --line: #2b302c; --accent: #9dc2ad; --accent-ink: #0d120f; --focus: #7fb0ff;
+	--chip-live: #7fcf9f; --chip-progressive: #e3b260; --chip-offline: #a8adf0;
+	color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font-body); margin: 0; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: var(--gutter); }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h2 { font-size: 1.35rem; font-weight: 700; font-stretch: 110%; letter-spacing: -0.005em; }
+h3 { font-size: 1.02rem; font-weight: 650; font-stretch: 105%; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.eyebrow { font: 600 0.72rem/1.2 var(--font-display); font-stretch: 120%; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* masthead */
+.masthead { padding-block: clamp(22px, 4vw, 40px) 18px; }
+.masthead h1 { font-size: clamp(2rem, 5.4vw, 3.4rem); font-weight: 780; font-stretch: 122%; line-height: 0.98; letter-spacing: -0.02em; margin-top: 10px; }
+.lede { max-width: 68ch; margin-top: 14px; color: var(--ink-2); font-size: 1.04rem; }
+.film-rule { height: 6px; border-radius: 3px; margin-top: 18px; max-width: 520px;
+	background: linear-gradient(90deg, #8fa294 0%, #b2a7a0 8%, #a48c8f 18%, #c6bfb0 32%, #bda7b1 44%, #b598a9 50%, #bcb1ae 58%, #b3b1a0 66%, #a0948e 76%, #896f6c 88%, #8fa294 100%);
+	background-size: 200% 100%; animation: film-drift 18s linear infinite; }
+@keyframes film-drift { from { background-position: 0% 0; } to { background-position: 200% 0; } }
+@media (prefers-reduced-motion: reduce) { .film-rule { animation: none; } }
+
+/* evidence */
+.evidence { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(18px, 3vw, 40px); padding-block: 46px 10px; align-items: start; }
+.evidence figure { margin: 0; }
+.evidence img { display: block; width: 100%; height: auto; border-radius: var(--radius); }
+.evidence figcaption { margin-top: 8px; color: var(--muted); font-size: 0.84rem; }
+.facts { list-style: none; padding: 0; margin: 14px 0 18px; display: grid; gap: 8px; }
+.facts li { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-size: 0.92rem; }
+.facts li > span:first-child { color: var(--muted); font-size: 0.82rem; padding-top: 2px; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.huechart { margin-top: 18px; }
+.chart-title { margin-top: 18px; font: 650 0.86rem var(--font-display); font-stretch: 110%; color: var(--ink-2); }
+.huechart-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.hc-row-label, .hc-tick { fill: var(--muted); font: 11px var(--font-body); }
+.hc-row-label { font-weight: 600; fill: var(--ink-2); }
+.hc-axis { stroke: var(--line); stroke-width: 1; }
+.hc-col { cursor: default; outline: none; }
+.hc-col.is-hover rect:not(.hc-hit), .hc-col:focus-visible rect:not(.hc-hit) { stroke: var(--ink); stroke-width: 1.5; }
+.hc-tip { position: absolute; top: -6px; width: 140px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; font-size: 0.78rem; box-shadow: 0 6px 20px rgba(0,0,0,.14); pointer-events: none; display: grid; gap: 2px; z-index: 3; }
+.hc-tip strong { font: 600 0.95rem var(--font-mono); }
+.hc-tip span { color: var(--ink-2); font-family: var(--font-mono); display: flex; align-items: center; gap: 6px; }
+.hc-tip i { width: 12px; height: 3px; border-radius: 2px; display: inline-block; }
+.hc-table { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+.hc-table summary { cursor: pointer; }
+.table-scroll { overflow-x: auto; max-height: 240px; margin-top: 8px; }
+.hc-table table { border-collapse: collapse; font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-2); }
+.hc-table th, .hc-table td { padding: 3px 14px 3px 0; text-align: left; border-bottom: 1px solid var(--line); }
+
+/* lab */
+.lab { padding-block: 8px 30px; }
+.lab-head { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+.lab-head p { color: var(--muted); font-size: 0.9rem; max-width: 70ch; }
+.tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+.tab { all: unset; box-sizing: border-box; cursor: pointer; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); padding: 10px 12px 11px; display: grid; gap: 4px; min-width: 0; transition: border-color .15s, background .15s; }
+.tab:hover { border-color: var(--muted); }
+.tab:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.tab[aria-selected="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.tab-top { display: flex; align-items: center; gap: 8px; }
+.tab-num { font: 600 0.75rem var(--font-mono); color: var(--muted); }
+.tab-name { font: 680 0.98rem/1.2 var(--font-display); font-stretch: 108%; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 600 0.7rem var(--font-display); font-stretch: 115%; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.chip::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.chip.live { color: var(--chip-live); }
+.chip.progressive { color: var(--chip-progressive); }
+.chip.offline { color: var(--chip-offline); }
+
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+.stage-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.stage { position: relative; background: var(--stage); border-radius: var(--radius); overflow: hidden; height: min(68vh, 660px); min-height: 360px; color: var(--stage-ink); }
+.viewport, .viewport canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.viewport canvas { touch-action: none; }
+.stage-status { position: absolute; left: 12px; top: 12px; display: flex; gap: 8px; flex-wrap: wrap; z-index: 2; pointer-events: none; }
+.pill { font: 500 0.75rem var(--font-mono); background: rgba(16,17,16,.72); color: var(--stage-ink); border: 1px solid rgba(255,255,255,.12); padding: 4px 9px; border-radius: 999px; backdrop-filter: blur(6px); }
+.stage-hint { position: absolute; right: 12px; bottom: 12px; font-size: 0.75rem; color: var(--stage-muted); z-index: 2; pointer-events: none; text-align: right; }
+.stage-actions { position: absolute; left: 12px; bottom: 12px; display: flex; gap: 6px; flex-wrap: wrap; z-index: 2; max-width: calc(100% - 24px); }
+.stage-actions .btn { background: rgba(16,17,16,.72); color: var(--stage-ink); border-color: rgba(255,255,255,.16); backdrop-filter: blur(6px); }
+.stage-actions .btn.is-on { background: var(--stage-ink); color: #111; border-color: var(--stage-ink); }
+.stage-actions .btn:disabled { opacity: .45; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: var(--stage-muted); font-size: 0.9rem; z-index: 1; padding: 20px; }
+.frames { position: absolute; inset: 0; margin: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.frames img { width: 100%; height: 100%; object-fit: contain; cursor: grab; touch-action: none; user-select: none; }
+.frames img:active { cursor: grabbing; }
+.frames-caption { padding: 8px 12px 10px; font: 0.78rem var(--font-mono); color: var(--stage-muted); text-align: right; }
+
+/* control rail */
+.rail { display: grid; gap: 10px; }
+.group { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.group > summary { list-style: none; cursor: pointer; padding: 11px 14px; display: flex; justify-content: space-between; align-items: center; font: 650 0.86rem var(--font-display); font-stretch: 112%; letter-spacing: 0.02em; }
+.group > summary::-webkit-details-marker { display: none; }
+.group > summary::after { content: ''; width: 8px; height: 8px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg); margin-top: -4px; transition: transform .15s; }
+.group[open] > summary::after { transform: rotate(-135deg); margin-top: 3px; }
+.group-body { padding: 2px 14px 14px; display: grid; gap: 11px; }
+.ctl { display: grid; gap: 4px; min-width: 0; }
+.ctl-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.ctl-label { font-size: 0.82rem; color: var(--ink-2); }
+.ctl-value { font: 0.78rem var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ctl.is-disabled { opacity: .45; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; height: 22px; }
+select { width: 100%; font: 0.86rem var(--font-body); padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); }
+.ctl-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.ctl-toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch { width: 30px; height: 18px; border-radius: 9px; background: var(--line); position: relative; flex: none; transition: background .15s; }
+.switch::after { content: ''; position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .15s; }
+.ctl-toggle input:checked + .switch { background: var(--accent); }
+.ctl-toggle input:checked + .switch::after { transform: translateX(12px); }
+.ctl-toggle input:focus-visible + .switch { outline: 2px solid var(--focus); outline-offset: 2px; }
+.toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 12px; }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface-2); }
+.seg-item { flex: 1; position: relative; text-align: center; cursor: pointer; }
+.seg-item input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.seg-item span { display: block; padding: 6px 4px; font-size: 0.8rem; color: var(--ink-2); }
+.seg-item input:checked + span { background: var(--ink); color: var(--bg); font-weight: 600; }
+.seg-item input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: -2px; }
+.btn { font: 600 0.8rem var(--font-body); border-radius: 8px; padding: 7px 11px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--muted); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.is-on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.panel-note { font-size: 0.78rem; color: var(--muted); }
+.progress { font: 0.78rem var(--font-mono); color: var(--ink-2); min-height: 1.2em; }
+
+/* approach card */
+.card { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(16px, 2.6vw, 26px); display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 2fr); gap: 18px 34px; }
+.card-head h3 { font-size: 1.3rem; font-stretch: 110%; margin-top: 6px; }
+.card-head .speed { margin-top: 10px; font: 0.82rem var(--font-mono); color: var(--ink-2); }
+.card dl { margin: 0; display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 10px 18px; }
+.card dt { font: 600 0.72rem var(--font-display); font-stretch: 115%; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding-top: 3px; }
+.card dd { margin: 0; font-size: 0.93rem; max-width: 72ch; }
+
+/* comparison */
+.compare { padding-block: 34px 10px; }
+.compare h2 { margin-bottom: 6px; }
+.compare > p { color: var(--muted); font-size: 0.9rem; margin-bottom: 14px; max-width: 70ch; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table.matrix { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 0.86rem; }
+.matrix th, .matrix td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.matrix thead th { font: 650 0.8rem var(--font-display); font-stretch: 110%; color: var(--ink-2); background: var(--surface-2); }
+.matrix tbody th { font-weight: 600; color: var(--ink-2); width: 11rem; }
+.matrix tr:last-child td, .matrix tr:last-child th { border-bottom: 0; }
+.matrix .is-active { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.dots { display: inline-flex; gap: 3px; margin-right: 6px; vertical-align: middle; }
+.dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.dots i.on { background: var(--ink-2); }
+
+/* recipe */
+.recipe { padding-block: 34px 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 40px; }
+.recipe h2 { grid-column: 1 / -1; }
+.step { display: grid; gap: 6px; }
+.step h3 { font-size: 1rem; }
+.step p { color: var(--ink-2); font-size: 0.93rem; max-width: 64ch; }
+.recipe code, .card code { font: 0.84em var(--font-mono); background: var(--surface-2); padding: 1px 5px; border-radius: 5px; }
+footer { padding-block: 22px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.8rem; }
+footer p { max-width: 90ch; }
+
+@media (max-width: 1080px) {
+	.lab-grid { grid-template-columns: minmax(0, 1fr); }
+	.stage-col { position: static; }
+	.rail { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+	.card { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+	.evidence { grid-template-columns: minmax(0, 1fr); }
+	.tabs { grid-template-columns: repeat(5, minmax(132px, 1fr)); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; }
+	.tab { scroll-snap-align: start; }
+	.rail { grid-template-columns: minmax(0, 1fr); }
+	.stage { height: auto; aspect-ratio: 4 / 5; max-height: 76vh; min-height: 0; }
+	.recipe { grid-template-columns: minmax(0, 1fr); }
+	.facts li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+	.card dl { grid-template-columns: minmax(0, 1fr); gap: 2px 0; }
+	.card dd { margin-bottom: 8px; }
+	.stage-hint { display: none; }
+}
+</style>
+
+<header class="masthead wrap">
+	<p class="eyebrow">Material study · knitted underband with an interference coating</p>
+	<h1>Iridescent Band Lab</h1>
+	<p class="lede">Five ways to reproduce the colour-shifting brick-mesh band from your photo. Each one runs live here: move the light, orbit, stretch the knit, swap the lighting, then export labelled frames for training.</p>
+	<div class="film-rule" aria-hidden="true"></div>
+</header>
+
+<section class="lab wrap" id="lab" aria-labelledby="lab-title">
+	<div class="lab-head">
+		<h2 id="lab-title">The five approaches</h2>
+		<p>Same geometry, knit maps and lighting in every view. The default camera and studio light reproduce your photo; the light rig rotates so you can watch the colour shift. Every slider is live.</p>
+	</div>
+	<div class="tabs" role="tablist" id="tabs" aria-label="Rendering approach"></div>
+	<div class="lab-grid">
+		<div class="stage-col">
+			<div class="stage" id="stage">
+				<div class="viewport" id="viewport"></div>
+				<div class="loading" id="loading">Generating knit maps and lighting…</div>
+				<div class="stage-status" id="stage-status"></div>
+				<div class="stage-actions" id="stage-actions"></div>
+				<div class="stage-hint" id="stage-hint">Drag to orbit · scroll or pinch to zoom</div>
+			</div>
+		</div>
+		<aside class="rail" id="rail" aria-label="Controls">
+			<details class="group" id="g-lighting" open><summary>Lighting</summary><div class="group-body" id="panel-lighting"></div></details>
+			<details class="group" id="g-motion" open><summary>Shape &amp; motion</summary><div class="group-body" id="panel-motion"></div></details>
+			<details class="group" id="g-material" open><summary id="material-title">Material</summary><div class="group-body" id="panel-material"></div></details>
+			<details class="group" id="g-capture"><summary>Training capture</summary><div class="group-body" id="panel-capture"></div></details>
+			<details class="group" id="g-frames" hidden open><summary>Pre-rendered frames</summary><div class="group-body" id="panel-frames"></div></details>
+		</aside>
+	</div>
+	<article class="card" id="card" aria-live="polite"></article>
+</section>
+
+<section class="evidence wrap" aria-labelledby="evidence-title">
+	<div>
+		<figure>
+			<img src="ref/band_reference.jpg" alt="Crop of the reference photo: sage band with a pink-to-cream iridescent brick mesh" width="746" height="240">
+			<figcaption>Your photo, band only. The swatches below are sampled from it.</figcaption>
+		</figure>
+		<p class="chart-title">Measured colour along the band, by surface angle</p>
+		<div class="huechart" id="hue-chart"></div>
+	</div>
+	<div>
+		<h2 id="evidence-title">What the photo shows</h2>
+		<ul class="facts">
+			<li><span>Structure</span><span>12 staggered rows of brick cells on a <span class="num">1.8 mm</span> row pitch. Bricks are about <span class="num">3.7 × 1.5 mm</span>, <span class="num">4.3 mm</span> apart, with a half-brick offset.</span></li>
+			<li><span>Edges</span><span>A sage binding runs along the top. The lowest three rows shrink and break up, a knitted halftone fade.</span></li>
+			<li><span>Colour</span><span>Pastel only, saturation <span class="num">0.1–0.25</span>. The hue swings between magenta and cream about every <span class="num">20°</span> of surface angle.</span></li>
+			<li><span>Reading</span><span>Magenta sits where a softbox mirrors in the band, cream where it does not. That points to an interference layer over light yarn. Best fit: a TiO₂-like film about <span class="num">106 nm</span> thick.</span></li>
+			<li><span>Lighting</span><span>Key softbox about <span class="num">40°</span> camera-left, a rim light behind left, a weaker fill on the right and nothing on the camera axis. The default studio rig recreates this.</span></li>
+		</ul>
+	</div>
+</section>
+
+<section class="compare wrap" aria-labelledby="compare-title">
+	<h2 id="compare-title">How they compare</h2>
+	<p>My assessment after calibrating all five against your photo under the reconstructed studio light. The highlighted column is the approach on screen.</p>
+	<div class="table-wrap"><table class="matrix" id="matrix"></table></div>
+</section>
+
+<section class="recipe wrap" aria-labelledby="recipe-title">
+	<h2 id="recipe-title">Using this to train the dynamic behaviour</h2>
+	<div class="step">
+		<h3>Settle the physics first</h3>
+		<p>Shine a phone torch on the real band in a dark room and tilt it. If you see clean spectral rainbows that race across the band, it is a holographic foil: use approach 3. If the colour slides smoothly between magenta and cream, it is an interference layer: approaches 2, 4 and 5. The <em>Flashlight test</em> lighting preset shows both cases.</p>
+	</div>
+	<div class="step">
+		<h3>Calibrate on a few real captures</h3>
+		<p>Shoot the garment under a single known light at three or four angles, set the same light here, and tune film thickness, reflectance gain and roughness until the renders match. These are the parameters a model needs to see varied.</p>
+	</div>
+	<div class="step">
+		<h3>Generate in bulk, validate at the top</h3>
+		<p>Export randomised sets from approach 2 (thousands of views, with masks and camera labels). Check them against approach 4 or the Cycles frames, which add global illumination and true relief, so the model does not learn shortcuts specific to a raster shader.</p>
+	</div>
+	<div class="step">
+		<h3>Scale the offline set when needed</h3>
+		<p>The repository includes <code>blender/generate_dataset.py</code>, which renders domain-randomised Cycles frames with masks and the same JSON labels. It runs in 20 s per frame on a laptop CPU, or seconds on a GPU.</p>
+	</div>
+</section>
+
+<footer class="wrap">
+	<p>Built with three.js r186, three-gpu-pathtracer 0.0.26, fflate and Blender 5.2 Cycles. Outdoor and night HDRIs are CC0 from Poly Haven, via the three.js examples; the studio, dark-room and neon rigs are generated. The knit pattern, film optics and studio rig are reconstructed from your photo. The brand logo on the garment is not reproduced.</p>
+</footer>
+<!--APP-->

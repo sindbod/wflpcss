@@ -1,0 +1,6 @@
+node_modules/
+.cache/
+dist/
+# crop of the reference product photo: keep it out of the repository
+assets/ref/
+__pycache__/

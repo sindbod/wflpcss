@@ -1,0 +1,25 @@
+{
+  "name": "iridescent-band-lab",
+  "version": "1.0.0",
+  "description": "Five rendering approaches for an iridescent knitted bra underband",
+  "scripts": {
+    "build": "node build.mjs",
+    "export": "node tools/export-assets.mjs",
+    "shots": "node tools/screenshot.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fflate": "^0.8.3",
+    "lil-gui": "^0.21.0",
+    "three": "^0.186.1",
+    "three-gpu-pathtracer": "^0.0.26",
+    "three-mesh-bvh": "^0.9.15"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "playwright": "^1.63.0"
+  },
+  "type": "module"
+}

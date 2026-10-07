@@ -1,0 +1,22 @@
+// Full-page screenshot + horizontal-overflow check: node tools/fullpage.mjs out.png width height [light|dark] [#hash]
+import { chromium } from 'playwright';
+import { createServer } from 'node:http';
+import { readFileSync, existsSync, statSync } from 'node:fs';
+import { join, extname } from 'node:path';
+const root = new URL( '../dist', import.meta.url ).pathname;
+const types = { '.html': 'text/html', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.json': 'application/json' };
+const server = createServer( ( req, res ) => { const p = join( root, decodeURIComponent( req.url.split( '?' )[ 0 ] ) ); if ( ! existsSync( p ) || statSync( p ).isDirectory() ) { res.writeHead( 404 ); res.end(); return; } res.writeHead( 200, { 'Content-Type': types[ extname( p ) ] || 'application/octet-stream' } ); res.end( readFileSync( p ) ); } ).listen( 0 );
+const [ out, w, h, scheme, hash = '' ] = process.argv.slice( 2 );
+const browser = await chromium.launch( { executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: [ '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist' ] } );
+const page = await browser.newPage( { viewport: { width: + w, height: + h }, colorScheme: scheme || 'light', deviceScaleFactor: 1 } );
+const logs = [];
+page.on( 'console', ( m ) => { if ( m.type() === 'error' || m.type() === 'warning' ) logs.push( m.text() ); } );
+page.on( 'pageerror', ( e ) => logs.push( 'PAGEERROR ' + e.message ) );
+await page.goto( `http://localhost:${server.address().port}/preview.html${hash}` );
+await page.waitForFunction( () => window.__lab && window.__lab.ready, null, { timeout: 120000 } );
+await page.waitForTimeout( 3000 );
+const overflow = await page.evaluate( () => document.documentElement.scrollWidth - document.documentElement.clientWidth );
+await page.screenshot( { path: out, fullPage: true } );
+console.log( 'horizontal overflow px:', overflow );
+console.log( logs.filter( ( l ) => ! /GPU stall|deprecated|renamed|KHR_parallel|404/.test( l ) ).join( '\n' ) );
+await browser.close(); server.close();

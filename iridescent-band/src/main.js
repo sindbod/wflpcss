@@ -532,6 +532,7 @@ function selectApproach( id ) {
 		b.tabIndex = k === id ? 0 : - 1;
 
 	}
+	$( 'stage' ).setAttribute( 'aria-labelledby', `tab-${id}` );
 	renderCard( id );
 	highlightColumn( id );
 	try {

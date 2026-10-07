@@ -234,7 +234,7 @@ footer p { max-width: 90ch; }
 	<div class="tabs" role="tablist" id="tabs" aria-label="Rendering approach"></div>
 	<div class="lab-grid">
 		<div class="stage-col">
-			<div class="stage" id="stage">
+			<div class="stage" id="stage" role="tabpanel" aria-labelledby="tab-spectral">
 				<div class="viewport" id="viewport"></div>
 				<div class="loading" id="loading">Generating knit maps and lighting…</div>
 				<div class="stage-status" id="stage-status"></div>
@@ -276,7 +276,7 @@ footer p { max-width: 90ch; }
 
 <section class="compare wrap" aria-labelledby="compare-title">
 	<h2 id="compare-title">How they compare</h2>
-	<p>My assessment after calibrating all five against your photo under the reconstructed studio light. The highlighted column is the approach on screen.</p>
+	<p>My assessment after calibrating all five against your photo under the reconstructed studio light. Real-time frame costs are estimates for a laptop-class GPU; the Cycles cost was measured on the 4-core build machine. The highlighted column is the approach on screen.</p>
 	<div class="table-wrap"><table class="matrix" id="matrix"></table></div>
 </section>
 

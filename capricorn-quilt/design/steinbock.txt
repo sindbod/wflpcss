@@ -1,0 +1,30 @@
+; STEINBOCK / CAPRICORN - two-fabric patchwork wall quilt
+; 20 x 20 grid units (1 unit = 2" / 5 cm finished)
+;
+;   #  fabric L (light / figure)        .  fabric D (dark / background)
+;   7 9 1 3  half-square triangle; the digit is the numpad corner that is LIGHT
+;            7 = top-left   9 = top-right   1 = bottom-left   3 = bottom-right
+;
+; rows 0-3   sky band: Deneb Algedi (sawtooth star), Nashira, Dabih, Algedi (pinwheels)
+; rows 4-18  night window with the ibex and an edelweiss star
+; row 19 and columns 0 / 19: light frame
+###97###############
+##1..3#17####17#17##
+##7..9#39####39#39##
+###31###############
+#..................#
+#.......3##7.......#
+#......3#79#7......#
+#......#7..9#7.....#
+#......7....9##1...#
+#..........3##.#1..#
+#.........3######..#
+#..1.....3###7.7...#
+#..##########......#
+#..##########......#
+#..###7..9###......#
+#..#.#....#.#...3..#
+#..#.#....#.#..9#1.#
+#..#.#....#.#...7..#
+#..#.#....#.#......#
+####################

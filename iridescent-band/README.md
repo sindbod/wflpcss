@@ -72,12 +72,13 @@ Browser exports (`Training capture` panel) and `generate_dataset.py` write the s
 
 ```
 images/NNNNN.png, masks/NNNNN.png, labels.jsonl, README.txt
-labels.jsonl: { file, mask, approach, camera: { position, quaternion | camera_to_world, world_to_camera,
-               projection, fov_y_deg, intrinsics_px }, lighting: { environment, environment_rotation_deg,
-               key_light }, geometry: { shape, strain }, material: { film index, thickness, ... } }
+labels.jsonl: { file, mask, approach | renderer, camera: { camera_to_world, world_to_camera, fov_y_deg,
+               intrinsics_px, azimuth_deg, elevation_deg, distance_m, ... }, lighting: { environment,
+               environment_rotation_deg, key_light }, geometry: { shape, strain }, material: { ... } }
 ```
 
-Coordinates are metres, Y up, band bottom edge at y = 0, front of the band facing +Z.
+Coordinates are metres, Y up, band bottom edge at y = 0, front of the band facing +Z. Matrices are
+row-major nested lists; cameras look down their local −Z axis with +Y up.
 
 ## Layout
 

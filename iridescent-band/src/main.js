@@ -219,7 +219,7 @@ function buildLighting() {
 	controls.envIntensity = rangeControl( { id: 'env-int', label: 'Environment intensity', min: 0.1, max: 2.5, step: 0.05, value: s.envIntensity, format: ( v ) => `× ${v.toFixed( 2 )}`, onChange: ( v ) => viewer.set( 'envIntensity', v ) } );
 	controls.keyOn = toggleControl( { id: 'key-on', label: 'Key spot light', checked: s.keyOn, onChange: ( v ) => viewer.set( 'keyOn', v ) } );
 	controls.keyAzimuth = rangeControl( { id: 'key-az', label: 'Key azimuth (in the rig)', min: - 180, max: 180, step: 1, value: s.keyAzimuth, unit: '°', onChange: ( v ) => viewer.set( 'keyAzimuth', v ) } );
-	controls.keyElevation = rangeControl( { id: 'key-el', label: 'Key elevation', min: - 10, max: 80, step: 1, value: s.keyElevation, unit: '°', onChange: ( v ) => viewer.set( 'keyElevation', v ) } );
+	controls.keyElevation = rangeControl( { id: 'key-el', label: 'Key elevation', min: - 30, max: 80, step: 1, value: s.keyElevation, unit: '°', onChange: ( v ) => viewer.set( 'keyElevation', v ) } );
 	controls.keyLux = rangeControl( { id: 'key-lux', label: 'Key intensity', min: 0, max: 3, step: 0.01, value: s.keyLux, onChange: ( v ) => viewer.set( 'keyLux', v ) } );
 	controls.keySize = rangeControl( { id: 'key-size', label: 'Key size (soft ↔ point)', min: 0.002, max: 0.3, step: 0.001, value: s.keySize, format: ( v ) => `${( v * 100 ).toFixed( 1 )} cm`, onChange: ( v ) => viewer.set( 'keySize', v ) } );
 	controls.exposure = rangeControl( { id: 'exposure', label: 'Exposure', min: 0.3, max: 2.5, step: 0.01, value: s.exposure, format: ( v ) => `× ${v.toFixed( 2 )}`, onChange: ( v ) => viewer.set( 'exposure', v ) } );
@@ -289,7 +289,7 @@ function matchPhoto() {
 // back off on portrait stages so the whole front of the band stays in frame
 function photoDistance() {
 
-	return viewer.camera.aspect < 1 ? 0.62 : 0.46;
+	return viewer.camera.aspect < 1.25 ? 0.6 : 0.46;
 
 }
 
@@ -411,12 +411,16 @@ async function deliver( filename, blob ) {
 
 }
 
+let busy = false;
+
 async function runExport() {
 
 	const approach = approaches[ activeId ];
-	if ( ! approach || approach.isFrameViewer ) return;
+	if ( ! approach || approach.isFrameViewer || busy ) return;
+	busy = true;
 	controls.exportBtn.disable( true );
 	controls.snapBtn.disable( true );
+	for ( const b of Object.values( tabs ) ) b.disabled = true;
 	try {
 
 		const blob = await exportDataset( viewer, {
@@ -437,8 +441,10 @@ async function runExport() {
 
 	} finally {
 
+		busy = false;
 		controls.exportBtn.disable( false );
 		controls.snapBtn.disable( false );
+		for ( const b of Object.values( tabs ) ) b.disabled = false;
 
 	}
 
@@ -515,6 +521,7 @@ function setLiveUI( approachId ) {
 
 function selectApproach( id ) {
 
+	if ( busy ) return;
 	if ( ! approaches[ id ] ) id = approaches.spectral ? 'spectral' : 'cycles';
 	if ( id === activeId ) return;
 	const prev = activeId;
@@ -591,7 +598,7 @@ if ( 'IntersectionObserver' in window ) {
 	new IntersectionObserver( ( entries ) => {
 
 		const visible = entries[ 0 ].isIntersecting;
-		if ( activeId !== 'cycles' && webgl ) viewer.paused = ! visible;
+		if ( activeId !== 'cycles' && webgl && ! busy ) viewer.paused = ! visible;
 
 	} ).observe( $( 'stage' ) );
 
@@ -613,7 +620,7 @@ if ( window.innerWidth < 760 ) for ( const id of [ 'g-motion', 'g-material' ] ) 
 const fromHash = ( location.hash || '' ).match( /^#a([1-5])$/ );
 const initial = fromHash ? APPROACHES[ + fromHash[ 1 ] - 1 ].id : 'spectral';
 selectApproach( webgl ? initial : 'cycles' );
-if ( webgl && viewer.camera.aspect < 1 ) viewer.setCameraSpherical( 24, 5, photoDistance() );
+if ( webgl && viewer.camera.aspect < 1.25 ) viewer.setCameraSpherical( 24, 5, photoDistance() );
 if ( webgl && ! reduceMotion ) setFlag( 'spinEnv', true );
 syncFlagButtons();
 if ( webgl ) setLoading( '' );

@@ -1,4 +1,7 @@
-"""Convert rendered Cycles PNG frames to WebP and write the viewer manifest.
+"""Convert rendered Cycles PNG frames to JPEG (q92, 4:4:4 chroma) and write the viewer manifest.
+
+Lossy WebP forces 4:2:0 chroma, which smears the brick-scale interference colours; full-chroma JPEG
+keeps them at ~40 KB per 800x500 frame.
 
     python3 tools/pack-cycles.py .cache/cycles-frames assets/cycles
 """
@@ -16,11 +19,11 @@ for set_name, frames in manifest.items():
         png = os.path.join(src, info['file'])
         if not os.path.exists(png):
             continue
-        rel = info['file'][:-4] + '.webp'
+        rel = info['file'][:-4] + '.jpg'
         target = os.path.join(dst, rel)
         os.makedirs(os.path.dirname(target), exist_ok=True)
         if not os.path.exists(target) or os.path.getmtime(target) < os.path.getmtime(png):
-            Image.open(png).convert('RGB').save(target, 'WEBP', quality=86, method=6)
+            Image.open(png).convert('RGB').save(target, 'JPEG', quality=92, subsampling=0, optimize=True)
         out.setdefault(set_name, {})[key] = dict(info, file=rel)
 json.dump(out, open(os.path.join(dst, 'manifest.json'), 'w'), indent=1)
 total = sum(os.path.getsize(os.path.join(dp, f)) for dp, _, fs in os.walk(dst) for f in fs)

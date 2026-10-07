@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { PhysicalSpotLight } from 'three-gpu-pathtracer';
+import { gunzipSync } from 'fflate';
 import { buildRingBand, buildForm, FlexSwatch } from './geometry.js';
 import { generateEnvironment } from './envgen.js';
 import { BAND } from './band.js';
@@ -304,7 +305,20 @@ export class Viewer {
 
 		} else {
 
-			tex = await this.hdrLoader.loadAsync( def.url );
+			// HDRIs are published as gzip + base64 text (artifact hosts only serve web media types)
+			const res = await fetch( `${def.url}.txt` );
+			if ( ! res.ok ) throw new Error( `Lighting file missing: ${def.url}` );
+			const b64 = ( await res.text() ).trim();
+			const bin = atob( b64 );
+			const bytes = new Uint8Array( bin.length );
+			for ( let i = 0; i < bin.length; i ++ ) bytes[ i ] = bin.charCodeAt( i );
+			const hdr = this.hdrLoader.parse( gunzipSync( bytes ).buffer );
+			tex = new THREE.DataTexture( hdr.data, hdr.width, hdr.height, THREE.RGBAFormat, hdr.type );
+			tex.flipY = true;
+			tex.magFilter = THREE.LinearFilter;
+			tex.minFilter = THREE.LinearFilter;
+			tex.generateMipmaps = false;
+			tex.needsUpdate = true;
 
 		}
 		tex.mapping = THREE.EquirectangularReflectionMapping;
@@ -515,6 +529,9 @@ export class Viewer {
 		const sph = this.getCameraSpherical();
 		const w = this.renderer.domElement.width, h = this.renderer.domElement.height;
 		const fy = 0.5 * h / Math.tan( cam.fov * Math.PI / 360 );
+		cam.updateMatrixWorld();
+		// row-major nested 4x4 lists (same layout as the Blender generator)
+		const rows = ( m ) => [ 0, 1, 2, 3 ].map( ( r ) => [ 0, 1, 2, 3 ].map( ( c ) => m.elements[ c * 4 + r ] ) );
 		return {
 			camera: {
 				position: cam.position.toArray(),
@@ -524,8 +541,9 @@ export class Viewer {
 				azimuth_deg: sph.azimuth,
 				elevation_deg: sph.elevation,
 				distance_m: sph.distance,
-				world_to_camera: cam.matrixWorldInverse.toArray(),
-				projection: cam.projectionMatrix.toArray(),
+				camera_to_world: rows( cam.matrixWorld ),
+				world_to_camera: rows( cam.matrixWorldInverse ),
+				projection: rows( cam.projectionMatrix ),
 				intrinsics_px: { fx: fy, fy, cx: w / 2, cy: h / 2 },
 			},
 			lighting: {

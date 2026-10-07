@@ -1,6 +1,7 @@
 // Build: bundles the map worker to a string, then the app; assembles dist/ (page + assets).
 import * as esbuild from 'esbuild';
-import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync, rmSync, readdirSync } from 'node:fs';
+import { gzipSync } from 'node:zlib';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -69,9 +70,20 @@ writeFileSync( join( dist, 'index.html' ), page );
 // Local preview wrapper (adds the skeleton the artifact host adds at publish time).
 writeFileSync( join( dist, 'preview.html' ), `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif;background:#f6f6f4}img{max-width:100%}[hidden]{display:none!important}</style></head><body>${page}</body></html>` );
 
-for ( const dir of [ 'hdr', 'cycles', 'ref' ] ) {
+// Artifacts serve only web media types, so each Radiance HDR ships as gzip + base64 text (lossless).
+rmSync( join( dist, 'hdr' ), { recursive: true, force: true } );
+mkdirSync( join( dist, 'hdr' ), { recursive: true } );
+for ( const f of readdirSync( join( root, 'assets', 'hdr' ) ).filter( ( n ) => n.endsWith( '.hdr' ) ) ) {
+
+	const packed = gzipSync( readFileSync( join( root, 'assets', 'hdr', f ) ), { level: 9 } ).toString( 'base64' );
+	writeFileSync( join( dist, 'hdr', `${f}.txt` ), packed );
+
+}
+
+for ( const dir of [ 'cycles', 'ref' ] ) {
 
 	const src = join( root, 'assets', dir );
+	rmSync( join( dist, dir ), { recursive: true, force: true } );
 	if ( existsSync( src ) ) cpSync( src, join( dist, dir ), { recursive: true } );
 
 }

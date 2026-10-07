@@ -42,7 +42,8 @@ def camera_labels(sc, width, height):
     cam = sc.cam
     bpy.context.view_layer.update()
     world_b = cam.matrix_world.copy()
-    world_t = B2T @ world_b @ B2T.inverted()
+    # only the world frame changes: Blender and three.js cameras both look down local -Z with +Y up
+    world_t = B2T @ world_b
     fov_y = cam.data.angle
     fy = 0.5 * height / math.tan(fov_y / 2)
     return dict(

@@ -25,7 +25,8 @@ masks/NNNNN.png    band mask (white = band incl. lining), when exported with mas
 labels.jsonl       one JSON object per frame
 
 Coordinates: metres, Y up, band bottom edge at y = 0, front of the band facing +Z.
-camera.world_to_camera and camera.projection are column-major 4x4 matrices (three.js order).
+camera.camera_to_world, camera.world_to_camera and camera.projection are 4x4 matrices as row-major nested
+lists; the camera looks down its local -Z axis with +Y up (OpenGL / three.js convention).
 camera.intrinsics_px gives fx, fy, cx, cy for the exported image size.
 lighting.environment names the HDR (see the page); environment_rotation_deg rotates the whole light rig
 (environment and key light) about +Y. key_light.azimuth_deg is relative to the rig.

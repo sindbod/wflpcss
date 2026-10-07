@@ -335,6 +335,1636 @@
    "distance": 0.5,
    "light_rotation": 60,
    "environment": "studio"
+  },
+  "c18_l1": {
+   "file": "grid/c18_l1.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 60,
+   "environment": "studio"
+  },
+  "c19_l1": {
+   "file": "grid/c19_l1.jpg",
+   "camera_azimuth": 285,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 60,
+   "environment": "studio"
+  },
+  "c20_l1": {
+   "file": "grid/c20_l1.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 60,
+   "environment": "studio"
+  },
+  "c21_l1": {
+   "file": "grid/c21_l1.jpg",
+   "camera_azimuth": 315,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 60,
+   "environment": "studio"
+  },
+  "c22_l1": {
+   "file": "grid/c22_l1.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 60,
+   "environment": "studio"
+  },
+  "c23_l1": {
+   "file": "grid/c23_l1.jpg",
+   "camera_azimuth": 345,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 60,
+   "environment": "studio"
+  },
+  "c00_l2": {
+   "file": "grid/c00_l2.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c01_l2": {
+   "file": "grid/c01_l2.jpg",
+   "camera_azimuth": 15,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c02_l2": {
+   "file": "grid/c02_l2.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c03_l2": {
+   "file": "grid/c03_l2.jpg",
+   "camera_azimuth": 45,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c04_l2": {
+   "file": "grid/c04_l2.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c05_l2": {
+   "file": "grid/c05_l2.jpg",
+   "camera_azimuth": 75,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c06_l2": {
+   "file": "grid/c06_l2.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c07_l2": {
+   "file": "grid/c07_l2.jpg",
+   "camera_azimuth": 105,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c08_l2": {
+   "file": "grid/c08_l2.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c09_l2": {
+   "file": "grid/c09_l2.jpg",
+   "camera_azimuth": 135,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c10_l2": {
+   "file": "grid/c10_l2.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c11_l2": {
+   "file": "grid/c11_l2.jpg",
+   "camera_azimuth": 165,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c12_l2": {
+   "file": "grid/c12_l2.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c13_l2": {
+   "file": "grid/c13_l2.jpg",
+   "camera_azimuth": 195,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c14_l2": {
+   "file": "grid/c14_l2.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c15_l2": {
+   "file": "grid/c15_l2.jpg",
+   "camera_azimuth": 225,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c16_l2": {
+   "file": "grid/c16_l2.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c17_l2": {
+   "file": "grid/c17_l2.jpg",
+   "camera_azimuth": 255,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c18_l2": {
+   "file": "grid/c18_l2.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c19_l2": {
+   "file": "grid/c19_l2.jpg",
+   "camera_azimuth": 285,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c20_l2": {
+   "file": "grid/c20_l2.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c21_l2": {
+   "file": "grid/c21_l2.jpg",
+   "camera_azimuth": 315,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c22_l2": {
+   "file": "grid/c22_l2.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c23_l2": {
+   "file": "grid/c23_l2.jpg",
+   "camera_azimuth": 345,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "c00_l3": {
+   "file": "grid/c00_l3.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c01_l3": {
+   "file": "grid/c01_l3.jpg",
+   "camera_azimuth": 15,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c02_l3": {
+   "file": "grid/c02_l3.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c03_l3": {
+   "file": "grid/c03_l3.jpg",
+   "camera_azimuth": 45,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c04_l3": {
+   "file": "grid/c04_l3.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c05_l3": {
+   "file": "grid/c05_l3.jpg",
+   "camera_azimuth": 75,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c06_l3": {
+   "file": "grid/c06_l3.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c07_l3": {
+   "file": "grid/c07_l3.jpg",
+   "camera_azimuth": 105,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c08_l3": {
+   "file": "grid/c08_l3.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c09_l3": {
+   "file": "grid/c09_l3.jpg",
+   "camera_azimuth": 135,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c10_l3": {
+   "file": "grid/c10_l3.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c11_l3": {
+   "file": "grid/c11_l3.jpg",
+   "camera_azimuth": 165,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c12_l3": {
+   "file": "grid/c12_l3.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c13_l3": {
+   "file": "grid/c13_l3.jpg",
+   "camera_azimuth": 195,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c14_l3": {
+   "file": "grid/c14_l3.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c15_l3": {
+   "file": "grid/c15_l3.jpg",
+   "camera_azimuth": 225,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c16_l3": {
+   "file": "grid/c16_l3.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c17_l3": {
+   "file": "grid/c17_l3.jpg",
+   "camera_azimuth": 255,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c18_l3": {
+   "file": "grid/c18_l3.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c19_l3": {
+   "file": "grid/c19_l3.jpg",
+   "camera_azimuth": 285,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c20_l3": {
+   "file": "grid/c20_l3.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c21_l3": {
+   "file": "grid/c21_l3.jpg",
+   "camera_azimuth": 315,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c22_l3": {
+   "file": "grid/c22_l3.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c23_l3": {
+   "file": "grid/c23_l3.jpg",
+   "camera_azimuth": 345,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "c00_l4": {
+   "file": "grid/c00_l4.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c01_l4": {
+   "file": "grid/c01_l4.jpg",
+   "camera_azimuth": 15,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c02_l4": {
+   "file": "grid/c02_l4.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c03_l4": {
+   "file": "grid/c03_l4.jpg",
+   "camera_azimuth": 45,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c04_l4": {
+   "file": "grid/c04_l4.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c05_l4": {
+   "file": "grid/c05_l4.jpg",
+   "camera_azimuth": 75,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c06_l4": {
+   "file": "grid/c06_l4.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c07_l4": {
+   "file": "grid/c07_l4.jpg",
+   "camera_azimuth": 105,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c08_l4": {
+   "file": "grid/c08_l4.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c09_l4": {
+   "file": "grid/c09_l4.jpg",
+   "camera_azimuth": 135,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c10_l4": {
+   "file": "grid/c10_l4.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c11_l4": {
+   "file": "grid/c11_l4.jpg",
+   "camera_azimuth": 165,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c12_l4": {
+   "file": "grid/c12_l4.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c13_l4": {
+   "file": "grid/c13_l4.jpg",
+   "camera_azimuth": 195,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c14_l4": {
+   "file": "grid/c14_l4.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c15_l4": {
+   "file": "grid/c15_l4.jpg",
+   "camera_azimuth": 225,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c16_l4": {
+   "file": "grid/c16_l4.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c17_l4": {
+   "file": "grid/c17_l4.jpg",
+   "camera_azimuth": 255,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c18_l4": {
+   "file": "grid/c18_l4.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c19_l4": {
+   "file": "grid/c19_l4.jpg",
+   "camera_azimuth": 285,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c20_l4": {
+   "file": "grid/c20_l4.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c21_l4": {
+   "file": "grid/c21_l4.jpg",
+   "camera_azimuth": 315,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c22_l4": {
+   "file": "grid/c22_l4.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c23_l4": {
+   "file": "grid/c23_l4.jpg",
+   "camera_azimuth": 345,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "c00_l5": {
+   "file": "grid/c00_l5.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c01_l5": {
+   "file": "grid/c01_l5.jpg",
+   "camera_azimuth": 15,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c02_l5": {
+   "file": "grid/c02_l5.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c03_l5": {
+   "file": "grid/c03_l5.jpg",
+   "camera_azimuth": 45,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c04_l5": {
+   "file": "grid/c04_l5.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c05_l5": {
+   "file": "grid/c05_l5.jpg",
+   "camera_azimuth": 75,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c06_l5": {
+   "file": "grid/c06_l5.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c07_l5": {
+   "file": "grid/c07_l5.jpg",
+   "camera_azimuth": 105,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c08_l5": {
+   "file": "grid/c08_l5.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c09_l5": {
+   "file": "grid/c09_l5.jpg",
+   "camera_azimuth": 135,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c10_l5": {
+   "file": "grid/c10_l5.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c11_l5": {
+   "file": "grid/c11_l5.jpg",
+   "camera_azimuth": 165,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c12_l5": {
+   "file": "grid/c12_l5.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c13_l5": {
+   "file": "grid/c13_l5.jpg",
+   "camera_azimuth": 195,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c14_l5": {
+   "file": "grid/c14_l5.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c15_l5": {
+   "file": "grid/c15_l5.jpg",
+   "camera_azimuth": 225,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c16_l5": {
+   "file": "grid/c16_l5.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c17_l5": {
+   "file": "grid/c17_l5.jpg",
+   "camera_azimuth": 255,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c18_l5": {
+   "file": "grid/c18_l5.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c19_l5": {
+   "file": "grid/c19_l5.jpg",
+   "camera_azimuth": 285,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c20_l5": {
+   "file": "grid/c20_l5.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c21_l5": {
+   "file": "grid/c21_l5.jpg",
+   "camera_azimuth": 315,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c22_l5": {
+   "file": "grid/c22_l5.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "c23_l5": {
+   "file": "grid/c23_l5.jpg",
+   "camera_azimuth": 345,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 300,
+   "environment": "studio"
+  }
+ },
+ "envs": {
+  "studio_c00": {
+   "file": "envs/studio_c00.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c01": {
+   "file": "envs/studio_c01.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c02": {
+   "file": "envs/studio_c02.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c03": {
+   "file": "envs/studio_c03.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c04": {
+   "file": "envs/studio_c04.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c05": {
+   "file": "envs/studio_c05.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c06": {
+   "file": "envs/studio_c06.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c07": {
+   "file": "envs/studio_c07.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c08": {
+   "file": "envs/studio_c08.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c09": {
+   "file": "envs/studio_c09.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c10": {
+   "file": "envs/studio_c10.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "studio_c11": {
+   "file": "envs/studio_c11.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "darkroom_c00": {
+   "file": "envs/darkroom_c00.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c01": {
+   "file": "envs/darkroom_c01.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c02": {
+   "file": "envs/darkroom_c02.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c03": {
+   "file": "envs/darkroom_c03.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c04": {
+   "file": "envs/darkroom_c04.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c05": {
+   "file": "envs/darkroom_c05.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c06": {
+   "file": "envs/darkroom_c06.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c07": {
+   "file": "envs/darkroom_c07.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c08": {
+   "file": "envs/darkroom_c08.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c09": {
+   "file": "envs/darkroom_c09.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c10": {
+   "file": "envs/darkroom_c10.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "darkroom_c11": {
+   "file": "envs/darkroom_c11.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "darkroom"
+  },
+  "neon_c00": {
+   "file": "envs/neon_c00.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c01": {
+   "file": "envs/neon_c01.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c02": {
+   "file": "envs/neon_c02.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c03": {
+   "file": "envs/neon_c03.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c04": {
+   "file": "envs/neon_c04.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c05": {
+   "file": "envs/neon_c05.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c06": {
+   "file": "envs/neon_c06.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c07": {
+   "file": "envs/neon_c07.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c08": {
+   "file": "envs/neon_c08.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c09": {
+   "file": "envs/neon_c09.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c10": {
+   "file": "envs/neon_c10.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "neon_c11": {
+   "file": "envs/neon_c11.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "neon"
+  },
+  "sunset_c00": {
+   "file": "envs/sunset_c00.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c01": {
+   "file": "envs/sunset_c01.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c02": {
+   "file": "envs/sunset_c02.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c03": {
+   "file": "envs/sunset_c03.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c04": {
+   "file": "envs/sunset_c04.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c05": {
+   "file": "envs/sunset_c05.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c06": {
+   "file": "envs/sunset_c06.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c07": {
+   "file": "envs/sunset_c07.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c08": {
+   "file": "envs/sunset_c08.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c09": {
+   "file": "envs/sunset_c09.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c10": {
+   "file": "envs/sunset_c10.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "sunset_c11": {
+   "file": "envs/sunset_c11.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sunset"
+  },
+  "overcast_c00": {
+   "file": "envs/overcast_c00.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c01": {
+   "file": "envs/overcast_c01.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c02": {
+   "file": "envs/overcast_c02.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c03": {
+   "file": "envs/overcast_c03.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c04": {
+   "file": "envs/overcast_c04.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c05": {
+   "file": "envs/overcast_c05.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c06": {
+   "file": "envs/overcast_c06.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c07": {
+   "file": "envs/overcast_c07.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c08": {
+   "file": "envs/overcast_c08.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c09": {
+   "file": "envs/overcast_c09.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c10": {
+   "file": "envs/overcast_c10.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "overcast_c11": {
+   "file": "envs/overcast_c11.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "overcast"
+  },
+  "sun_c00": {
+   "file": "envs/sun_c00.jpg",
+   "camera_azimuth": 0,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c01": {
+   "file": "envs/sun_c01.jpg",
+   "camera_azimuth": 30,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c02": {
+   "file": "envs/sun_c02.jpg",
+   "camera_azimuth": 60,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c03": {
+   "file": "envs/sun_c03.jpg",
+   "camera_azimuth": 90,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c04": {
+   "file": "envs/sun_c04.jpg",
+   "camera_azimuth": 120,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c05": {
+   "file": "envs/sun_c05.jpg",
+   "camera_azimuth": 150,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c06": {
+   "file": "envs/sun_c06.jpg",
+   "camera_azimuth": 180,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c07": {
+   "file": "envs/sun_c07.jpg",
+   "camera_azimuth": 210,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c08": {
+   "file": "envs/sun_c08.jpg",
+   "camera_azimuth": 240,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c09": {
+   "file": "envs/sun_c09.jpg",
+   "camera_azimuth": 270,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c10": {
+   "file": "envs/sun_c10.jpg",
+   "camera_azimuth": 300,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  },
+  "sun_c11": {
+   "file": "envs/sun_c11.jpg",
+   "camera_azimuth": 330,
+   "camera_elevation": 6,
+   "distance": 0.5,
+   "light_rotation": 0,
+   "environment": "sun"
+  }
+ },
+ "macro": {
+  "l00": {
+   "file": "macro/l00.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 0,
+   "environment": "studio"
+  },
+  "l01": {
+   "file": "macro/l01.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 15,
+   "environment": "studio"
+  },
+  "l02": {
+   "file": "macro/l02.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 30,
+   "environment": "studio"
+  },
+  "l03": {
+   "file": "macro/l03.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 45,
+   "environment": "studio"
+  },
+  "l04": {
+   "file": "macro/l04.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 60,
+   "environment": "studio"
+  },
+  "l05": {
+   "file": "macro/l05.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 75,
+   "environment": "studio"
+  },
+  "l06": {
+   "file": "macro/l06.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 90,
+   "environment": "studio"
+  },
+  "l07": {
+   "file": "macro/l07.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 105,
+   "environment": "studio"
+  },
+  "l08": {
+   "file": "macro/l08.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 120,
+   "environment": "studio"
+  },
+  "l09": {
+   "file": "macro/l09.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 135,
+   "environment": "studio"
+  },
+  "l10": {
+   "file": "macro/l10.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 150,
+   "environment": "studio"
+  },
+  "l11": {
+   "file": "macro/l11.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 165,
+   "environment": "studio"
+  },
+  "l12": {
+   "file": "macro/l12.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 180,
+   "environment": "studio"
+  },
+  "l13": {
+   "file": "macro/l13.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 195,
+   "environment": "studio"
+  },
+  "l14": {
+   "file": "macro/l14.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 210,
+   "environment": "studio"
+  },
+  "l15": {
+   "file": "macro/l15.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 225,
+   "environment": "studio"
+  },
+  "l16": {
+   "file": "macro/l16.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 240,
+   "environment": "studio"
+  },
+  "l17": {
+   "file": "macro/l17.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 255,
+   "environment": "studio"
+  },
+  "l18": {
+   "file": "macro/l18.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 270,
+   "environment": "studio"
+  },
+  "l19": {
+   "file": "macro/l19.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 285,
+   "environment": "studio"
+  },
+  "l20": {
+   "file": "macro/l20.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 300,
+   "environment": "studio"
+  },
+  "l21": {
+   "file": "macro/l21.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 315,
+   "environment": "studio"
+  },
+  "l22": {
+   "file": "macro/l22.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 330,
+   "environment": "studio"
+  },
+  "l23": {
+   "file": "macro/l23.jpg",
+   "camera_azimuth": 24,
+   "camera_elevation": 3,
+   "distance": 0.17,
+   "light_rotation": 345,
+   "environment": "studio"
+  }
+ },
+ "stretch": {
+  "s0": {
+   "file": "stretch/s0.jpg",
+   "strain": 0,
+   "camera_azimuth": 24,
+   "camera_elevation": 5,
+   "distance": 0.3,
+   "environment": "studio"
+  },
+  "s1": {
+   "file": "stretch/s1.jpg",
+   "strain": 0.03,
+   "camera_azimuth": 24,
+   "camera_elevation": 5,
+   "distance": 0.3,
+   "environment": "studio"
+  },
+  "s2": {
+   "file": "stretch/s2.jpg",
+   "strain": 0.06,
+   "camera_azimuth": 24,
+   "camera_elevation": 5,
+   "distance": 0.3,
+   "environment": "studio"
+  },
+  "s3": {
+   "file": "stretch/s3.jpg",
+   "strain": 0.09,
+   "camera_azimuth": 24,
+   "camera_elevation": 5,
+   "distance": 0.3,
+   "environment": "studio"
+  },
+  "s4": {
+   "file": "stretch/s4.jpg",
+   "strain": 0.12,
+   "camera_azimuth": 24,
+   "camera_elevation": 5,
+   "distance": 0.3,
+   "environment": "studio"
   }
  }
 }

@@ -41,7 +41,8 @@ function sampleParams( rng, rand, state ) {
 		p.camera = {
 			azimuth: rng() * 360,
 			elevation: - 8 + rng() * 40,
-			distance: Math.exp( Math.log( 0.12 ) + rng() * ( Math.log( 0.6 ) - Math.log( 0.12 ) ) ),
+			// measured from the band's centre axis; the torso radius reaches 0.137 m, so start at 0.17 m
+			distance: Math.exp( Math.log( 0.17 ) + rng() * ( Math.log( 0.65 ) - Math.log( 0.17 ) ) ),
 			fov: 20 + rng() * 20,
 		};
 

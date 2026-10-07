@@ -261,7 +261,7 @@ function buildMotion() {
 	row.append(
 		buttonControl( { label: 'Match photo view', onClick: matchPhoto } ).el,
 		buttonControl( { label: 'Front view', onClick: () => viewer.setCameraSpherical( 0, 4, 0.42 ) } ).el,
-		buttonControl( { label: 'Macro', onClick: () => viewer.setCameraSpherical( 24, 3, 0.11 ) } ).el,
+		buttonControl( { label: 'Macro', onClick: () => viewer.setCameraSpherical( 24, 3, 0.17 ) } ).el,
 	);
 	controls.motionNote = el( 'p', 'panel-note', '' );
 	p.append( controls.shape.el, grid, controls.stretch.el, row, controls.motionNote );

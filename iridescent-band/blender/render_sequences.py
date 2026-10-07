@@ -73,10 +73,12 @@ def main():
                 sc.set_camera(az, 6, 0.5)
                 frame('envs', f'{env_id}_c{ci:02d}', dict(camera_azimuth=az, camera_elevation=6, distance=0.5, light_rotation=0, environment=env_id))
     if 'macro' in sets:
-        sc.set_camera(cam['azimuth'], 3, 0.11)
+        # distances are from the band's centre axis; the torso radius is 0.106-0.137 m, so 0.17 m keeps
+        # the camera about 6 cm off the band
+        sc.set_camera(cam['azimuth'], 3, 0.17)
         for li, rot in enumerate(range(0, 360, 15)):
             light('studio', rot)
-            frame('macro', f'l{li:02d}', dict(camera_azimuth=cam['azimuth'], camera_elevation=3, distance=0.11, light_rotation=rot, environment='studio'))
+            frame('macro', f'l{li:02d}', dict(camera_azimuth=cam['azimuth'], camera_elevation=3, distance=0.17, light_rotation=rot, environment='studio'))
     if 'stretch' in sets:
         light('studio', 0)
         sc.set_camera(cam['azimuth'], 5, 0.3)

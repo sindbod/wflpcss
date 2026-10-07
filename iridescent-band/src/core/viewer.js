@@ -88,7 +88,7 @@ export class Viewer {
 		controls.target.copy( BAND_CENTER );
 		controls.enableDamping = true;
 		controls.dampingFactor = 0.08;
-		controls.minDistance = 0.06;
+		controls.minDistance = 0.15; // the torso radius reaches 0.137 m; never orbit into the form
 		controls.maxDistance = 2.2;
 		controls.autoRotateSpeed = 1.2;
 		controls.update();
@@ -241,6 +241,8 @@ export class Viewer {
 		const ring = this.state.shape === 'ring';
 		this.worn.visible = ring;
 		this.swatchGroup.visible = ! ring;
+		// worn: the torso radius reaches 0.137 m, so never orbit into the form; the free swatch allows close-ups
+		if ( this.controls ) this.controls.minDistance = ring ? 0.15 : 0.05;
 		this.floor.visible = true;
 
 	}

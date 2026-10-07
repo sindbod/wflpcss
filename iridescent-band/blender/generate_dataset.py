@@ -124,7 +124,8 @@ def main():
                    illuminance=rng.uniform(0.2, 1.4), radius_m=math.exp(rng.uniform(math.log(0.003), math.log(0.15))))
         sc.set_key(key['azimuth_deg'], key['elevation_deg'], key['illuminance'], key['radius_m'], key_on)
         az, el = rng.uniform(0, 360), rng.uniform(-8, 32)
-        dist = math.exp(rng.uniform(math.log(0.1), math.log(0.6)))
+        # from the centre axis; the torso radius reaches 0.137 m, so start at 0.17 m to stay outside the form
+        dist = math.exp(rng.uniform(math.log(0.17), math.log(0.65)))
         fov = rng.uniform(18, 40)
         sc.set_camera(az, el, dist, fov)
         strain = rng.uniform(0, 0.10)

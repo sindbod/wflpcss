@@ -5,7 +5,7 @@ import math
 
 from modular import H, V, Leaf, Node, Rect, leaves
 from plan import (DESIGN, FABRICS, NCOLS, NROWS, ORDER, PIECES, PLANS, SECTIONS, SYSTEMS, TEMPLATE_NO, TREE,
-                  colour_at, disc_radii, qc_types, section_pins)
+                  arc_points, colour_at, disc_radii, qc_types, section_pins)
 from svg import (OPP, TRI, draw_exploded, explode, f, hlines, hst_shapes, label_text, leaf_shapes,
                  qc_shapes, quarter_arc, quarter_path, svg_wrap, wave_lines)
 
@@ -118,12 +118,33 @@ def module_key_svg(s=56):
 
 
 # --------------------------------------------------------- layout chart
+def unit_labels(s, ox, oy, fs=8.5):
+    """Codes of the triangle and quarter-circle units, for the layout chart."""
+    out = []
+    for p in PIECES:
+        x, y = ox + p.rect.c0 * s, oy + p.rect.r0 * s
+        if p.kind == "hst":          # in the middle of the other half
+            (u, v) = [sum(c) / 3 for c in zip(*OPP[p.corner])]
+            out.append(f'<text class="lb lb{p.b}" x="{f(x + u * s)}" y="{f(y + v * s)}" font-size="{fs}">{p.label}</text>')
+        elif p.kind == "qc":         # in the outermost ring, on the diagonal
+            radii = [r for r, _ in p.unit.discs()] + [0.0]
+            mid = (radii[0] + radii[1]) / 2
+            fab = p.unit.discs()[0][1]
+            S = p.unit.n * s
+            cx, cy = corner_xy(p, x, y, S)
+            dx = -1 if p.corner in "93" else 1
+            dy = -1 if p.corner in "13" else 1
+            d = mid * s / math.sqrt(2)
+            out.append(f'<text class="lb lb{fab}" x="{f(cx + dx * d)}" y="{f(cy + dy * d)}" font-size="{fs}">{p.label}</text>')
+    return "".join(out)
+
+
 def chart_svg(s=30):
     left = 84
     W = left + NCOLS * s + 12
     Hh = 10 + NROWS * s + 12
     ox, oy = left, 10
-    body = [whole(s, ox, oy, labels=True, seams=True)]
+    body = [whole(s, ox, oy, labels=True, seams=True), unit_labels(s, ox, oy)]
     for i, sec in enumerate(SECTIONS, 1):
         y0, y1 = oy + sec.rect.r0 * s + 3, oy + sec.rect.r1 * s - 3
         body.append(f'<path class="bracket" d="M{left - 8},{f(y0)} h-6 V{f(y1)} h6"/>')
@@ -186,7 +207,14 @@ def section_svg(i, s=34, gap=7, pad=2):
         if x is not None:
             yy = mg + h
             marks.append(f'<polygon class="pin" points="{f(x - 5)},{f(yy + 9)} {f(x + 5)},{f(yy + 9)} {f(x)},{f(yy + 2)}"/>')
-    inner = f'<g transform="translate(0 {mg})">{body}</g>' + "".join(marks)
+    # ring ends to match: a dot on both pieces that meet there
+    dots = []
+    for gx, gy, _ in arc_points(sec):
+        for lf, x, y in items:
+            r = lf.rect
+            if r.c0 <= gx <= r.c1 and r.r0 <= gy <= r.r1 and (gx in (r.c0, r.c1) or gy in (r.r0, r.r1)):
+                dots.append(f'<circle class="pindot" cx="{f(pad + x + (gx - r.c0) * s)}" cy="{f(pad + y + (gy - r.r0) * s)}" r="3.6"/>')
+    inner = f'<g transform="translate(0 {mg})">{body}{"".join(dots)}</g>' + "".join(marks)
     return svg_wrap(inner, w, h + 2 * mg, cls="dia exploded", title=f"Section {i}, exploded")
 
 
@@ -317,7 +345,7 @@ def template_drawing(sys_key, r):
     fs = (3.2 if unit == "mm" else 0.13) * (1.0 if r <= 1 else 1.3)
     tx, ty = m + a + fs * 1.0, m + a + fs * 2.6
     body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty)}" font-size="{f(fs * 1.4)}" font-weight="700">Template {TEMPLATE_NO[r]}</text>')
-    body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 1.7)}" font-size="{f(fs)}">R {sy.fmt(r * sy.unit)}</text>')
+    body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 1.7)}" font-size="{f(fs)}">radius {sy.fmt(r * sy.unit)}</text>')
     if r > 1:
         body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 3.4)}" font-size="{f(fs)}">• = corner of the finished unit</text>')
         body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 4.9)}" font-size="{f(fs)}">dashed = seam lines</text>')
@@ -502,22 +530,26 @@ def hst_method_svg(sys_key, a="W", b="N"):
 # ------------------------------------------------------------ strip plans
 def strip_svgs(sys_key, fab, width_px=660):
     sy = SYSTEMS[sys_key]
-    k = width_px / sy.wof
+    k = width_px / sy.wof                       # one scale for every strip, fat-quarter strips are shorter
+    plan = PLANS[sys_key][fab]
+    L = plan["length"] * k
     figs = []
     n = 0
-    for st in PLANS[sys_key][fab]["strips"]:
+    for st in plan["strips"]:
         if st["cuts"][0].kind == "binding":
             continue
         n += 1
         h = st["width"] * k
-        parts = [f'<rect class="stripbg" x="0" y="0" width="{f(width_px)}" height="{f(h)}"/>']
+        parts = [f'<rect class="stripbg" x="0" y="0" width="{f(L)}" height="{f(h)}"/>']
         x = 0
         for c in st["cuts"]:
             w = c.b * k
             ph = c.a * k
             parts.append(f'<rect class="f{fab}" x="{f(x)}" y="0" width="{f(w)}" height="{f(ph)}"/>')
-            if c.extra:
+            if c.extra and c.extra_on == "b":      # the pale part is trimmed off later
                 parts.append(f'<rect class="extra" x="{f(x + (c.b - c.extra) * k)}" y="0" width="{f(c.extra * k)}" height="{f(ph)}"/>')
+            elif c.extra:
+                parts.append(f'<rect class="extra" x="{f(x)}" y="{f(ph - c.extra * k)}" width="{f(w)}" height="{f(c.extra * k)}"/>')
             if c.kind == "hst":
                 parts.append(f'<path class="sqdiag" d="M{f(x + 5)},5 L{f(x + w - 5)},{f(ph - 5)}"/>')
             if c.kind == "disc":
@@ -531,7 +563,7 @@ def strip_svgs(sys_key, fab, width_px=660):
                 parts.append(f'<text class="lb lb{fab}" x="{f(x + w / 2)}" y="{f(ph / 2)}" font-size="{fs}">{c.label}</text>')
             x += w
         if st["free"] > 1e-6:
-            parts.append(f'<rect class="waste" x="{f(x)}" y="0" width="{f(width_px - x)}" height="{f(h)}"/>')
+            parts.append(f'<rect class="waste" x="{f(x)}" y="0" width="{f(L - x)}" height="{f(h)}"/>')
         figs.append((n, st, svg_wrap("".join(parts), width_px, h, cls="dia strip", title=f"Strip {n}")))
     return figs
 

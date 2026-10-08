@@ -33,13 +33,17 @@ const PAPERS = {
     if (wide > paper.printable) {
       throw new Error(`${units}: the page is ${wide}px wide in print, wider than ${paper.format}; templates would shrink`);
     }
+    const ver = await page.evaluate(() => {
+      const m = (document.querySelector('footer .version') || { textContent: '' }).textContent.match(/version ([\d.]+), ([A-Za-z]+ \d{4})/);
+      return m ? `version ${m[1]}, ${m[2]}` : '';
+    });
     const out = path.join(root, `kogge-pattern-${units}.pdf`);
     await page.pdf({
       path: out, format: paper.format, printBackground: true, margin: MARGIN,
       outline: true, tagged: true,
       displayHeaderFooter: true,
       headerTemplate: '<span></span>',
-      footerTemplate: '<div style="font:8px Helvetica,Arial,sans-serif;color:#777;width:100%;padding:0 14mm;display:flex;justify-content:space-between"><span>Kogge · Hanseatic cog patchwork quilt</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>',
+      footerTemplate: `<div style="font:8px Helvetica,Arial,sans-serif;color:#777;width:100%;padding:0 14mm;display:flex;justify-content:space-between"><span>Kogge · Hanseatic cog patchwork quilt${ver ? ' · ' + ver : ''}</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`,
     });
     console.log('wrote', out, paper.format);
     await page.close();

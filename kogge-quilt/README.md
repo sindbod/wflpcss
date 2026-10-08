@@ -52,13 +52,13 @@ Plus fusible web, backing, batting and a hanging sleeve; the pattern lists the s
 The pattern (version 1.1) covers:
 
 - materials, including backing yardage and how to piece it, and a tools list;
-- abbreviations and read-first notes, and a six-square seam test with a tolerance;
+- read-first notes, abbreviations and terms, and a six-square seam test with a tolerance;
 - a strip-by-strip cutting plan and piece list for each fabric;
 - the triangle units, with how to trim them;
 - the quarter-circle units: a tracing list (which template, how many, which fabric) and an
   eight-step fusible appliqué method;
-- the top in 7 horizontal sections, with a size to check for every unit, column and
-  section, the pin points and the arc ends to match;
+- the top in 7 horizontal sections, with a size to check for every segment, column and
+  section, and the pin points and ring ends to match, marked on the diagrams;
 - joining, a full quilting plan, binding with diagrams for joining strips and mitring
   corners, and a hanging sleeve;
 - five numbered true-size templates with test squares; the two largest print in parts
@@ -82,7 +82,8 @@ The pattern (version 1.1) covers:
    pieces, then the fewest sub-assemblies, limited to horizontal sections and to pieces that
    fit across the fabric width.
 2. **Piece codes.** Identical cut pieces share a code (fabric letter and size number);
-   triangle units are H1, H2 and quarter-circle units Q1 to Q6.
+   a + marks a piece cut long on purpose and trimmed to fit, so it can't be mixed up with
+   its exact twin. Triangle units are H1, H2 and quarter-circle units Q1 to Q6.
 3. **Cutting.** Pieces, triangle squares, appliqué backgrounds and appliqué squares are
    packed into strips across the fabric (usable width 105 cm / 40″). Fabric that fits on a
    fat quarter even after prewashing is bought as one.

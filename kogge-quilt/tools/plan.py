@@ -58,7 +58,7 @@ class System:
     def dims(self, a, b, unit=True):
         if self.key == "cm":
             return f"{self.fmt(a, False)} × {self.fmt(b, False)}" + (" cm" if unit else "")
-        return f"{self.fmt(a)} × {self.fmt(b)}" if unit else f"{self.fmt(a, False)} × {self.fmt(b, False)}"
+        return f"{self.fmt(a, False)} × {self.fmt(b)}" if unit else f"{self.fmt(a, False)} × {self.fmt(b, False)}"
 
     def length(self, x):
         steps = math.ceil(x / self.round_to - 1e-9)
@@ -180,12 +180,17 @@ LABELS, SOLIDS, HSTS, QCS = assign_labels()
 
 
 def solid_table():
-    rows = []
-    for (kind, *key), lab in LABELS.items():
-        if kind == "solid":
-            fab, a, b = key
-            rows.append(dict(label=lab, fabric=fab, a=a, b=b, count=SOLIDS[tuple(key)]))
-    rows.sort(key=lambda r: (ORDER.index(r["fabric"]), r["a"], r["b"]))
+    """One row per piece code (pieces cut long have their own code)."""
+    groups = {}
+    for p in PIECES:
+        if p.kind != "solid":
+            continue
+        a, b = sorted((p.rect.w, p.rect.h))
+        g = groups.setdefault(p.label, dict(label=p.label, fabric=p.fabric, a=a, b=b, count=0,
+                                            long=id(p) in globals().get("LONG", {}), piece=p))
+        g["count"] += 1
+    rows = list(groups.values())
+    rows.sort(key=lambda r: (ORDER.index(r["fabric"]), r["a"], r["b"], r["long"]))
     return rows
 
 
@@ -262,8 +267,8 @@ def seams_h(t):
 
 def unit_names():
     """Names of the sub-assemblies as the section steps call them: "column k"
-    (or "row k") for the parts of a section, "unit ka", "unit kb", ... for the
-    units inside part k, in the order they are made."""
+    (or "row k") for the parts of a section, "segment ka", "segment kb", ...
+    for the segments inside part k, in the order they are made."""
     names = {}
     for sec in SECTIONS:
         if isinstance(sec, Leaf):
@@ -282,7 +287,7 @@ def unit_names():
                         visit(c, False)
                 if not top:
                     count += 1
-                    names[id(n)] = f"unit {k}{chr(96 + count)}"
+                    names[id(n)] = f"segment {k}{chr(96 + count)}"
 
             visit(child, True)
     return names
@@ -352,6 +357,18 @@ def long_strips():
 LONG = long_strips()
 
 
+def long_dim(p):
+    """Which side of a piece cut long is trimmed later: "w" (width) or "h"."""
+    if LONG[id(p)] is None:
+        return "w"                       # plain bands: trimmed to the width of the section above
+    return "h" if PARENT[id(p)].orient == V else "w"
+
+
+for _p in PIECES:                        # a piece cut long gets its own code: S6+ next to S6
+    if id(_p) in LONG and not _p.label.endswith("+"):
+        _p.label += "+"
+
+
 # ---------------------------------------------------- templates, finishing
 def templates():
     """One template per disc radius, numbered from the smallest:
@@ -402,6 +419,7 @@ class Cut:
     extra: float = 0.0
     kind: str = "piece"   # piece, hst, qcbg, disc
     r: float = 0.0        # disc: radius in grid units (which template)
+    extra_on: str = "b"   # piece cut long: the side that carries the extra, "a" (across) or "b" (along)
 
 
 def appliqué_items(sys_):
@@ -415,60 +433,76 @@ def appliqué_items(sys_):
     return items
 
 
+def piece_cut(sys_, p):
+    """Cut size of a solid piece, (width, height), with any extra length on
+    the side that is trimmed to fit later."""
+    extra = sys_.long_extra if id(p) in LONG else 0.0
+    w = sys_.cut(p.rect.w) + (extra if extra and long_dim(p) == "w" else 0.0)
+    h = sys_.cut(p.rect.h) + (extra if extra and long_dim(p) == "h" else 0.0)
+    return w, h, extra
+
+
 def cutting_plan(sys_: System):
-    plan = {}
-    for fab in ORDER:
-        items = []
-        for p in PIECES:
-            if p.kind == "solid" and p.fabric == fab:
-                a, b = sorted((p.rect.w, p.rect.h))
-                extra = sys_.long_extra if id(p) in LONG else 0.0
-                items.append((sys_.cut(a), sys_.cut(b) + extra, p.label, extra, "piece", 0.0))
-        for t in hst_types():
-            if fab in t["pair"]:
-                for _ in range(math.ceil(t["count"] / 2)):
-                    items.append((sys_.hst_cut, sys_.hst_cut, t["label"], 0.0, "hst", 0.0))
-        for q in qc_types():
-            if q["bg"] == fab:
-                side = sys_.cut(q["n"])
-                for _ in range(q["count"]):
-                    items.append((side, side, q["label"], 0.0, "qcbg", 0.0))
-        for f2, side, lab, kind, r in appliqué_items(sys_):
-            if f2 == fab:
-                items.append((side, side, lab, 0.0, "disc", r))
-        items.sort(key=lambda t: (-t[0], -t[1], t[2]))
-        strips = []
-        for a, b, label, extra, kind, r in items:
-            options = []
-            for s in strips:
-                if abs(s["width"] - a) < 1e-9 and s["free"] >= b - 1e-9:
-                    options.append((-s["width"], s["free"] - b, id(s), s, False))
-                if abs(s["width"] - b) < 1e-9 and abs(a - b) > 1e-9 and s["free"] >= a - 1e-9:
-                    options.append((-s["width"], s["free"] - a, id(s), s, True))
-            if options:
-                _, _, _, s, rot = min(options)
-                if rot:
-                    s["cuts"].append(Cut(label, b, a, True, kind=kind, r=r)); s["free"] -= a
-                else:
-                    s["cuts"].append(Cut(label, a, b, extra=extra, kind=kind, r=r)); s["free"] -= b
-                continue
-            wider = [s for s in strips if s["width"] > a + 1e-9 and s["free"] >= b - 1e-9]
-            if wider and kind != "hst":
-                s = min(wider, key=lambda s: (s["width"], s["free"]))
-                s["cuts"].append(Cut(label, a, b, trimmed=True, extra=extra, kind=kind, r=r)); s["free"] -= b
-                continue
-            if b > sys_.wof:
-                raise ValueError(f"{label} ({b}) is longer than the usable fabric width")
-            strips.append(dict(width=a, free=sys_.wof - b, cuts=[Cut(label, a, b, extra=extra, kind=kind, r=r)]))
-        if fab == BINDING_FABRIC:
-            for _ in range(binding_strips(sys_)):
-                strips.append(dict(width=sys_.binding_w, free=0, cuts=[Cut("binding", sys_.binding_w, sys_.wof, kind="binding")]))
-        total = sum(s["width"] for s in strips)
-        buy_txt, buy_val = sys_.length(total + sys_.extra)
-        longest = max((sum(c.b for c in s["cuts"]) for s in strips if s["cuts"][0].kind != "binding"), default=0)
-        widest = max((s["width"] for s in strips), default=0)
-        plan[fab] = dict(strips=strips, total=total, buy=buy_txt, buy_val=buy_val, longest=longest, widest=widest)
-    return plan
+    return {fab: plan_fabric(sys_, fab, sys_.wof) for fab in ORDER}
+
+
+def plan_fabric(sys_: System, fab, length, squeeze=False):
+    """Strips for one fabric, each `length` long (the usable width of fabric,
+    or the long side of a fat quarter). squeeze: also cut triangle squares
+    from wider strips, to save fabric on a fat quarter."""
+    items = []
+    for p in PIECES:
+        if p.kind == "solid" and p.fabric == fab:
+            w, h, extra = piece_cut(sys_, p)
+            a, b = sorted((w, h))
+            grown = w if extra and long_dim(p) == "w" else h
+            on = "a" if extra and abs(grown - a) < 1e-9 and abs(a - b) > 1e-9 else "b"
+            items.append((a, b, p.label, extra, "piece", 0.0, on))
+    for t in hst_types():
+        if fab in t["pair"]:
+            for _ in range(math.ceil(t["count"] / 2)):
+                items.append((sys_.hst_cut, sys_.hst_cut, t["label"], 0.0, "hst", 0.0, "b"))
+    for q in qc_types():
+        if q["bg"] == fab:
+            side = sys_.cut(q["n"])
+            for _ in range(q["count"]):
+                items.append((side, side, q["label"], 0.0, "qcbg", 0.0, "b"))
+    for f2, side, lab, kind, r in appliqué_items(sys_):
+        if f2 == fab:
+            items.append((side, side, lab, 0.0, "disc", r, "b"))
+    items.sort(key=lambda t: (-t[0], -t[1], t[2]))
+    strips = []
+    for a, b, label, extra, kind, r, on in items:
+        options = []
+        for s in strips:
+            if abs(s["width"] - a) < 1e-9 and s["free"] >= b - 1e-9:
+                options.append((-s["width"], s["free"] - b, id(s), s, False))
+            if abs(s["width"] - b) < 1e-9 and abs(a - b) > 1e-9 and s["free"] >= a - 1e-9:
+                options.append((-s["width"], s["free"] - a, id(s), s, True))
+        if options:
+            _, _, _, s, rot = min(options)
+            if rot:
+                s["cuts"].append(Cut(label, b, a, True, extra=extra, kind=kind, r=r, extra_on="a" if on == "b" else "b")); s["free"] -= a
+            else:
+                s["cuts"].append(Cut(label, a, b, extra=extra, kind=kind, r=r, extra_on=on)); s["free"] -= b
+            continue
+        wider = [s for s in strips if s["width"] > a + 1e-9 and s["free"] >= b - 1e-9]
+        if wider and (kind != "hst" or squeeze):
+            s = min(wider, key=lambda s: (s["width"], s["free"]))
+            s["cuts"].append(Cut(label, a, b, trimmed=True, extra=extra, kind=kind, r=r, extra_on=on)); s["free"] -= b
+            continue
+        if b > length:
+            raise ValueError(f"{label} ({b}) is longer than the strip length {length}")
+        strips.append(dict(width=a, free=length - b, cuts=[Cut(label, a, b, extra=extra, kind=kind, r=r, extra_on=on)]))
+    if fab == BINDING_FABRIC:
+        for _ in range(binding_strips(sys_)):
+            strips.append(dict(width=sys_.binding_w, free=0, cuts=[Cut("binding", sys_.binding_w, sys_.wof, kind="binding")]))
+    total = sum(s["width"] for s in strips)
+    buy_txt, buy_val = sys_.length(total + sys_.extra)
+    longest = max((sum(c.b for c in s["cuts"]) for s in strips if s["cuts"][0].kind != "binding"), default=0)
+    widest = max((s["width"] for s in strips), default=0)
+    return dict(strips=strips, total=total, buy=buy_txt, buy_val=buy_val, longest=longest, widest=widest,
+                length=length, fq=False)
 
 
 PLANS = {k: cutting_plan(s) for k, s in SYSTEMS.items()}
@@ -542,7 +576,7 @@ def sanity():
                 need = sum(q["count"] for r_, f in q["discs"] if f == fab)
                 assert got[("disc", q["label"])] == need, (key, fab, q)
             for s in PLANS[key][fab]["strips"]:
-                assert sum(c.b for c in s["cuts"]) <= sys_.wof + 1e-9
+                assert sum(c.b for c in s["cuts"]) <= max(PLANS[key][fab]["length"], sys_.wof) + 1e-9
             # no piece longer than the fabric is wide
             for p in PIECES:
                 if p.kind == "solid":
@@ -719,8 +753,24 @@ def fits_fat_quarter(sys_key, fab, shrink=0.05):
     return need is not None and need <= height
 
 
+def replan_fat_quarters():
+    """Fabrics that fit a fat quarter are cut from one: strips along its long side."""
+    for key, sys_ in SYSTEMS.items():
+        for fab in ORDER:
+            if fits_fat_quarter(key, fab):
+                length, height = fq_usable(key)
+                plan = plan_fabric(sys_, fab, length, squeeze=True)
+                if plan["total"] <= height + 1e-9:      # the real plan must fit too
+                    plan["fq"] = True
+                    PLANS[key][fab] = plan
+
+
 def amount(sys_key, fab):
     """What to buy: a fat quarter if everything fits on one, else a length."""
-    if fits_fat_quarter(sys_key, fab):
+    if PLANS[sys_key][fab]["fq"]:
         return "1 fat quarter", FQ[sys_key][2]
     return PLANS[sys_key][fab]["buy"], "× width of fabric"
+
+
+
+replan_fat_quarters()

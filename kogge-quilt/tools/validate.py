@@ -308,7 +308,7 @@ def check_exact(out):
         if cm_txt != SYSTEMS["cm"].dims(wc, hc) or in_txt != SYSTEMS["in"].dims(wi, hi):
             wrong.append(f"{name}: page says {cm_txt} / {in_txt}, sewn {SYSTEMS['cm'].dims(wc, hc)} / {SYSTEMS['in'].dims(wi, hi)}")
     ok &= not wrong and len(stated) > 0
-    out.append(f"- The page gives {len(stated)} size checks, for the quilt top, every section and every column and unit "
+    out.append(f"- The page gives {len(stated)} size checks, for the quilt top, every section and every column and segment "
                "inside them, in cm and in inches. "
                + ("Every one of them comes out of the simulation." if not wrong else
                   "**These do not match:** " + "; ".join(wrong)))
@@ -530,16 +530,16 @@ def check_fabric(out):
             ok &= have >= p["total"]
             out.append(f"- {key}, fabric {fab}: the fullest strip uses {fx(sys_, used)} of the width, so the fabric must "
                        f"be at least {fx(sys_, used + 2 * selvage + squaring)} wide including selvages. "
-                       f"{p['buy']} leaves {fx(sys_, have)} after 5 % shrinkage, a {fx(sys_, crooked)} crooked shop cut "
+                       f"{p['buy']} leaves {fx(sys_, have)} after 5% shrinkage, a {fx(sys_, crooked)} crooked shop cut "
                        f"and squaring up; the strips need {fx(sys_, p['total'])}: "
                        + ("enough" if have >= p["total"] else "**not enough**")
                        + f", {fx(sys_, have - p['total'])} spare.")
         if quarters:
             L, Hh = fq_usable(key)
-            fits = [(f, fq_height(key, f, L)) for f in quarters]
+            fits = [(f, PLANS[key][f]["total"]) for f in quarters]     # the fat-quarter cutting plan itself
             ok &= all(need is not None and need <= Hh for _, need in fits)
-            out.append(f"- {key}, fat quarters ({', '.join(quarters)}): after 5 % shrinkage, selvage and squaring up a "
-                       f"{FQ[key][2]} fat quarter leaves {fx(sys_, L)} × {fx(sys_, Hh)}. "
+            out.append(f"- {key}, fat quarters ({', '.join(quarters)}): after 5% shrinkage, selvage and squaring up, a "
+                       f"fat quarter of {FQ[key][2]} leaves {fx(sys_, L)} × {fx(sys_, Hh)}. "
                        + "; ".join(f"{f} needs {fx(sys_, need)} of that height" if need is not None and need <= Hh
                                    else f"**{f} does not fit**" for f, need in fits) + ".")
     for key, sys_ in SYSTEMS.items():
@@ -550,7 +550,7 @@ def check_fabric(out):
         spare = (shrunk - top) / 2
         ok &= spare > 0
         out.append(f"- {key}, backing: two {fx(sys_, b['piece'])} lengths joined side by side make about "
-                   f"{fx(sys_, width)} × {fx(sys_, length)}; after 5 % shrinkage it still reaches {fx(sys_, spare)} beyond "
+                   f"{fx(sys_, width)} × {fx(sys_, length)}; after 5% shrinkage it still reaches {fx(sys_, spare)} beyond "
                    f"the top on every side (the pattern asks for {fx(sys_, (b['side'] - top) / 2)} to trim later).")
         strips = sum(1 for st in PLANS[key][BINDING_FABRIC]["strips"] if st["cuts"][0].kind == "binding")
         have = strips * sys_.wof - (strips - 1) * sys_.binding_w      # each diagonal join uses one strip width
@@ -643,7 +643,7 @@ def verdict(ok, summary):
             "- **Arcs forgive.** Every arc ends square to the seams at its corner. Where an arc touches a seam "
             "tangentially, a wrong seam allowance shaves at most 1 mm off its curve.",
             "- **Materials hold.** Triangle squares stay big enough with seams up to 2 mm too wide, and every fabric "
-            "amount survives 5 % shrinkage and a crooked shop cut.",
+            "amount survives 5% shrinkage and a crooked shop cut.",
             ""]
 
 

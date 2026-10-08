@@ -4,8 +4,8 @@ from __future__ import annotations
 import math
 
 from modular import H, V, Leaf, Node, Rect, leaves
-from plan import (DESIGN, FABRICS, NCOLS, NROWS, ORDER, PIECES, PLANS, SECTIONS, SYSTEMS, TREE, colour_at,
-                  disc_radii, qc_types, section_pins)
+from plan import (DESIGN, FABRICS, NCOLS, NROWS, ORDER, PIECES, PLANS, SECTIONS, SYSTEMS, TEMPLATE_NO, TREE,
+                  colour_at, disc_radii, qc_types, section_pins)
 from svg import (OPP, TRI, draw_exploded, explode, f, hlines, hst_shapes, label_text, leaf_shapes,
                  qc_shapes, quarter_arc, quarter_path, svg_wrap, wave_lines)
 
@@ -299,13 +299,11 @@ def tpl_strokes(unit):
             f"stroke-width:{0.25 * k:.4f};stroke-dasharray:{2 * k:.4f} {1.5 * k:.4f}")
 
 
-def template_sheet_svg(sys_key, r):
-    """True-size template for radius r grid units, in mm (cm) or inches."""
+def template_drawing(sys_key, r):
+    """Template for radius r grid units, in true-size drawing units: mm for the
+    metric pattern, inches for the imperial one. Returns (body, W, unit)."""
     sy = SYSTEMS[sys_key]
-    if sys_key == "cm":
-        unit, k = "mm", 10.0
-    else:
-        unit, k = "in", 1.0
+    unit, k = ("mm", 10.0) if sys_key == "cm" else ("in", 1.0)
     s = sy.unit * k
     a = sy.sa * k
     R = r * s
@@ -317,14 +315,133 @@ def template_sheet_svg(sys_key, r):
             f'<path class="tplsa" style="{seam}" d="M{f(m + a)},{f(m + a)} L{f(m + a + R - 0.001)},{f(m + a)} M{f(m + a)},{f(m + a)} L{f(m + a)},{f(m + a + R)}"/>',
             f'<circle class="tpldot" cx="{f(m + a)}" cy="{f(m + a)}" r="{f(1.2 if unit == "mm" else 0.05)}"/>']
     fs = (3.2 if unit == "mm" else 0.13) * (1.0 if r <= 1 else 1.3)
-    label = f"R {sy.fmt(r * sy.unit)}"
     tx, ty = m + a + fs * 1.0, m + a + fs * 2.6
-    body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty)}" font-size="{f(fs * 1.4)}">{label}</text>')
+    body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty)}" font-size="{f(fs * 1.4)}" font-weight="700">Template {TEMPLATE_NO[r]}</text>')
+    body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 1.7)}" font-size="{f(fs)}">R {sy.fmt(r * sy.unit)}</text>')
     if r > 1:
-        body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 1.8)}" font-size="{f(fs)}">• = corner of the finished unit</text>')
-        body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 3.3)}" font-size="{f(fs)}">dashed = seam lines</text>')
+        body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 3.4)}" font-size="{f(fs)}">• = corner of the finished unit</text>')
+        body.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty + fs * 4.9)}" font-size="{f(fs)}">dashed = seam lines</text>')
+    return "".join(body), W, unit
+
+
+def template_sheet_svg(sys_key, r):
+    """True-size template for radius r grid units, in mm (cm) or inches."""
+    body, W, unit = template_drawing(sys_key, r)
     return (f'<svg class="tplsvg" viewBox="0 0 {f(W)} {f(W)}" width="{f(W)}{unit}" height="{f(W)}{unit}" '
-            f'role="img" xmlns="http://www.w3.org/2000/svg"><title>Template, radius {label}</title>{"".join(body)}</svg>')
+            f'role="img" xmlns="http://www.w3.org/2000/svg"><title>Template {TEMPLATE_NO[r]}, radius {SYSTEMS[sys_key].fmt(r * SYSTEMS[sys_key].unit)}</title>{body}</svg>')
+
+
+# The printable area A4 and US Letter share with the PDF margins, less room for
+# a caption: every part of a large template fits on one page of either paper.
+PART_MAX_MM = (182.0, 227.0)
+PART_OVERLAP_MM = 10.0
+
+
+def template_fits(sys_key, r):
+    _, W, unit = template_drawing(sys_key, r)
+    side = W * (1.0 if unit == "mm" else 25.4)
+    return side <= PART_MAX_MM[0] and side <= PART_MAX_MM[1]
+
+
+def template_parts(sys_key, r):
+    """A template too big for one page, split into overlapping page-sized parts.
+    Returns (parts, key): parts = [(number, svg)], key = a small map of how
+    they go together."""
+    body, W, unit = template_drawing(sys_key, r)
+    to_mm = 1.0 if unit == "mm" else 25.4
+    mm = 1.0 / to_mm                                  # one millimetre in drawing units
+    ov = PART_OVERLAP_MM * mm
+    maxw, maxh = PART_MAX_MM[0] * mm, PART_MAX_MM[1] * mm
+    cols = max(1, math.ceil((W - ov) / (maxw - ov) - 1e-9))
+    rows = max(1, math.ceil((W - ov) / (maxh - ov) - 1e-9))
+    xs = [W * i / cols for i in range(cols + 1)]
+    ys = [W * j / rows for j in range(rows + 1)]
+    line, seam = tpl_strokes(unit)
+    fs = 3.4 * mm
+    no = TEMPLATE_NO[r]
+    n = cols * rows
+
+    def ticks(a, b, step=40.0):
+        """Positions of matching marks along a join from a to b."""
+        inner_a, inner_b = a + 12 * mm, b - 12 * mm
+        k = max(1, int((inner_b - inner_a) // (step * mm)) + 1)
+        return [inner_a + (inner_b - inner_a) * (t + 0.5) / k for t in range(k)]
+
+    parts = []
+    for j in range(rows):
+        for i in range(cols):
+            idx = j * cols + i + 1
+            x0, x1 = xs[i] - (ov if i else 0), xs[i + 1]
+            y0, y1 = ys[j] - (ov if j else 0), ys[j + 1]
+            assert x1 - x0 <= maxw + 1e-9 and y1 - y0 <= maxh + 1e-9, (sys_key, r, idx)
+            extra = []
+            if i:   # tape zone: the part on the left is laid over it
+                extra.append(f'<rect class="tplglue" x="{f(x0)}" y="{f(y0)}" width="{f(ov)}" height="{f(y1 - y0)}"/>')
+                extra.append(f'<path class="tplsa" style="{seam}" d="M{f(xs[i])},{f(y0)} V{f(y1)}"/>')
+                tx, ty = x0 + ov / 2, (max(y0, ys[j]) + y1) / 2
+                extra.append(f'<text class="tpltxt" x="{f(tx)}" y="{f(ty)}" font-size="{f(fs * 0.8)}" text-anchor="middle" '
+                             f'dominant-baseline="central" transform="rotate(-90 {f(tx)} {f(ty)})">part {idx - 1} goes on here</text>')
+                for t in ticks(max(y0, ys[j]), y1):
+                    extra.append(f'<path class="tpl" style="{line}" d="M{f(xs[i] - 3 * mm)},{f(t)} H{f(xs[i] + 3 * mm)}"/>')
+            if j:
+                extra.append(f'<rect class="tplglue" x="{f(x0)}" y="{f(y0)}" width="{f(x1 - x0)}" height="{f(ov)}"/>')
+                extra.append(f'<path class="tplsa" style="{seam}" d="M{f(x0)},{f(ys[j])} H{f(x1)}"/>')
+                extra.append(f'<text class="tpltxt" x="{f((max(x0, xs[i]) + x1) / 2)}" y="{f(y0 + ov / 2)}" font-size="{f(fs * 0.8)}" '
+                             f'text-anchor="middle" dominant-baseline="central">part {idx - cols} goes on here</text>')
+                for t in ticks(max(x0, xs[i]), x1):
+                    extra.append(f'<path class="tpl" style="{line}" d="M{f(t)},{f(ys[j] - 3 * mm)} V{f(ys[j] + 3 * mm)}"/>')
+            if i < cols - 1:   # this part is cut along its right edge and laid over the next
+                extra.append(f'<path class="tpl" style="{line}" d="M{f(x1)},{f(y0)} V{f(y1)}"/>')
+                extra.append(f'<text class="tpltxt" x="{f(x1 - 2 * mm)}" y="{f(max(y0, ys[j]) + 6 * mm)}" font-size="{f(fs)}" text-anchor="end">✂ cut</text>')
+                for t in ticks(max(y0, ys[j]), y1):
+                    extra.append(f'<path class="tpl" style="{line}" d="M{f(x1 - 3 * mm)},{f(t)} H{f(x1)}"/>')
+            if j < rows - 1:
+                extra.append(f'<path class="tpl" style="{line}" d="M{f(x0)},{f(y1)} H{f(x1)}"/>')
+                extra.append(f'<text class="tpltxt" x="{f(max(x0, xs[i]) + 2 * mm)}" y="{f(y1 - 2.5 * mm)}" font-size="{f(fs)}">✂ cut</text>')
+                for t in ticks(max(x0, xs[i]), x1):
+                    extra.append(f'<path class="tpl" style="{line}" d="M{f(t)},{f(y1 - 3 * mm)} V{f(y1)}"/>')
+            # the part's own label and where it sits in the whole
+            lx, ly = max(x0, xs[i]) + 8 * mm, y1 - 30 * mm
+            cell = 6 * mm
+            extra.append(f'<text class="tpltxt" x="{f(lx)}" y="{f(ly)}" font-size="{f(fs * 1.5)}" font-weight="700">Template {no}</text>')
+            extra.append(f'<text class="tpltxt" x="{f(lx)}" y="{f(ly + fs * 1.6)}" font-size="{f(fs)}">part {idx} of {n}</text>')
+            for jj in range(rows):
+                for ii in range(cols):
+                    cls = "tplmapon" if (ii, jj) == (i, j) else "tplmap"
+                    extra.append(f'<rect class="{cls}" style="{line}" x="{f(lx + ii * cell)}" y="{f(ly + fs * 2.6 + jj * cell)}" width="{f(cell)}" height="{f(cell)}"/>')
+            svg = (f'<svg class="tplsvg" viewBox="{f(x0)} {f(y0)} {f(x1 - x0)} {f(y1 - y0)}" width="{f(x1 - x0)}{unit}" '
+                   f'height="{f(y1 - y0)}{unit}" role="img" xmlns="http://www.w3.org/2000/svg">'
+                   f'<title>Template {no}, part {idx} of {n}</title>{body}{"".join(extra)}</svg>')
+            parts.append((idx, svg))
+    # a small map: the whole template with its parts numbered
+    k = 150 / W
+    key = [f'<rect class="stripbg" x="0" y="0" width="{f(W * k)}" height="{f(W * k)}"/>',
+           f'<g transform="scale({f(k)})"><path class="pen" vector-effect="non-scaling-stroke" '
+           f'd="{template_path(*_tpl_box(sys_key, r))}"/></g>']
+    for j in range(rows):
+        for i in range(cols):
+            key.append(f'<rect class="dim" x="{f(xs[i] * k)}" y="{f(ys[j] * k)}" width="{f((xs[i + 1] - xs[i]) * k)}" height="{f((ys[j + 1] - ys[j]) * k)}"/>')
+            key.append(f'<text class="mark" x="{f((xs[i] + xs[i + 1]) / 2 * k)}" y="{f((ys[j] + ys[j + 1]) / 2 * k)}">{j * cols + i + 1}</text>')
+    return parts, svg_wrap("".join(key), W * k, W * k, cls="tplkey", title=f"How the parts of template {no} go together")
+
+
+def _tpl_box(sys_key, r):
+    """Arguments for template_path() matching template_drawing()."""
+    sy = SYSTEMS[sys_key]
+    k = 10.0 if sys_key == "cm" else 1.0
+    m = 6.0 if sys_key == "cm" else 0.25
+    return m, m, sy.unit * k, sy.sa * k, r
+
+
+def test_square_mini(sys_key):
+    """A small true-size square to check the print scale on every template page."""
+    if sys_key == "cm":
+        return ('<svg class="tplsvg mini" viewBox="0 0 22 22" width="22mm" height="22mm" role="img" xmlns="http://www.w3.org/2000/svg">'
+                f'<title>2 cm test square</title><rect class="tpl" style="{tpl_strokes("mm")[0]}" x="1" y="1" width="20" height="20"/>'
+                '<text class="tpltxt" x="11" y="12.2" font-size="4" text-anchor="middle">2 cm</text></svg>')
+    return ('<svg class="tplsvg mini" viewBox="0 0 1.1 1.1" width="1.1in" height="1.1in" role="img" xmlns="http://www.w3.org/2000/svg">'
+            f'<title>1 inch test square</title><rect class="tpl" style="{tpl_strokes("in")[0]}" x=".05" y=".05" width="1" height="1"/>'
+            '<text class="tpltxt" x=".55" y=".6" font-size=".18" text-anchor="middle">1″</text></svg>')
 
 
 def test_square_svg(sys_key):
@@ -531,3 +648,70 @@ def quilting_svg(s=18):
             f'<path class="q-plan q-ditch" d="{ditch_path(s, pad, pad)}"/>'
             f'<rect class="outline" x="{pad}" y="{pad}" width="{NCOLS * s}" height="{NROWS * s}"/>')
     return svg_wrap(body, W, W, cls="dia", title="Quilting plan")
+
+
+# ---------------------------------------------------------------- binding
+def binding_join_svg():
+    """Joining the binding strips: sew across the corner, trim, press."""
+    w, P = 30, 236
+    out, caps = [], []
+    y = 18
+    x = 30                                   # panel 1: right sides together, sew across
+    out.append(f'<rect class="fN" x="{x}" y="{y + 44}" width="150" height="{w}"/>')
+    out.append(f'<rect class="fN" x="{x + 120}" y="{y}" width="{w}" height="118"/><rect class="wrongside" x="{x + 120}" y="{y}" width="{w}" height="118"/>')
+    out.append(f'<path class="stitch" d="M{x + 120},{y + 44} L{x + 150},{y + 44 + w}"/>')
+    caps.append((x + 85, "1  Sew across, right sides together"))
+    x += P                                   # panel 2: trimmed and pressed open
+    out.append(f'<rect class="fN" x="{x - 10}" y="{y + 44}" width="190" height="{w}"/>')
+    out.append(f'<path class="pen" d="M{x + 70},{y + 44 + w} L{x + 100},{y + 44}"/>')
+    out.append(f'<text class="dimtxt" x="{x + 85}" y="{y + 44 + w + 20}">seam pressed open</text>')
+    caps.append((x + 85, "2  Trim, press the seam open"))
+    x += P                                   # panel 3: pressed in half
+    out.append(f'<rect class="fN" x="{x - 10}" y="{y + 52}" width="190" height="{w / 2}"/>')
+    out.append(f'<text class="dimtxt" x="{x + 85}" y="{y + 44}">fold</text><text class="dimtxt" x="{x + 85}" y="{y + 52 + w / 2 + 18}">raw edges</text>')
+    caps.append((x + 85, "3  Press in half lengthwise"))
+    for cx, t in caps:
+        out.append(f'<text class="cap" x="{f(cx)}" y="{y + 150}">{t}</text>')
+    return svg_wrap("".join(out), x + 200, y + 162, cls="dia", title="Joining the binding strips")
+
+
+def binding_corner_svg():
+    """Mitring a binding corner, in three steps (top right corner shown)."""
+    w, sa, P = 22, 6, 236
+    out, caps = [], []
+    Y = 50                                   # the top edge of the quilt
+    for n in range(3):
+        px = 20 + n * P
+        left, X = px + 20, px + 150          # the quilt, and its corner
+        out.append(f'<rect class="stripbg" x="{left}" y="{Y}" width="{X - left}" height="120"/>')
+        if n == 0:
+            out.append(f'<rect class="fN" x="{left}" y="{Y}" width="{X - left + 34}" height="{w}"/>')
+            out.append(f'<path class="stitch" d="M{left},{Y + sa} H{X - sa}"/><circle class="pin" cx="{X - sa}" cy="{Y + sa}" r="3"/>')
+            caps.append((px + 95, "1  Stop one seam allowance short"))
+        elif n == 1:
+            out.append(f'<polygon class="fN" points="{left},{Y} {X},{Y} {X - w},{Y + w} {left},{Y + w}"/>')
+            out.append(f'<polygon class="fN" points="{X - w},{Y + w} {X},{Y} {X},{Y - 40} {X - w},{Y - 40}"/>')
+            out.append(f'<path class="edge" d="M{X - w},{Y + w} L{X},{Y}"/>')
+            out.append(f'<path class="stitch" d="M{left},{Y + sa} H{X - sa}"/>')
+            caps.append((px + 95, "2  Fold the strip up at 45°"))
+        else:
+            out.append(f'<rect class="fN" x="{left}" y="{Y}" width="{X - w - left}" height="{w}"/>')
+            out.append(f'<rect class="fN" x="{X - w}" y="{Y}" width="{w}" height="120"/>')
+            out.append(f'<path class="edge" d="M{X - w},{Y} H{X}"/>')
+            out.append(f'<path class="stitch" d="M{left},{Y + sa} H{X - sa} M{X - sa},{Y} V{Y + 120}"/>')
+            caps.append((px + 95, "3  Fold it down, sew from the edge"))
+    for cx, t in caps:
+        out.append(f'<text class="cap" x="{f(cx)}" y="{Y + 145}">{t}</text>')
+    return svg_wrap("".join(out), 20 + 3 * P, Y + 158, cls="dia", title="Mitring the binding at a corner")
+
+
+# --------------------------------------------------------------- colouring
+def colouring_svg(s=26):
+    """Line drawing of every piece, to try other colours."""
+    pad = 8
+    W = NCOLS * s + 2 * pad
+    body = (f'<rect x="0" y="0" width="{f(W)}" height="{f(W)}" fill="#fff"/>'
+            f'<g class="colour-me">{whole(s, pad, pad)}</g>'
+            f'<rect x="{pad}" y="{pad}" width="{NCOLS * s}" height="{NROWS * s}" fill="none" stroke="#222" stroke-width="1.6"/>')
+    return svg_wrap(body, W, W, cls="dia colouring", title="Colouring sheet")
+

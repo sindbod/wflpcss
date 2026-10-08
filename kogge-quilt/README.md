@@ -33,7 +33,7 @@ design and is not affiliated with the artist.
 | B Oak brown | 0.4 m | ½ yd | Hull, mast, yard, rudder |
 | T Teal | 0.5 m | ⅝ yd | Waves |
 | A Aqua | 1 fat quarter | 1 fat quarter | Wave crests |
-| N Baltic navy | 1.1 m | 1⅜ yd | Deep sea, gulls, binding |
+| N Baltic navy | 1.2 m | 1⅜ yd | Deep sea, gulls, binding |
 
 Plus fusible web, backing, batting and a hanging sleeve; the pattern lists the sizes.
 
@@ -44,15 +44,26 @@ Plus fusible web, backing, batting and a hanging sleeve; the pattern lists the s
 | File | What it is |
 |---|---|
 | `index.html` | The full pattern. Open it in a browser and switch between cm and inch and between three colourways (Hanse, North Sea, Amber). |
-| `kogge-pattern-cm.pdf`, `kogge-pattern-in.pdf` | Printable A4 versions of the pattern (metric and imperial). The templates print at true size. |
+| `kogge-pattern-cm.pdf`, `kogge-pattern-in.pdf` | The printable pattern: metric on A4, imperial on US Letter, with bookmarks. Print at 100 %: the templates are true size. |
 | `design/kogge.py` | The design: fabrics and the picture, drawn with four modules on the grid. |
 | `tools/` | The generator: piecing solver, cutting planner, diagrams, page and PDF builder, validator. |
 | `VALIDATION.md` | Report of the virtual sewing test (see below). |
 
-The pattern covers materials, a strip-by-strip cutting plan for each fabric, the triangle
-units, the quarter-circle units with true-size templates, the top in 7 horizontal sections
-(each with a size check, its pin points and the arc ends to match), joining, quilting
-suggestions, binding, a hanging sleeve and a layout chart with every piece code.
+The pattern (version 1.1) covers:
+
+- materials, including backing yardage and how to piece it, and a tools list;
+- abbreviations and read-first notes, and a six-square seam test with a tolerance;
+- a strip-by-strip cutting plan and piece list for each fabric;
+- the triangle units, with how to trim them;
+- the quarter-circle units: a tracing list (which template, how many, which fabric) and an
+  eight-step fusible appliqué method;
+- the top in 7 horizontal sections, with a size to check for every unit, column and
+  section, the pin points and the arc ends to match;
+- joining, a full quilting plan, binding with diagrams for joining strips and mitring
+  corners, and a hanging sleeve;
+- five numbered true-size templates with test squares; the two largest print in parts
+  that tape together;
+- a layout chart with every piece code and a colouring sheet for trying other colours.
 
 ## How it is generated
 
@@ -88,7 +99,7 @@ page tells you to check is right. It then repeats the job 400 times with realist
 appliqué and sewing errors. Results are in [`VALIDATION.md`](VALIDATION.md). In short:
 
 - Sewn exactly, all 119 joins meet, all 30 outlines that cross a seam line up (10 of them
-  arcs), and all 8 size checks on the page are correct.
+  arcs), and all 38 size checks on the page are correct, in cm and in inches.
 - With careful sewing (seam allowance right on average, ±0.5 mm), the most you ease between
   two pins is under 1 cm over a full section and 6 mm over 37 cm inside one.
 - The real risk is a seam that is consistently off: the sky section has many more seams than

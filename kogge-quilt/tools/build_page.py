@@ -13,15 +13,19 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from figures import (assembly_svg, chart_svg, hero_svg, hst_method_svg, map_svg, module_key_svg, qc_method_svg,
-                     qc_unit_svg, quilting_svg, section_svg, strip_svgs, template_sheet_svg, test_square_svg,
+from figures import (assembly_svg, binding_corner_svg, binding_join_svg, chart_svg, colouring_svg, hero_svg,
+                     hst_method_svg, map_svg, module_key_svg, qc_method_svg, qc_unit_svg, quilting_svg, section_svg,
+                     strip_svgs, template_fits, template_parts, template_sheet_svg, test_square_mini, test_square_svg,
                      thumb_svg)
 from modular import H, V, Leaf, leaves
-from plan import (FABRICS, FQ, LONG, NCOLS, NROWS, ORDER, PARENT, PIECES, PLANS, ROOT, SECTIONS, SYSTEMS, UNIT_NAMES, amount,
-                  arc_points, disc_radii, fusible_area, hst_types, qc_name, qc_types, sanity, section_pins, solid_table)
+from plan import (BINDING_FABRIC, FABRICS, FQ, LONG, NCOLS, NROWS, ORDER, PARENT, PIECES, PLANS, ROOT, SECTIONS, SYSTEMS,
+                  TEMPLATE_NO, TEMPLATES, UNIT_NAMES, amount, arc_points, backing, binding_need, disc_radii, fusible_area,
+                  hst_types, qc_name, qc_types, sanity, section_pins, solid_table)
 from svg import CORNER_WORDS, hst_icon, qc_icon
 
 CM, IN = SYSTEMS["cm"], SYSTEMS["in"]
+VERSION = "1.1"
+VERSION_DATE = "October 2026"
 
 
 # ---------------------------------------------------------------- helpers
@@ -70,7 +74,7 @@ def seq(tokens):
 
 def nested_steps(t):
     """Steps to build part t of a section: nested units first, in the order
-    they are made. Returns [(unit name or None for t itself, direction, tokens)]."""
+    they are made. Returns [(unit name or None for t itself, direction, tokens, node)]."""
     lines = []
 
     def visit(n, top=False):
@@ -79,11 +83,16 @@ def nested_steps(t):
         toks = [visit(c) for c in n.children]
         direction = "top to bottom" if n.orient == H else "left to right"
         name = None if top else UNIT_NAMES[id(n)].split()[-1]
-        lines.append((name, direction, toks))
+        lines.append((name, direction, toks, n))
         return None if top else unit_chip(name)
 
     visit(t, top=True)
     return lines
+
+
+def measures(node, key):
+    """A size check; data-node lets tools/validate.py compare it with the simulation."""
+    return f'<span class="meas" data-node="{key}">measures {cut_dims(node.rect.w, node.rect.h)}</span>'
 
 
 def steps_html(sec):
@@ -91,19 +100,21 @@ def steps_html(sec):
     piece, then join everything left to right (or top to bottom)."""
     part = "Column" if sec.orient == V else "Row"
     final_dir = "left to right" if sec.orient == V else "top to bottom"
+    no = SECTIONS.index(sec) + 1
     blocks, toks = [], []
     for k, child in enumerate(sec.children, 1):
         if isinstance(child, Leaf):
             toks.append(chip(child))
             continue
         items = []
-        for name, direction, t in nested_steps(child):
+        for name, direction, t, node in nested_steps(child):
             who = f"Unit {unit_chip(name)}" if name else f"{part} {unit_chip(str(k))}"
-            items.append(f'<li><span class="lead">{who}, {direction}:</span>{seq(t)}</li>')
+            items.append(f'<li><span class="lead">{who}, {direction}:</span>{seq(t)}{measures(node, f"section {no}, {UNIT_NAMES[id(node)]}")}</li>')
         blocks.append(f'<li class="grp"><ol class="sub">{"".join(items)}</ol></li>')
         toks.append(unit_chip(str(k)))
     lead = f"Join the {part.lower()}s {final_dir}:" if blocks else f"Join {final_dir}:"
-    blocks.append(f'<li class="grp final"><span class="lead">{lead}</span>{seq(toks)}</li>')
+    blocks.append(f'<li class="grp final"><span class="lead">{lead}</span>{seq(toks)}'
+                  f'<span class="meas">and press the seams open</span></li>')
     return '<ol class="joins">' + "".join(blocks) + "</ol>"
 
 
@@ -194,9 +205,13 @@ def materials():
                     f'<td class="num">{amt}</td><td>{role[0].upper() + role[1:]}</td></tr>')
     web_cm = fusible_area(CM) / 45 / 100
     web_in = fusible_area(IN) / 17 / 36
+    bc, bi = backing(CM), backing(IN)
     extra = [
-        ("Backing", m("135 × 135 cm", "54 × 54″"), "Piece it if your fabric is narrower"),
-        ("Batting", m("135 × 135 cm", "54 × 54″"), "Thin cotton keeps a wall quilt flat"),
+        ("Backing", m(f"{bc['two']} <small>or {bc['wide']} of extra-wide backing</small>",
+                      f"{bi['two']} <small>or {bi['wide']} of extra-wide backing</small>"),
+         "Cut two lengths of " + m(CM.fmt(bc["piece"]), IN.fmt(bi["piece"])) + ", join them side by side and trim to "
+         + m(CM.dims(bc["side"], bc["side"]), IN.dims(bi["side"], bi["side"]))),
+        ("Batting", m(CM.dims(bc["side"], bc["side"]), IN.dims(bi["side"], bi["side"])), "Thin cotton keeps a wall quilt flat"),
         ("Fusible web", m(f"{math.ceil(web_cm * 10) / 10:.1f} m, 45 cm wide".replace(".", "."), f"{math.ceil(web_in * 8) / 8:g} yd, 17″ wide"),
          "Paper-backed, for the quarter circles"),
         ("Hanging sleeve", m("22 × 115 cm", "8½ × 46″"), "Leftover backing works"),
@@ -227,7 +242,7 @@ def piece_list(fab):
             if f_ == fab:
                 out.append(f'<tr><td><span class="chip plain">{q["label"]}</span></td>'
                            f'<td class="num">{m("R " + CM.fmt(r_ * CM.unit), "R " + IN.fmt(r_ * IN.unit))}</td>'
-                           f'<td class="num">{q["count"]}</td><td class="use">quarter circles, {qc_name(q).lower()}</td></tr>')
+                           f'<td class="num">{q["count"]}</td><td class="use">template {TEMPLATE_NO[r_]}, {qc_name(q).lower()}</td></tr>')
     return ('<table class="pieces"><thead><tr><th>Code</th><th>Size</th><th>Qty</th><th>Used in</th></tr></thead>'
             f'<tbody>{"".join(out)}</tbody></table>')
 
@@ -241,13 +256,13 @@ def strip_cards(sys_key, fab):
     for n, st, svg in strip_svgs(sys_key, fab):
         groups = []
         for c in st["cuts"]:
-            key = (c.kind, c.label, c.b, c.trimmed, c.a, c.extra)
+            key = (c.kind, c.label, c.b, c.trimmed, c.a, c.extra, c.r)
             if groups and groups[-1][0] == key:
                 groups[-1][1] += 1
             else:
                 groups.append([key, 1])
         names = []
-        for (kind, label, b, trimmed, a, extra), k in groups:
+        for (kind, label, b, trimmed, a, extra, r), k in groups:
             if kind == "piece":
                 t = (f"{k} × " if k > 1 else "") + f"{label} at {sy.fmt(b)}"
                 if extra:
@@ -257,13 +272,13 @@ def strip_cards(sys_key, fab):
             elif kind == "hst":
                 t = f"{k} square{'s' if k > 1 else ''} {sy.dims(a, b, unit=False)} for {label}"
             else:
-                t = f"{k} square{'s' if k > 1 else ''} {sy.dims(a, b, unit=False)} for {label} quarter circles"
+                t = f"{k} square{'s' if k > 1 else ''} {sy.dims(a, b, unit=False)} for template {TEMPLATE_NO[r]} ({label})"
             if trimmed and kind == "piece":
                 t += f", trimmed to {sy.fmt(a)} wide"
             names.append(t)
         cap = f'{sy.fmt(st["width"])} strip → ' + " · ".join(names)
         cards.append(f'<figure class="stripfig"><div class="stripsvg">{svg}</div><figcaption><b>{n}</b>{cap}</figcaption></figure>')
-    return "".join(cards)
+    return cards
 
 
 def strip_summary(sys_key, fab):
@@ -282,29 +297,34 @@ def cutting_block(fab):
     name, role, _ = FABRICS[fab]
     a_cm = amount("cm", fab)[0]
     a_in = amount("in", fab)[0]
+    cards_cm, cards_in = strip_cards("cm", fab), strip_cards("in", fab)
     fq_note = ""
     if a_cm.startswith("1 fat"):
         fq_note = f'<p class="prose small">Cutting from a fat quarter: cut the same strips along its long side instead of across the width of fabric.</p>'
     return f"""
     <article class="fabric" id="cut-{fab}">
-      <header class="fabric-head"><span class="sw-dot big sw{fab}"></span><div><h3>{name} <span class="code">{fab}</span></h3><p>{m(a_cm, a_in)} · {role}</p></div></header>
-      <p class="cutsum"><span class="cm">Cut {strip_summary("cm", fab)}.</span><span class="in">Cut {strip_summary("in", fab)}.</span></p>
-      {fq_note}
-      <div class="strips cm">{strip_cards("cm", fab)}</div>
-      <div class="strips in">{strip_cards("in", fab)}</div>
-      <details class="plist" open><summary>Piece list for {name.lower()}</summary><div class="tablewrap">{piece_list(fab)}</div></details>
+      <div class="fabric-start">
+        <header class="fabric-head"><span class="sw-dot big sw{fab}"></span><div><h3>{name} <span class="code">{fab}</span></h3><p>{m(a_cm, a_in)} · {role}</p></div></header>
+        <p class="cutsum"><span class="cm">Cut {strip_summary("cm", fab)}.</span><span class="in">Cut {strip_summary("in", fab)}.</span></p>
+        {fq_note}
+        <div class="strips cm">{cards_cm[0]}</div>
+        <div class="strips in">{cards_in[0]}</div>
+      </div>
+      <div class="strips cm more">{"".join(cards_cm[1:])}</div>
+      <div class="strips in more">{"".join(cards_in[1:])}</div>
+      <details class="plist" open><summary>Piece list for {fabric_lc(fab)}</summary><div class="tablewrap">{piece_list(fab)}</div></details>
     </article>"""
 
 
 def unit_cards():
     cards = []
     for q in qc_types():
-        discs = ", ".join(f"{fabric_lc(f_)} {m('R ' + CM.fmt(r * CM.unit), 'R ' + IN.fmt(r * IN.unit))}" for r, f_ in q["discs"])
+        discs = ", ".join(f"template {TEMPLATE_NO[r]} in {fabric_lc(f_)}" for r, f_ in q["discs"])
         cards.append(f"""
       <article class="card">
         <div class="card-fig">{qc_unit_svg(q)}</div>
         <h3>{q["label"]} · {qc_name(q)} <span class="kind">make {q["count"]} · {q["n"]} × {q["n"]} grid unit{"s" if q["n"] > 1 else ""}</span></h3>
-        <p class="need">Background: {fabric_lc(q["bg"])} square {cut_dims(q["n"], q["n"])}. Quarter circles, largest first: {discs}.</p>
+        <p class="need">Background: {fabric_lc(q["bg"])} square {cut_dims(q["n"], q["n"])}. Quarter circles, largest first: {discs}. The finished unit still measures {cut_dims(q["n"], q["n"])}.</p>
       </article>""")
     return "".join(cards)
 
@@ -384,30 +404,61 @@ def section_cards():
         cards.append(f"""
       <article class="sec" id="s{i}">
         <div class="sec-head"><span class="secno">{i}</span><div><h3>Section {i}</h3><p>{SECTION_NOTES.get(i, "")}</p></div>
-          <p class="check">Measures {cut_dims(r.w, r.h)}</p>{thumb_svg(i)}</div>
+          <p class="check" data-node="section {i}">Measures {cut_dims(r.w, r.h)}</p>{thumb_svg(i)}</div>
         <div class="sec-fig">{section_svg(i)}</div>
         {how}
       </article>""")
     return "".join(cards)
 
 
+def tracing_list(t):
+    """'8 sailcloth (Q1), 4 Baltic navy (Q2), …' for one template."""
+    return ", ".join(f"{c} {fabric_lc(f_)} ({lab})" for lab, f_, c in t["uses"])
+
+
+def tracing_table():
+    rows = []
+    for t in TEMPLATES:
+        r = t["r"]
+        rows.append(f'<tr><th scope="row">Template {t["no"]}</th>'
+                    f'<td class="num">{m("R " + CM.fmt(r * CM.unit), "R " + IN.fmt(r * IN.unit))}</td>'
+                    f'<td class="num">{t["total"]}</td><td class="use">{tracing_list(t)}</td></tr>')
+    return ('<table class="mat tracing"><thead><tr><th>Template</th><th>Radius</th><th>Trace</th><th>Fabric (unit)</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table>')
+
+
 def templates_block():
-    small = [r for r in disc_radii() if r <= 3]
-    large = [r for r in disc_radii() if r > 3]
-    used = defaultdict(list)
-    for q in qc_types():
-        for r, f_ in q["discs"]:
-            used[r].append(f"{q['label']} {fabric_lc(f_)}")
-    figs_cm = "".join(f'<figure class="tplfig">{template_sheet_svg("cm", r)}<figcaption>R {CM.fmt(r * CM.unit)} · {", ".join(used[r])}</figcaption></figure>' for r in small)
-    figs_in = "".join(f'<figure class="tplfig">{template_sheet_svg("in", r)}<figcaption>R {IN.fmt(r * IN.unit)} · {", ".join(used[r])}</figcaption></figure>' for r in small)
-    big = "; ".join(f"{m('R ' + CM.fmt(r * CM.unit), 'R ' + IN.fmt(r * IN.unit))} for {', '.join(used[r])}" for r in large)
+    out = {}
+    for key in ("cm", "in"):
+        sy = SYSTEMS[key]
+        square = "5 × 5 cm" if key == "cm" else "2 × 2″"
+        mini = "2 cm" if key == "cm" else "1″"
+        small = [f'<figure class="tplfig"><div>{test_square_svg(key)}</div><figcaption>Test square: must measure {square}</figcaption></figure>']
+        big = []
+        for t in TEMPLATES:
+            r = t["r"]
+            head = f'<b>Template {t["no"]}</b> · R {sy.fmt(r * sy.unit)} · trace {t["total"]}: {tracing_list(t)}'
+            if template_fits(key, r):
+                small.append(f'<figure class="tplfig"><div>{template_sheet_svg(key, r)}</div><figcaption>{head}</figcaption></figure>')
+                continue
+            parts, keymap = template_parts(key, r)
+            pieces = "".join(
+                f'<figure class="tplfig tplpart"><div>{svg}</div><figcaption>{test_square_mini(key)}'
+                f'<span><b>Template {t["no"]}, part {i} of {len(parts)}.</b> Check that the square measures {mini} before you cut.'
+                + (f' Template {t["no"]} · R {sy.fmt(r * sy.unit)} · trace {t["total"]}: {tracing_list(t)}.' if i == 1 else "")
+                + '</span></figcaption></figure>'
+                for i, svg in parts)
+            big.append(f'<div class="tplbig"><figure class="tplkeyfig">{keymap}<figcaption>{head}. '
+                       f'Printed in {len(parts)} parts that tape together as numbered.</figcaption></figure>'
+                       f'<div class="tpls">{pieces}</div></div>')
+        out[key] = f'<div class="{key}"><div class="tpls">{"".join(small)}</div>{"".join(big)}</div>'
     return f"""
   <div class="prose">
-    <p>Print this page at 100 % (“actual size”) and check the test square with a ruler before you trace. Each template is a quarter circle around the corner of the finished unit; its straight edges include the seam allowance, so they go on the raw edges of the background square. The dashed lines are the seam lines.</p>
-    <p>The two largest arcs do not fit on a sheet: {big}. Draw them with a string compass: pin a strip of paper to the fusible web at the corner point {m("0.75 cm", "¼″")} in from both edges, mark the radius on the strip, and swing a pencil through the hole.</p>
+    <p>Print these pages at 100 % (“actual size”, not “fit to page”) and measure the test square before you trace. Each template is a quarter circle around the corner of the finished unit. Its straight edges include the seam allowance and go on the raw edges of the background square; the dashed lines are the seam lines.</p>
+    <p>Templates 4 and 5 are too big for one page and come in parts. Cut each part along its edges marked ✂, lay it over the grey strip of the next part so the cut edge sits on the dashed line and the short marks meet, and tape. Then cut the template out along its outline. If you prefer, draw these two arcs with a string compass instead: tie a pencil to a strip of card, pin the card at the corner dot and swing the pencil.</p>
   </div>
-  <div class="tpls cm"><figure class="tplfig">{test_square_svg("cm")}<figcaption>Test square: must measure 5 × 5 cm</figcaption></figure>{figs_cm}</div>
-  <div class="tpls in"><figure class="tplfig">{test_square_svg("in")}<figcaption>Test square: must measure 2 × 2″</figcaption></figure>{figs_in}</div>"""
+  {out["cm"]}
+  {out["in"]}"""
 
 
 # ------------------------------------------------------------------ CSS
@@ -549,6 +600,24 @@ svg.tplsvg { display: block; background: #fff; }
 .tpls { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; margin-top: 18px; }
 .tplfig { background: #fff; color: #333; padding: 10px; border-radius: 8px; border: 1px solid var(--line); max-width: 100%; overflow-x: auto; }
 .tplfig figcaption { color: #555; margin-top: 6px; }
+.tplpart figcaption { display: flex; align-items: center; gap: 12px; }
+.tplglue { fill: #e6e6e6; }
+.tplmap { fill: none; stroke: #111; }
+.tplmapon { fill: #111; stroke: #111; }
+.tplbig { margin-top: 26px; }
+.tplkeyfig { display: flex; align-items: center; gap: 16px; margin-bottom: 4px; max-width: 70ch; }
+.tplkeyfig svg { flex: none; }
+.tplkeyfig figcaption { font-size: .92rem; color: var(--ink); }
+svg.tplsvg.mini { flex: none; }
+ol.steps2 { columns: 2 320px; column-gap: 44px; max-width: none; }
+ol.steps2 li { break-inside: avoid; }
+.meas { color: var(--muted); font-size: .84rem; margin-left: 4px; white-space: nowrap; }
+.bindfigs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; margin-top: 22px; }
+.colouring { background: #fff; border-radius: 4px; }
+.colour-me rect, .colour-me polygon, .colour-me path { fill: #fff !important; stroke: #222; stroke-width: .7; }
+.colourpanel svg { max-width: 640px; }
+footer .version { margin-top: 6px; font-size: .85rem; }
+table.tracing td.use { min-width: 22ch; }
 
 /* chips */
 .chip { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 2.2em; height: 1.65em; padding: 0 .45em; border-radius: 4px; font: 600 .8rem/1 var(--mono); vertical-align: middle; white-space: nowrap; box-shadow: inset 0 0 0 1px var(--edge); }
@@ -595,6 +664,10 @@ ol.sub li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
 .sw-dot.big { width: 34px; height: 34px; margin: 0; flex: none; }
 .cutsum { font-weight: 600; max-width: 70ch; }
 .strips { display: grid; gap: 10px; background: var(--mat); border-radius: 12px; padding: clamp(12px, 2vw, 20px); overflow-x: auto; }
+.fabric-start .strips { border-radius: 12px 12px 0 0; padding-bottom: 5px; }
+.strips.more { border-radius: 0 0 12px 12px; padding-top: 5px; }
+.strips.more:empty { display: none; }
+.fabric-start .strips:has(+ .strips.more:empty), .fabric-start:has(~ .strips.more:empty) .strips { border-radius: 12px; }
 .stripfig { display: grid; gap: 4px; }
 .stripsvg svg { min-width: 560px; width: 100%; height: auto; display: block; }
 .stripfig figcaption { font-size: .86rem; color: var(--muted); }
@@ -643,11 +716,18 @@ footer p { max-width: 70ch; }
   h1 { font-size: 48pt; }
   .lede { max-width: none; margin-bottom: 14px; }
   .facts { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 10px 20px; padding-top: 12px; }
-  .fabric + .fabric { break-before: page; }
+  .fabric-head, .cutsum, details.plist > summary { break-after: avoid; }
+  .fabric { margin-top: 8mm; }
+  .fabric-start { break-inside: avoid; }
   .blocks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
   .card { padding: 12px; }
   .chartpanel svg { min-width: 0 !important; max-width: 150mm; }
   .sec, .card, .stripfig, figure, tr, .conv li, .note, .tplfig { break-inside: avoid; }
+  .tplpart { break-before: page; }
+  .tplpart figcaption { margin-top: 4mm; }
+  .colourpanel svg { max-width: 150mm; }
+  .tplkeyfig { display: none !important; }
+  footer { break-before: avoid; }
   .sec-fig svg, .stripsvg svg { min-width: 0 !important; }
   .panel, .strips, .sec-fig, .card-fig { background-image: none; }
   details.plist > summary { list-style: none; }
@@ -694,12 +774,14 @@ def page_body():
     hst = hst_types()
     toc = [("design", "Design"), ("materials", "Materials"), ("cutting", "Cutting"), ("triangles", "Triangles"),
            ("circles", "Quarter circles"), ("sections", "Sections"), ("assembly", "Assembly"),
-           ("finishing", "Finishing"), ("templates", "Templates"), ("chart", "Chart")]
+           ("finishing", "Finishing"), ("templates", "Templates"), ("chart", "Chart"), ("colouring", "Colouring")]
     toc_html = "".join(f'<a href="#{a}">{b}</a>' for a, b in toc)
     hst_lines = "".join(f"<li><b>{t['label']}</b>, {fabric_lc(t['pair'][0])} with {fabric_lc(t['pair'][1])}: "
                         f"make {t['count']} from {math.ceil(t['count'] / 2)} pair{'s' if math.ceil(t['count'] / 2) > 1 else ''} of squares"
                         f"{' (one spare)' if t['count'] % 2 else ''}.</li>" for t in hst)
     plain = [i for i, s in enumerate(SECTIONS, 1) if all(isinstance(c, Leaf) and c.kind == "solid" for c in leaves(s))]
+    n_bind = sum(1 for st in PLANS["cm"][BINDING_FABRIC]["strips"] if st["cuts"][0].kind == "binding")
+    n_bind_in = sum(1 for st in PLANS["in"][BINDING_FABRIC]["strips"] if st["cuts"][0].kind == "binding")
     top_unf = cut_dims(NCOLS, NROWS)
     return f"""
 <header class="bar"><div class="wrap bar-in">
@@ -744,13 +826,16 @@ def page_body():
   <div class="part-head"><span class="step">Materials</span><h2>What you need</h2></div>
   <div class="tablewrap">{materials()}</div>
   <p class="note"><b>Fabric choice.</b> Solids or tone-on-tone prints keep the shapes crisp. Check that the sky, the sail cloth and the aqua read clearly apart, and that the navy is the darkest fabric.</p>
-  <p class="prose">Tools: rotary cutter, mat and long ruler, a square ruler of at least {m("6.5 cm", "6½″")}, an iron and pressing cloth, a pencil, and a compass or a strip of card for the two largest arcs.</p>
+  <p class="prose"><b>Tools:</b> rotary cutter, cutting mat and a long ruler; a square ruler of {m("15 cm", "6½″")} or more for trimming the triangle units; small sharp scissors for the appliqué; an iron, a pressing cloth and an appliqué pressing sheet or baking paper; a pencil; clear tape for joining template parts; a walking foot for straight-line quilting and an open-toe foot for stitching the arcs.</p>
 </section>
 
 <section class="part" id="before">
   <div class="part-head"><span class="step">Before you begin</span><h2>How this pattern works</h2></div>
   <ul class="conv">
-    <li><b>Seam allowance</b>All sizes include {m("0.75 cm", "¼″")} seams. Sew six {m("6.5 cm", "2½″")} scrap squares into a row: it must be {m("31.5 cm", "12½″")} long, give or take {m("2 mm", "1/16″")}. If it is shorter your seams are too wide, if longer too narrow: adjust and sew a new row. It matters: with every seam {m("1 mm", "1/32″")} too wide, section 1 comes out {m(CM.fmt(SEAM_TEST["cm"]), IN.fmt(SEAM_TEST["in"]))} narrower than the hull below it.</li>
+    <li><b>Read first</b>Read the whole pattern before you cut. Cut every fabric as its cutting plan shows and label each stack with its code as you go.</li>
+    <li><b>Abbreviations</b>WOF: width of fabric, from selvage to selvage ({m("105 cm", "40″")} usable assumed). RST: right sides together. HST: half-square triangle. FQ: fat quarter ({m(FQ["cm"][2], FQ["in"][2])}).</li>
+    <li><b>Prewashing</b>Optional. The fabric amounts allow for 5 % shrinkage.</li>
+    <li><b>Seam allowance</b>Sew all seams right sides together. All sizes include {m("0.75 cm", "¼″")} seams. Sew six {m("6.5 cm", "2½″")} scrap squares into a row: it must be {m("31.5 cm", "12½″")} long, give or take {m("2 mm", "1/16″")}. If it is shorter your seams are too wide, if longer too narrow: adjust and sew a new row. It matters: with every seam {m("1 mm", "1/32″")} too wide, section 1 comes out {m(CM.fmt(SEAM_TEST["cm"]), IN.fmt(SEAM_TEST["in"]))} narrower than the hull below it.</li>
     <li><b>Grid</b>One grid unit is {m("5 cm", "2″")} finished. Every piece is a whole number of units, so every seam lines up with the grid.</li>
     <li><b>Piece codes</b>The letter is the fabric (S sky, U sun gold, R red, W sail cloth, C copper, B brown, T teal, A aqua, N navy), the number the size. H are triangle units, Q quarter-circle units.</li>
     <li><b>Appliqué</b>Quarter circles are fused to their background squares and stitched before any piecing. Their straight edges disappear into the seams; only the arcs are stitched.</li>
@@ -773,7 +858,7 @@ def page_body():
     <ol class="prose">
       <li>Draw a diagonal on the wrong side of each lighter {m("8 cm", "3″")} square and place it right sides together on its darker partner.</li>
       <li>Sew {m("0.75 cm", "¼″")} from the line on both sides, cut on the line and press toward the darker fabric.</li>
-      <li>Trim each unit to {m("6.5 × 6.5 cm", "2½ × 2½″")} with the seam running exactly corner to corner.</li>
+      <li>Trim each unit to {m("6.5 × 6.5 cm", "2½ × 2½″")} with the seam running exactly corner to corner: lay the 45° line of the square ruler on the seam, trim two sides, turn the unit and trim the other two.</li>
     </ol>
     <ul class="prose">{hst_lines}</ul>
   </div>
@@ -781,17 +866,20 @@ def page_body():
 
 <section class="part" id="circles">
   <div class="part-head"><span class="step">Step 2</span><h2>Make the quarter-circle units</h2>
-    <p class="prose">{sum(q["count"] for q in qc_types())} units in {len(qc_types())} kinds. Every unit is a background square with one or more quarter discs fused into a corner. The discs are traced from the templates at the end of the pattern.</p></div>
+    <p class="prose">{sum(q["count"] for q in qc_types())} units in {len(qc_types())} kinds. Every unit is a background square with one or more quarter discs fused into a corner. The discs are traced from {len(TEMPLATES)} templates at the end of the pattern; this list says how many of each to trace, and for which fabric.</p></div>
+  <div class="tablewrap">{tracing_table()}</div>
   <figure class="panel"><div class="cm">{qc_method_svg("cm")}</div><div class="in">{qc_method_svg("in")}</div></figure>
-  <div class="cols" style="margin-top:22px">
-    <ol class="prose">
-      <li>Trace each quarter circle onto the paper side of the fusible web. Mark the corner point on every tracing.</li>
-      <li>Iron the web onto the wrong side of the fabric squares cut for the discs and cut out on the line.</li>
-      <li>Peel the paper and lay the disc into the corner of its background square with both straight edges on the raw edges. Fuse.</li>
-      <li>For rings, fuse the next smaller disc into the same corner on top, then the next.</li>
-      <li>Stitch every arc 2 mm inside its edge with a straight stitch or a narrow zigzag, in matching thread. Leave the straight edges: the seams will hold them.</li>
+  <div style="margin-top:22px">
+    <ol class="prose steps2">
+      <li><b>Trace.</b> Lay the fusible web paper side up over a template and trace it as many times as the list says, about {m("1 cm", "⅜″")} apart. Mark the corner dot and write the unit code beside each tracing. Quarter circles are symmetrical, so they never need reversing.</li>
+      <li><b>Rough-cut.</b> Cut each tracing out about {m("5 mm", "¼″")} outside the line. On templates 3 to 5, also cut away the middle, leaving a ring of web about {m("1.5 cm", "⅝″")} wide inside the line, so the sun, bow and stern stay soft.</li>
+      <li><b>Fuse.</b> Iron each tracing, paper side up, onto the wrong side of its fabric square, with its straight edges along two edges of the square. Follow the instructions of your web.</li>
+      <li><b>Cut.</b> Cut along the curved line with small sharp scissors. With the paper still on, the fabric cuts like card.</li>
+      <li><b>Place.</b> Peel off the paper. Lay the disc right side up in the corner of its background square, as the unit picture shows: corner dot on the corner, both straight edges on the raw edges. Fuse with a pressing cloth.</li>
+      <li><b>Rings.</b> Fuse the next smaller disc into the same corner on top of it, then the next.</li>
+      <li><b>Stitch.</b> Stitch along every arc about {m("2 mm", "1/16″")} inside its edge in matching thread, with an open-toe foot: a straight stitch, a narrow zigzag ({m("1.5 mm", "1/16″")} wide and long) or a blanket stitch. Zigzag and blanket stitch keep raw edges tidiest in the wash. Leave the straight edges: the seams hold them.</li>
+      <li><b>Check.</b> Press from the back. Trim anything that overhangs the square; the unit still measures its cut size.</li>
     </ol>
-    <p class="note"><b>Keep it soft.</b> Where three discs are stacked (sun, bow and stern), you may cut away the inside of the lower layers from the back, leaving about {m("1 cm", "⅜″")} under each arc.</p>
   </div>
   <div class="blocks" style="margin-top:22px">{unit_cards()}</div>
 </section>
@@ -817,7 +905,7 @@ def page_body():
     <ol class="prose">
       <li>Join sections {plain[0] if plain else 4}{" and " + str(plain[1]) if len(plain) > 1 else ""} first: sew each pair of strips end to end and trim the band to the width of section 3.</li>
       <li>Join sections 1 to {len(SECTIONS)} from top to bottom. Pin at the ends and at every seam that meets a seam across the join, then ease in any difference between pins.</li>
-      <li>The quilt top measures {top_unf}. Stay-stitch around the edge about {m("0.3 cm", "⅛″")} from the raw edge.</li>
+      <li>The quilt top <span data-node="quilt top">measures {top_unf}</span>. Stay-stitch around the edge about {m("0.3 cm", "⅛″")} from the raw edge.</li>
     </ol>
   </div>
 </section>
@@ -840,13 +928,18 @@ def page_body():
       <h3 style="margin-top:22px">Binding and sleeve</h3>
       <ol>
         <li>Trim batting and backing even with the top.</li>
-        <li>Join the navy binding strips with diagonal seams and press in half lengthwise.</li>
-        <li>Hem the sleeve ends, fold it lengthwise and baste it to the top edge of the back so the binding seam catches it.</li>
-        <li>Sew the binding on with a {m("0.75 cm", "¼″")} seam, mitring the corners, and hand-stitch it to the back. Hand-stitch the lower edge of the sleeve.</li>
+        <li>Join the {n_bind} {fabric_lc(BINDING_FABRIC)} binding strips ({m(CM.fmt(CM.binding_w), IN.fmt(IN.binding_w))} × WOF) end to end with diagonal seams into one strip about {m(CM.fmt(n_bind * CM.wof), IN.fmt(n_bind_in * IN.wof))} long; you need {m(CM.fmt(binding_need(CM)), IN.fmt(binding_need(IN)))}. Press it in half lengthwise, wrong sides together.</li>
+        <li>Hem the short ends of the sleeve, fold it in half lengthwise and baste it to the top edge of the back, so the binding seam catches its raw edges.</li>
+        <li>Start halfway along one side and leave a {m("20 cm", "8″")} tail. Sew the binding to the front, raw edges together, with a {m("0.75 cm", "¼″")} seam, mitring each corner as shown.</li>
+        <li>Join the two ends with a diagonal seam, finish sewing, turn the binding to the back and hand-stitch its fold over the seam. Hand-stitch the lower edge of the sleeve.</li>
         <li>Add a label: your name, the year, and “Kogge”.</li>
       </ol>
     </div>
     <figure class="panel">{quilting_svg()}<figcaption><span class="legend"><span><i></i>Suggested quilting lines</span></span></figcaption></figure>
+  </div>
+  <div class="bindfigs">
+    <figure class="panel">{binding_join_svg()}<figcaption>Joining the binding strips. The pale strip is shown wrong side up.</figcaption></figure>
+    <figure class="panel">{binding_corner_svg()}<figcaption>Mitring a corner. Turn the quilt and carry on down the next side.</figcaption></figure>
   </div>
 </section>
 
@@ -861,8 +954,15 @@ def page_body():
   <figure class="panel chartpanel">{chart_svg()}</figure>
 </section>
 
+<section class="part" id="colouring">
+  <div class="part-head"><span class="step">Reference</span><h2>Colour your own</h2>
+    <p class="prose">Print this page and try your own colours before you buy fabric. Every line is a seam or the edge of a quarter circle.</p></div>
+  <figure class="panel colourpanel">{colouring_svg()}</figure>
+</section>
+
 <footer>
   <p>Kogge is an original quilt design, inspired by the modular geometric illustrations of Siggi Eggertsson and by the Bremen cog of about 1380. Every measurement, cutting plan and diagram on this page is generated from one design grid and checked against it, and the top was also sewn in software with real seam allowances.</p>
+  <p class="version">Pattern version {VERSION}, {VERSION_DATE}. Please read all instructions before you start.</p>
 </footer>
 </main>
 """

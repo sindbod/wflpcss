@@ -35,9 +35,9 @@ from functools import lru_cache
 from html import unescape
 
 from modular import H, V, Leaf, leaves
-from plan import (FQ, LONG, NCOLS, NROWS, ORDER, PARENT, PIECES, PLANS, ROOT, SECTIONS, SYSTEMS, TREE,
-                  UNIT_NAMES, amount, boundary_sides, colour_at, fq_height, fq_usable, hst_types, piece_ids,
-                  plain_section, qc_name, qc_types, sanity)
+from plan import (BINDING_FABRIC, FQ, LONG, NCOLS, NROWS, ORDER, PARENT, PIECES, PLANS, ROOT, SECTIONS, SYSTEMS,
+                  TREE, UNIT_NAMES, amount, backing, binding_need, boundary_sides, colour_at, fq_height, fq_usable,
+                  hst_types, piece_ids, plain_section, qc_name, qc_types, sanity)
 
 EDGES = ("top", "bottom", "left", "right")
 CENTRE_EDGES = {"7": ("top", "left"), "9": ("top", "right"), "1": ("bottom", "left"), "3": ("bottom", "right")}
@@ -241,18 +241,32 @@ def page_text():
     return re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", " ", html)))
 
 
-def printed_measures(text):
-    """Every 'measures A × B cm' statement about a unit on the metric page."""
-    return [(float(m.group(1)), float(m.group(2)), text[max(0, m.start() - 40):m.end()].strip())
-            for m in re.finditer(r"(?<!must )[Mm]easures? (\d+(?:\.\d+)?) × (\d+(?:\.\d+)?)\s*cm", text)]
+def printed_measures(html):
+    """Every size check on the page: (unit, metric text, imperial text)."""
+    pat = (r'data-node="([^"]+)"[^>]*>\s*[Mm]easures\s*<span class="cm">([^<]+)</span>'
+           r'<span class="in">([^<]+)</span>')
+    return [(k, unescape(a).strip(), unescape(b).strip()) for k, a, b in re.findall(pat, html)]
+
+
+def all_units():
+    """Every sub-assembly the page names: {name: node}."""
+    out = {"quilt top": TREE}
+    for i, sec in enumerate(SECTIONS, 1):
+        out[f"section {i}"] = sec
+        stack = [] if isinstance(sec, Leaf) else list(sec.children)
+        while stack:
+            n = stack.pop()
+            if isinstance(n, Leaf):
+                continue
+            out[f"section {i}, {UNIT_NAMES[id(n)]}"] = n
+            stack += n.children
+    return out
 
 
 def unit_sizes(sys_):
-    """Exact sizes of the units the page quotes."""
+    """Exact sizes of every sub-assembly, sewn in software."""
     sewer = Sewer(sys_)
-    out = {}
-    for i, sec in enumerate(SECTIONS, 1):
-        out[f"section {i}"] = simulate(sec, sewer, {})[:2]
+    out = {name: simulate(n, sewer, {})[:2] for name, n in all_units().items() if n is not TREE}
     joins = {}
     out["quilt top"] = simulate(TREE, sewer, joins)[:2]
     return out, joins
@@ -281,15 +295,22 @@ def check_exact(out):
                       f"{n_arcs} of them arcs. " if not bad else f"**{len(bad)} joins do not meet.** ")
                    + f"Quilt top {fx(sys_, w)} × {fx(sys_, h)} (planned {fx(sys_, top)} square).")
     text = page_text()
-    sizes, _ = unit_sizes(SYSTEMS["cm"])
-    sim = {(round(w, 2), round(h, 2)) for w, h in sizes.values()}
-    sim |= {(h, w) for w, h in sim}
-    stated = printed_measures(text)
-    wrong = [s for s in stated if (round(s[0], 2), round(s[1], 2)) not in sim]
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    sizes = {k: unit_sizes(sy)[0] for k, sy in SYSTEMS.items()}
+    stated = printed_measures(html)
+    wrong = []
+    for name, cm_txt, in_txt in stated:
+        if name not in sizes["cm"]:
+            wrong.append(f"{name} (no such unit)")
+            continue
+        (wc, hc), (wi, hi) = sizes["cm"][name], sizes["in"][name]
+        if cm_txt != SYSTEMS["cm"].dims(wc, hc) or in_txt != SYSTEMS["in"].dims(wi, hi):
+            wrong.append(f"{name}: page says {cm_txt} / {in_txt}, sewn {SYSTEMS['cm'].dims(wc, hc)} / {SYSTEMS['in'].dims(wi, hi)}")
     ok &= not wrong and len(stated) > 0
-    out.append(f"- The page quotes {len(stated)} section and quilt sizes to check while sewing. "
+    out.append(f"- The page gives {len(stated)} size checks, for the quilt top, every section and every column and unit "
+               "inside them, in cm and in inches. "
                + ("Every one of them comes out of the simulation." if not wrong else
-                  "**These do not match:** " + "; ".join(w[2] for w in wrong)))
+                  "**These do not match:** " + "; ".join(wrong)))
     # the seam test: six squares in a row
     cm = SYSTEMS["cm"]
     m = re.search(r"Sew six (\d+(?:\.\d+)?) cm scrap squares into a row: it must be (\d+(?:\.\d+)?) cm long", text)
@@ -520,6 +541,22 @@ def check_fabric(out):
                        f"{FQ[key][2]} fat quarter leaves {fx(sys_, L)} × {fx(sys_, Hh)}. "
                        + "; ".join(f"{f} needs {fx(sys_, need)} of that height" if need is not None and need <= Hh
                                    else f"**{f} does not fit**" for f, need in fits) + ".")
+    for key, sys_ in SYSTEMS.items():
+        b = backing(sys_)
+        top = NCOLS * sys_.unit
+        width, length = 2 * (sys_.wof + 2 * (1.0 if key == "cm" else 0.5)) - 2 * sys_.sa * 2, b["piece"]
+        shrunk = min(width, length) * 0.95
+        spare = (shrunk - top) / 2
+        ok &= spare > 0
+        out.append(f"- {key}, backing: two {fx(sys_, b['piece'])} lengths joined side by side make about "
+                   f"{fx(sys_, width)} × {fx(sys_, length)}; after 5 % shrinkage it still reaches {fx(sys_, spare)} beyond "
+                   f"the top on every side (the pattern asks for {fx(sys_, (b['side'] - top) / 2)} to trim later).")
+        strips = sum(1 for st in PLANS[key][BINDING_FABRIC]["strips"] if st["cuts"][0].kind == "binding")
+        have = strips * sys_.wof - (strips - 1) * sys_.binding_w      # each diagonal join uses one strip width
+        ok &= have >= binding_need(sys_)
+        out.append(f"- {key}, binding: {strips} strips joined with diagonal seams give {fx(sys_, have)}; the quilt needs "
+                   f"{fx(sys_, binding_need(sys_))} including the corners and the join: "
+                   + ("enough." if have >= binding_need(sys_) else "**not enough.**"))
     return ok
 
 

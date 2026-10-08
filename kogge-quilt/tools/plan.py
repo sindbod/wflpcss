@@ -352,6 +352,45 @@ def long_strips():
 LONG = long_strips()
 
 
+# ---------------------------------------------------- templates, finishing
+def templates():
+    """One template per disc radius, numbered from the smallest:
+    [{"no", "r", "uses": [(unit label, fabric, count)], "total"}]."""
+    out = []
+    for k, r in enumerate(disc_radii(), 1):
+        uses = [(q["label"], f, q["count"]) for q in qc_types() for rr, f in q["discs"] if rr == r]
+        out.append(dict(no=k, r=r, uses=uses, total=sum(c for _, _, c in uses)))
+    return out
+
+
+TEMPLATES = templates()
+TEMPLATE_NO = {t["r"]: t["no"] for t in TEMPLATES}
+BINDING_FABRIC = "N"
+
+
+def binding_need(sys_):
+    """Binding length: the perimeter plus enough to join the ends and turn corners."""
+    return 4 * NCOLS * sys_.unit + (25 if sys_.key == "cm" else 10)
+
+
+def binding_strips(sys_):
+    """Strips across the fabric for the binding. Every diagonal join uses up
+    one strip width of length."""
+    n = 1
+    while n * sys_.wof - (n - 1) * sys_.binding_w < binding_need(sys_):
+        n += 1
+    return n
+
+
+def backing(sys_):
+    """Backing and batting square, and the fabric to buy for it: two widths of
+    ordinary fabric joined side by side, or one length of wide backing."""
+    beyond = 7.5 if sys_.key == "cm" else 3.0     # on every side of the top
+    side = NCOLS * sys_.unit + 2 * beyond
+    piece = side + (5.0 if sys_.key == "cm" else 2.0)
+    return dict(side=side, piece=piece, two=sys_.length(2 * piece)[0], wide=sys_.length(piece)[0])
+
+
 # -------------------------------------------------------------- cutting
 @dataclass
 class Cut:
@@ -362,6 +401,7 @@ class Cut:
     trimmed: bool = False
     extra: float = 0.0
     kind: str = "piece"   # piece, hst, qcbg, disc
+    r: float = 0.0        # disc: radius in grid units (which template)
 
 
 def appliqué_items(sys_):
@@ -383,22 +423,22 @@ def cutting_plan(sys_: System):
             if p.kind == "solid" and p.fabric == fab:
                 a, b = sorted((p.rect.w, p.rect.h))
                 extra = sys_.long_extra if id(p) in LONG else 0.0
-                items.append((sys_.cut(a), sys_.cut(b) + extra, p.label, extra, "piece"))
+                items.append((sys_.cut(a), sys_.cut(b) + extra, p.label, extra, "piece", 0.0))
         for t in hst_types():
             if fab in t["pair"]:
                 for _ in range(math.ceil(t["count"] / 2)):
-                    items.append((sys_.hst_cut, sys_.hst_cut, t["label"], 0.0, "hst"))
+                    items.append((sys_.hst_cut, sys_.hst_cut, t["label"], 0.0, "hst", 0.0))
         for q in qc_types():
             if q["bg"] == fab:
                 side = sys_.cut(q["n"])
                 for _ in range(q["count"]):
-                    items.append((side, side, q["label"], 0.0, "qcbg"))
+                    items.append((side, side, q["label"], 0.0, "qcbg", 0.0))
         for f2, side, lab, kind, r in appliqué_items(sys_):
             if f2 == fab:
-                items.append((side, side, lab, 0.0, "disc"))
+                items.append((side, side, lab, 0.0, "disc", r))
         items.sort(key=lambda t: (-t[0], -t[1], t[2]))
         strips = []
-        for a, b, label, extra, kind in items:
+        for a, b, label, extra, kind, r in items:
             options = []
             for s in strips:
                 if abs(s["width"] - a) < 1e-9 and s["free"] >= b - 1e-9:
@@ -408,21 +448,20 @@ def cutting_plan(sys_: System):
             if options:
                 _, _, _, s, rot = min(options)
                 if rot:
-                    s["cuts"].append(Cut(label, b, a, True, kind=kind)); s["free"] -= a
+                    s["cuts"].append(Cut(label, b, a, True, kind=kind, r=r)); s["free"] -= a
                 else:
-                    s["cuts"].append(Cut(label, a, b, extra=extra, kind=kind)); s["free"] -= b
+                    s["cuts"].append(Cut(label, a, b, extra=extra, kind=kind, r=r)); s["free"] -= b
                 continue
             wider = [s for s in strips if s["width"] > a + 1e-9 and s["free"] >= b - 1e-9]
             if wider and kind != "hst":
                 s = min(wider, key=lambda s: (s["width"], s["free"]))
-                s["cuts"].append(Cut(label, a, b, trimmed=True, extra=extra, kind=kind)); s["free"] -= b
+                s["cuts"].append(Cut(label, a, b, trimmed=True, extra=extra, kind=kind, r=r)); s["free"] -= b
                 continue
             if b > sys_.wof:
                 raise ValueError(f"{label} ({b}) is longer than the usable fabric width")
-            strips.append(dict(width=a, free=sys_.wof - b, cuts=[Cut(label, a, b, extra=extra, kind=kind)]))
-        if fab == "N":
-            perim = 4 * NCOLS * sys_.unit + (25 if sys_.key == "cm" else 10)
-            for _ in range(math.ceil(perim / sys_.wof)):
+            strips.append(dict(width=a, free=sys_.wof - b, cuts=[Cut(label, a, b, extra=extra, kind=kind, r=r)]))
+        if fab == BINDING_FABRIC:
+            for _ in range(binding_strips(sys_)):
                 strips.append(dict(width=sys_.binding_w, free=0, cuts=[Cut("binding", sys_.binding_w, sys_.wof, kind="binding")]))
         total = sum(s["width"] for s in strips)
         buy_txt, buy_val = sys_.length(total + sys_.extra)

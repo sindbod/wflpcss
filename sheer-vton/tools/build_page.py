@@ -117,12 +117,13 @@ def main():
         by_strain = {c['strain']: c['ratio_rgb'][1] for c in see['cases'] if c['skin'] == 'fair' and c['rig'] == 'softbox' and c['sss']}
         if 0.0 in by_strain and 0.4 in by_strain:
             nums['strain'] = {'from': f'{by_strain[0.0]:.2f}', 'to': f'{by_strain[0.4]:.2f}'}
-    if fs:
-        v = fs['variants']
-        add = v['additive luminance, holo excluded']['mesh']['detail_rms']
-        mul = v['multiplicative luminance + guard, holo excluded (node default)']['mesh']['detail_rms']
-        nums['fs_ratio'] = f'{add / max(mul, 1e-9):.1f}×'
-        nums['find']['fs'] = nums['fs_ratio']
+    if fs and 'sweep' in fs:
+        sw = fs['sweep']
+        nums['fs'] = dict(matched_mean=f"{sw['level-matched (default)']['mean_gain_db']:+.1f}".replace('+', ''),
+                          matched_worst=f"{sw['level-matched (default)']['worst_gain_db']:.1f}",
+                          add_worst=f"{-sw['additive RGB']['worst_gain_db']:.0f}",
+                          log_worst=f"{-sw['log-luminance']['worst_gain_db']:.0f}")
+        nums['find']['fs'] = f"{sw['level-matched (default)']['mean_gain_db']:+.1f} dB"
     meta = dict(skin=dict(tone='fair'), rig=dict(id='flash'), view=dict(id='front'), holo='grating')
     nums['caption_short'] = P.training_caption(meta, style='short')
 

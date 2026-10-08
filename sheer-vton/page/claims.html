@@ -147,7 +147,8 @@
   <article class="claim" data-v="part">
     <div class="row"><span class="chip">Partly</span><span class="where">Post-AI step</span></div>
     <blockquote>“Pass the output through a high-pass filter mask to restore the absolute sharpest pixel-level threads from the original client asset over the AI-generated lighting fields.”</blockquote>
-    <p>It works under three conditions, each measured below. The detail must come from an image registered to the pixel: the pass-1 output, not the flat product shot (2 px off turns the weave into ghosting). The split should be log-luminance, not RGB, or the old lighting's level comes back with the threads (<span class="num" data-k="fs_ratio">6×</span> lower mesh error). And the holo must stay out: its fine detail is lighting.</p>
+    <p>It helps under three conditions, each measured below. The detail must come from an image registered to the pixel, the pass-1 output rather than the flat product shot: 1 px off already does worse than no restore. Its strength must follow the new lighting: the plain high-pass pastes bright threads into frames that got darker and lost up to <span class="num" data-k="fs.add_worst">21</span> dB on the renders, while scaling the detail by the local brightness ratio gained <span class="num" data-k="fs.matched_mean">2.2</span> dB on average. And the holo must stay out: its fine detail is lighting, and restoring it raises the holo's detail error 1.7×.</p>
+    <p class="fix"><b>Do this:</b> SheerFrequencyRestore with its defaults, the pass-1 image as source, mesh (and lace) as mask, holo as exclude.</p>
     <button class="show" type="button" data-jump="h-fs">Go to the scores</button>
   </article>
 </div>

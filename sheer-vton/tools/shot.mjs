@@ -23,8 +23,13 @@ const logs = [];
 page.on('console', (m) => logs.push(`${m.type()}: ${m.text()}`));
 page.on('pageerror', (e) => logs.push(`pageerror: ${e.message}`));
 page.on('requestfailed', (r) => logs.push(`failed: ${r.url()}`));
+page.on('response', (r) => { if (r.status() >= 400) logs.push(`${r.status()}: ${r.url()}`); });
 await page.goto(`http://127.0.0.1:${server.address().port}/preview.html`, { waitUntil: 'networkidle' });
-await page.waitForTimeout(1200);
+await page.evaluate(async () => {
+  for (let y = 0; y < document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); }
+  window.scrollTo(0, 0);
+});
+await page.waitForTimeout(1500);
 const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
 await page.screenshot({ path: out, fullPage: true });
 console.log(JSON.stringify({ overflow, logs: logs.filter((l) => !l.includes('fonts.g')) }, null, 1));

@@ -11,8 +11,8 @@ then follows the briefing's pass 2 with the fixes from the review:
                   (SetLatentNoiseMask), ControlNet canny 0.75 + tile 0.6 from the pass-1 image
   composite       the refined region is pasted back over pass 1 so everything outside the mask stays
                   byte-identical (the VAE round trip would otherwise soften it)
-  detail restore  SheerFrequencyRestore on the mesh only, holo excluded (its detail is lighting),
-                  multiplicative (log-luminance) split, radius from the weave period
+  detail restore  SheerFrequencyRestore on the mesh only, holo excluded (its detail is lighting), detail
+                  scaled to the refined image's local brightness, radius from the weave period
   QA              SheerTransmissionQA reports whether the skin under the mesh reads physically (between
                   about t^2 and 0.85 t) or like an alpha blend (t)
 Run with run_workflow.py, or open the JSON in ComfyUI (it converts API-format files when loaded).
@@ -72,8 +72,8 @@ def graph(p=DEFAULTS):
                                         'resize_source': False, 'mask': ['3', 3]}, 'Paste refined region over pass 1'),
         '19': ('SheerFrequencyRestore', {'refined': ['18', 0], 'source': ['1', 0], 'mask': ['3', 0],
                                          'exclude_mask': ['3', 2], 'radius_px': 0.0, 'strength': 1.0,
-                                         'luminance_only': True, 'highlight_guard': 3.0, 'feather_px': 2.0,
-                                         'linear_light': False, 'mode': 'multiplicative'},
+                                         'luminance_only': False, 'highlight_guard': 3.0, 'feather_px': 2.0,
+                                         'linear_light': False, 'mode': 'matched', 'level_cap': 1.5},
                'Restore weave detail (mesh only, holo excluded)'),
         '20': ('SaveImage', {'images': ['19', 0], 'filename_prefix': 'sheer_vton/refined'}, 'Save'),
         '21': ('PreviewImage', {'images': ['19', 1]}, 'Restored detail band'),

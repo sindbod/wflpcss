@@ -205,7 +205,7 @@ footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line);
       <li><span class="fig num" data-k="find.tr">21–32 %</span><h3>Skin under the net reads darker than the net is open</h3><p>The net is 50 % open, yet fair skin behind it keeps only this share of its light. Light crosses the net twice, and skin spreads it sideways in between. An alpha blend makes the mesh too transparent.</p></li>
       <li><span class="fig num">45 → 85 %</span><h3>Angle closes the net, tension barely opens it</h3><p>Coverage rises from face-on to 75° because the yarn has thickness. Stretching it 40 % opens it only from 50 % to 44 %.</p></li>
       <li><span class="fig">0th order</span><h3>The briefing's holo is a diffraction foil</h3><p>White glare with violet nearest it is a grating's zeroth and first order. A clear film on bright metal stays near silver with a faint tint.</p></li>
-      <li><span class="fig num" data-k="find.fs">6×</span><h3>Frequency separation needs three fixes</h3><p>Restore from the pass-1 output (pixel-registered), split log-luminance instead of RGB, and keep the holo out. Each is measured below.</p></li>
+      <li><span class="fig num" data-k="find.fs">+2.2 dB</span><h3>Frequency separation needs level matching</h3><p>Pasting pass-1 threads back helps only if the detail is scaled to the new lighting, the source is pixel-aligned, and the holo stays out. The plain high-pass lost up to 21 dB on the renders.</p></li>
       <li><span class="fig">[PROD_*]</span><h3>Tokens are inert until trained</h3><p>A base model reads them as noise. The generator writes token-captioned frames with masks for a LoRA, and the refiner graph loads it.</p></li>
     </ol>
   </section>
@@ -284,15 +284,18 @@ footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line);
       <h3>Three holographic models under flash and rim light</h3>
       <div class="grid3" id="holo-grid"></div>
       <div class="table-wrap"><table id="film-table"></table></div>
-      <p>Diffraction foil (one grating along the band), glitter foil (0.8 mm cells with random grating directions) and a TiO₂-like film on aluminium. Under the flash only the gratings give white glare with spectral fringes. Under rim light the film's grazing reflection goes silver-white. The table shows why: the brighter the metal, the weaker the film's colour.</p>
+      <p>Diffraction foil (one grating along the band), glitter foil (0.8 mm cells with random grating directions) and a TiO₂-like film on aluminium. Under the flash, seen from the front, only the gratings give white glare with spectral fringes. Under rim light, seen from the side where the strip light reflects in the band, the gratings show spectral tints and sparkle while the film stays silver-white. The table shows why: the brighter the metal, the weaker the film's colour.</p>
     </div>
   </section>
 
   <section aria-labelledby="h-fs">
     <header><span class="eyebrow">Post-AI step</span><h2 id="h-fs">Frequency separation, scored on ground truth</h2>
-      <p>The macro camera rendered under the flash stands in for the pass-1 output; the same camera under softboxes is the target; the target with its weave blurred away is the refiner's output. Each variant restores detail from the flash frame and is scored against the target. Error is the RMS of the detail band; lower is better.</p></header>
+      <p>The macro camera rendered under the flash stands in for the pass-1 output; the same camera under softboxes is the target; the target with its weave blurred away is the refiner's output. Each variant restores detail from the flash frame and is scored against the target. Detail error is the RMS of the detail band (lower is better); PSNR covers colour too (higher is better).</p></header>
     <div class="table-wrap"><table id="fs-table"></table></div>
     <div class="grid3" id="fs-grid"></div>
+    <h3>All skin tones and lighting changes</h3>
+    <p class="muted">Mesh PSNR gained over no restore, for 3 skin tones × 6 lighting changes (flash ↔ softbox, strobe → softbox, rim ↔ softbox, flash → rim). Where the refined frame is darker than the source, the plain high-pass pastes bright threads into it; where the source is dark, the log split blows its ratios up.</p>
+    <div class="table-wrap"><table id="fs-sweep"></table></div>
   </section>
 
   <section aria-labelledby="h-pipe">
@@ -317,7 +320,7 @@ flowchart TD
   F --> Q["SheerTransmissionQA: t² check"]
 </pre></div>
       <div class="nodes">
-        <div class="node"><code>SheerFrequencyRestore</code><p>Restores the weave from the pass-1 image. Defaults: log-luminance split, radius from the weave period, highlight guard, an exclude mask for the holo. Refuses sources that are not the same size as the refined image.</p></div>
+        <div class="node"><code>SheerFrequencyRestore</code><p>Restores the weave from the pass-1 image, with the detail scaled to the refined image's local brightness, the radius taken from the weave period, a highlight guard and an exclude mask for the holo. Refuses sources that are not the same size as the refined image.</p></div>
         <div class="node"><code>SheerTokenPrompt</code><p>Builds the refiner prompt from the tokens, the lighting scenario, the skin tone and the holo model, in the briefing's wording or the corrected wording.</p></div>
         <div class="node"><code>SheerMaskSplit</code><p>Turns a token mask image into mesh, lace, holo, mesh + holo and garment masks.</p></div>
         <div class="node"><code>SheerTransmissionQA</code><p>Measures how much skin shows through the mesh relative to bare skin and reports whether it reads physically (t²) or like an alpha blend (t).</p></div>
@@ -494,7 +497,7 @@ flowchart TD
   for (const rig of ['flash', 'softbox']) for (const [skin, sk] of [['fair', 'Fair'], ['deep', 'Deep']]) for (const [m, ml] of [['sss', 'scattering'], ['lambert', 'opaque']])
     $('#sss-grid').append(tile(`renders/sss/${skin}_${rig}_${m}.jpg`, `${sk} · ${ml} · ${rig}`));
   for (const rig of ['flash', 'rim']) for (const [k, label] of [['grating', 'Diffraction foil'], ['grating_pixel', 'Glitter foil'], ['film', 'Film on aluminium']])
-    $('#holo-grid').append(tile(`renders/holo/${k}_${rig}.jpg`, `${label} · ${rig === 'flash' ? 'flash' : 'rim'}`));
+    $('#holo-grid').append(tile(`renders/holo/${k}_${rig}.jpg`, `${label} · ${rig === 'flash' ? 'flash, front' : 'rim, side'}`));
 
   // ---------- charts
   const NS = 'http://www.w3.org/2000/svg';
@@ -553,11 +556,13 @@ flowchart TD
     D.film.map((r) => ({ cells: [r.metal, r.film, { html: `${sw(r.rgb)}<span class="mono">${r.rgb.map((v) => v.toFixed(3)).join('  ')}</span>` }] })), ['', '', 'n']);
   if (D.fs) {
     const regs = ['mesh', 'lace', 'holo'];
+    if (D.fs.sweep) table($('#fs-sweep'), ['Mode', 'Mean gain', 'Worst case', 'Best case'],
+      Object.entries(D.fs.sweep).map(([k, v]) => ({ best: k.includes('default'), cells: [k, `${v.mean_gain_db > 0 ? '+' : ''}${fmt(v.mean_gain_db, 1)} dB`, `${fmt(v.worst_gain_db, 1)} dB`, `+${fmt(v.best_gain_db, 1)} dB`] })), ['', 'n', 'n', 'n']);
     const rows = Object.entries(D.fs.variants).map(([name, r]) => ({ best: name.includes('node default') && !name.includes('shifted'),
       cells: [name, ...regs.map((k) => (r[k] ? fmt(r[k].detail_rms * 1000, 1) : '–')), ...regs.map((k) => (r[k] ? fmt(r[k].psnr, 1) : '–'))] }));
     table($('#fs-table'), ['Variant', 'Mesh error ×1000', 'Lace', 'Holo', 'Mesh PSNR dB', 'Lace', 'Holo'], rows, ['', 'n', 'n', 'n', 'n', 'n', 'n']);
     for (const [f, label] of [['source', 'Source: flash (pass-1 stand-in)'], ['refined', 'Refined: target, weave lost'], ['target', 'Target: softbox'],
-      ['restored', 'Node default'], ['briefing', 'Briefing: additive RGB incl. holo'], ['shift2', 'Node default, source 2 px off']])
+      ['restored', 'Level-matched (node default)'], ['briefing', 'Briefing: additive RGB incl. holo'], ['shift2', 'Node default, source 2 px off']])
       $('#fs-grid').append(tile(`fs/fs_${f}.jpg`, label));
   } else { $('#fs-table').replaceWith(el('p', { class: 'muted', text: 'Evaluation pending.' })); }
   table($('#cal-table'), ['Region', 'Linear RGB', ''], D.photo.map((r) => ({ cells: [r.label, { html: `<span class="mono">${r.rgb.map((v) => v.toFixed(3)).join('  ')}</span>` }, { html: sw(r.rgb) }] })), ['', 'n', '']);

@@ -54,7 +54,8 @@ def test_estimates_the_weave_period():
 def test_restores_weave_under_new_lighting():
     source, target, refined = scene()
     mask = np.ones(target.shape[:2], np.float32)
-    out, high, r = fs.restore_detail(refined, source, mask, radius=0, guard=0, feather=0)
+    out, high, r = fs.restore_detail(refined, source, mask, radius=0, guard=0, feather=0, mode='multiplicative',
+                                     luminance_only=True)
     assert 1.9 <= r <= 2.4  # half the 4.24 px spectral period
     c_out, c_ref = corr(hp(out), hp(target)), corr(hp(refined), hp(target))
     assert c_out > 0.95 and c_out > c_ref + 0.3, (c_out, c_ref)
@@ -75,6 +76,19 @@ def test_multiplicative_beats_additive_when_lighting_changes():
                                           linear=linear)
             errs[mode] = float(np.sqrt(((hp(out) - hp(target)) ** 2).mean()))
         assert errs['multiplicative'] < factor * errs['additive'], (linear, errs)
+
+
+def test_matched_mode_never_pastes_bright_detail_into_a_darker_frame():
+    """Rim-light case: the refined frame is far darker than the source. Additive detail overshoots,
+    level-matched detail is scaled down with the frame."""
+    source, target, _ = scene()
+    dark = fs.linear_to_srgb(fs.srgb_to_linear(target) * 0.05)
+    refined = fs.blur(dark, 3.0)
+    mask = np.ones(dark.shape[:2], np.float32)
+    err = lambda img: float(np.abs(img - dark).mean())
+    add, _, _ = fs.restore_detail(refined, source, mask, radius=3.0, feather=0, mode='additive')
+    mat, _, _ = fs.restore_detail(refined, source, mask, radius=3.0, feather=0, mode='matched')
+    assert err(mat) <= err(refined) * 1.05 < err(add), (err(mat), err(refined), err(add))
 
 
 def test_guard_suppresses_a_stale_glint():

@@ -24,7 +24,7 @@ Civitai. The refiner settings are therefore untested; the graph is checked for s
 | Skin shows "cleanly" through ~40 % opaque mesh; sheer fabric is a subtractive layer | Light crosses the net twice. The net is 50 % open face-on (dots included), yet fair skin behind it keeps 21 % of its light under softboxes (in and out pass unrelated openings: about t²) and 32 % under on-camera flash (both crossings could share an opening; skin's sideways scattering decorrelates them, opaque skin would keep 42 %). An alpha blend at 50 % makes mesh panels too light. |
 | Rim light: opacity shifts with fabric tension | Viewing angle dominates: 45 % coverage face-on, 85 % at 75°, 93 % at 80°. 40 % stretch only opens it from 50 % to 44 %. |
 | `[PROD_holo]` is a conductive metal thin film; white glare fading to violet and magenta | White glare with violet nearest is a diffraction grating (zeroth + first order). A clear film over aluminium stays near silver (best case 0.98 / 0.82 / 0.82). |
-| Frequency separation restores threads from the client asset | Only from a pixel-registered source (the pass-1 output), in log-luminance (the additive split carries the old lighting level), with the holo excluded (its detail is lighting). |
+| Frequency separation restores threads from the client asset | Only from a pixel-registered source (the pass-1 output; 1 px off is already worse than no restore), with the holo excluded (its detail is lighting), and with the detail scaled to the refined image's local brightness. Over 18 lighting changes on the renders: plain additive split −4.8 dB mean / −21 dB worst against no restore; log-luminance split −1.3 / −5.8 dB; level-matched (the node's default) +2.2 / −0.9 dB. |
 
 ## Layout
 

@@ -317,11 +317,12 @@
    ],
    "radius_px": 0.0,
    "strength": 1.0,
-   "luminance_only": true,
+   "luminance_only": false,
    "highlight_guard": 3.0,
    "feather_px": 2.0,
    "linear_light": false,
-   "mode": "multiplicative"
+   "mode": "matched",
+   "level_cap": 1.5
   },
   "_meta": {
    "title": "Restore weave detail (mesh only, holo excluded)"

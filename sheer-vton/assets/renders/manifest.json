@@ -1,0 +1,3912 @@
+{
+ "matrix": {
+  "fair_flash_front": {
+   "file": "matrix/fair_flash_front.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_strobe_front": {
+   "file": "matrix/fair_strobe_front.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_softbox_front": {
+   "file": "matrix/fair_softbox_front.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_rim_front": {
+   "file": "matrix/fair_rim_front.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_flash_front": {
+   "file": "matrix/medium_flash_front.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_strobe_front": {
+   "file": "matrix/medium_strobe_front.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_softbox_front": {
+   "file": "matrix/medium_softbox_front.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_rim_front": {
+   "file": "matrix/medium_rim_front.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_flash_front": {
+   "file": "matrix/deep_flash_front.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_strobe_front": {
+   "file": "matrix/deep_strobe_front.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_softbox_front": {
+   "file": "matrix/deep_softbox_front.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_rim_front": {
+   "file": "matrix/deep_rim_front.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "front",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_flash_three_quarter": {
+   "file": "matrix/fair_flash_three_quarter.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_strobe_three_quarter": {
+   "file": "matrix/fair_strobe_three_quarter.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_softbox_three_quarter": {
+   "file": "matrix/fair_softbox_three_quarter.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_rim_three_quarter": {
+   "file": "matrix/fair_rim_three_quarter.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_flash_three_quarter": {
+   "file": "matrix/medium_flash_three_quarter.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_strobe_three_quarter": {
+   "file": "matrix/medium_strobe_three_quarter.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_softbox_three_quarter": {
+   "file": "matrix/medium_softbox_three_quarter.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_rim_three_quarter": {
+   "file": "matrix/medium_rim_three_quarter.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_flash_three_quarter": {
+   "file": "matrix/deep_flash_three_quarter.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_strobe_three_quarter": {
+   "file": "matrix/deep_strobe_three_quarter.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_softbox_three_quarter": {
+   "file": "matrix/deep_softbox_three_quarter.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_rim_three_quarter": {
+   "file": "matrix/deep_rim_three_quarter.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "three_quarter",
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_flash_side": {
+   "file": "matrix/fair_flash_side.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_strobe_side": {
+   "file": "matrix/fair_strobe_side.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_softbox_side": {
+   "file": "matrix/fair_softbox_side.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_rim_side": {
+   "file": "matrix/fair_rim_side.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_flash_side": {
+   "file": "matrix/medium_flash_side.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_strobe_side": {
+   "file": "matrix/medium_strobe_side.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_softbox_side": {
+   "file": "matrix/medium_softbox_side.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_rim_side": {
+   "file": "matrix/medium_rim_side.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_flash_side": {
+   "file": "matrix/deep_flash_side.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_strobe_side": {
+   "file": "matrix/deep_strobe_side.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_softbox_side": {
+   "file": "matrix/deep_softbox_side.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_rim_side": {
+   "file": "matrix/deep_rim_side.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "side",
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  }
+ },
+ "macro": {
+  "fair_flash": {
+   "file": "macro/fair_flash.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_strobe": {
+   "file": "macro/fair_strobe.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_softbox": {
+   "file": "macro/fair_softbox.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_rim": {
+   "file": "macro/fair_rim.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_flash": {
+   "file": "macro/medium_flash.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_strobe": {
+   "file": "macro/medium_strobe.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_softbox": {
+   "file": "macro/medium_softbox.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "medium_rim": {
+   "file": "macro/medium_rim.jpg",
+   "skin": {
+    "tone": "medium",
+    "label": "medium / olive",
+    "albedo_linear": [
+     0.3,
+     0.185,
+     0.085
+    ],
+    "monk_skin_tone_approx": 6
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_flash": {
+   "file": "macro/deep_flash.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_strobe": {
+   "file": "macro/deep_strobe.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_softbox": {
+   "file": "macro/deep_softbox.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_rim": {
+   "file": "macro/deep_rim.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "macro",
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  }
+ },
+ "shadow": {
+  "fair_flash": {
+   "file": "shadow/fair_flash.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "shadow",
+    "azimuth_deg": -30.0,
+    "elevation_deg": 6.0,
+    "distance_m": 0.16,
+    "focal_mm": 100.0,
+    "target": [
+     -0.11448786407709122,
+     -0.07972461730241776,
+     0.012000000104308128
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_strobe": {
+   "file": "shadow/fair_strobe.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "shadow",
+    "azimuth_deg": -30.0,
+    "elevation_deg": 6.0,
+    "distance_m": 0.16,
+    "focal_mm": 100.0,
+    "target": [
+     -0.11448786407709122,
+     -0.07972461730241776,
+     0.012000000104308128
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_flash": {
+   "file": "shadow/deep_flash.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "shadow",
+    "azimuth_deg": -30.0,
+    "elevation_deg": 6.0,
+    "distance_m": 0.16,
+    "focal_mm": 100.0,
+    "target": [
+     -0.11448786407709122,
+     -0.07972461730241776,
+     0.012000000104308128
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_strobe": {
+   "file": "shadow/deep_strobe.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "strobe",
+    "label": "A': bare strobe 45 degrees camera-left (hard, off-axis)"
+   },
+   "view": {
+    "id": "shadow",
+    "azimuth_deg": -30.0,
+    "elevation_deg": 6.0,
+    "distance_m": 0.16,
+    "focal_mm": 100.0,
+    "target": [
+     -0.11448786407709122,
+     -0.07972461730241776,
+     0.012000000104308128
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  }
+ },
+ "strain": {
+  "strain_00": {
+   "file": "strain/strain_00.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "strain",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.1005922481417656,
+     0.08500000089406967
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.0,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true,
+   "waist_strain": 0.0
+  },
+  "strain_12": {
+   "file": "strain/strain_12.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "strain",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.1005922481417656,
+     0.08500000089406967
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true,
+   "waist_strain": 0.12
+  },
+  "strain_25": {
+   "file": "strain/strain_25.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "strain",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.1005922481417656,
+     0.08500000089406967
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.25,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true,
+   "waist_strain": 0.25
+  },
+  "strain_40": {
+   "file": "strain/strain_40.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "strain",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.1005922481417656,
+     0.08500000089406967
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.4,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true,
+   "waist_strain": 0.4
+  }
+ },
+ "holo": {
+  "grating_flash": {
+   "file": "holo/grating_flash.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "band",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 2.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.093047134578228,
+     0.1589999943971634
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "grating_rim": {
+   "file": "holo/grating_rim.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "band_side",
+    "azimuth_deg": 100.0,
+    "elevation_deg": 2.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.12402365356683731,
+     0.0035455517936497927,
+     0.1589999943971634
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "grating_pixel_flash": {
+   "file": "holo/grating_pixel_flash.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "band",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 2.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.093047134578228,
+     0.1589999943971634
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating_pixel",
+   "skin_subsurface": true
+  },
+  "grating_pixel_rim": {
+   "file": "holo/grating_pixel_rim.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "band_side",
+    "azimuth_deg": 100.0,
+    "elevation_deg": 2.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.12402365356683731,
+     0.0035455517936497927,
+     0.1589999943971634
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating_pixel",
+   "skin_subsurface": true
+  },
+  "film_flash": {
+   "file": "holo/film_flash.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "band",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 2.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.093047134578228,
+     0.1589999943971634
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "film",
+   "skin_subsurface": true
+  },
+  "film_rim": {
+   "file": "holo/film_rim.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "rim",
+    "label": "C: twin strip lights behind, rim / backlight"
+   },
+   "view": {
+    "id": "band_side",
+    "azimuth_deg": 100.0,
+    "elevation_deg": 2.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.12402365356683731,
+     0.0035455517936497927,
+     0.1589999943971634
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "film",
+   "skin_subsurface": true
+  }
+ },
+ "sss": {
+  "fair_flash_sss": {
+   "file": "sss/fair_flash_sss.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "sss",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_flash_lambert": {
+   "file": "sss/fair_flash_lambert.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "sss",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": false
+  },
+  "deep_flash_sss": {
+   "file": "sss/deep_flash_sss.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "sss",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_flash_lambert": {
+   "file": "sss/deep_flash_lambert.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "flash",
+    "label": "A: on-camera flash at dusk (as in the example photo)"
+   },
+   "view": {
+    "id": "sss",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": false
+  },
+  "fair_softbox_sss": {
+   "file": "sss/fair_softbox_sss.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "sss",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "fair_softbox_lambert": {
+   "file": "sss/fair_softbox_lambert.jpg",
+   "skin": {
+    "tone": "fair",
+    "label": "fair / porcelain",
+    "albedo_linear": [
+     0.545,
+     0.325,
+     0.235
+    ],
+    "monk_skin_tone_approx": 5
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "sss",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": false
+  },
+  "deep_softbox_sss": {
+   "file": "sss/deep_softbox_sss.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "sss",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": true
+  },
+  "deep_softbox_lambert": {
+   "file": "sss/deep_softbox_lambert.jpg",
+   "skin": {
+    "tone": "deep",
+    "label": "deep / espresso",
+    "albedo_linear": [
+     0.09,
+     0.045,
+     0.026
+    ],
+    "monk_skin_tone_approx": 8
+   },
+   "rig": {
+    "id": "softbox",
+    "label": "B: large softboxes, catalogue"
+   },
+   "view": {
+    "id": "sss",
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   },
+   "mesh": {
+    "Pitch": 0.6,
+    "BarWidth": 0.155,
+    "BarThick": 0.09,
+    "DotPitchU": 9.0,
+    "DotPitchV": 9.0,
+    "DotRadius": 0.85,
+    "DotHeight": 0.35,
+    "waist_strain": 0.12,
+    "offset_mm": 0.5,
+    "yarn": {
+     "reflect": [
+      0.1,
+      0.01,
+      0.016
+     ],
+     "transmit": [
+      0.2,
+      0.004,
+      0.1
+     ]
+    }
+   },
+   "holo": "grating",
+   "skin_subsurface": false
+  }
+ },
+ "masks": {
+  "front": {
+   "file": "masks/front.png",
+   "camera": {
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   }
+  },
+  "three_quarter": {
+   "file": "masks/three_quarter.png",
+   "camera": {
+    "azimuth_deg": 40.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   }
+  },
+  "side": {
+   "file": "masks/side.png",
+   "camera": {
+    "azimuth_deg": 78.0,
+    "elevation_deg": 0.0,
+    "distance_m": 1.3,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     0.0,
+     0.16500000655651093
+    ]
+   }
+  },
+  "macro": {
+   "file": "masks/macro.png",
+   "camera": {
+    "azimuth_deg": 16.0,
+    "elevation_deg": 4.0,
+    "distance_m": 0.2,
+    "focal_mm": 100.0,
+    "target": [
+     0.08918784558773041,
+     -0.07198581844568253,
+     0.1720000058412552
+    ]
+   }
+  },
+  "shadow": {
+   "file": "masks/shadow.png",
+   "camera": {
+    "azimuth_deg": -30.0,
+    "elevation_deg": 6.0,
+    "distance_m": 0.16,
+    "focal_mm": 100.0,
+    "target": [
+     -0.11448786407709122,
+     -0.07972461730241776,
+     0.012000000104308128
+    ]
+   }
+  },
+  "strain": {
+   "file": "masks/strain.png",
+   "camera": {
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.1005922481417656,
+     0.08500000089406967
+    ]
+   }
+  },
+  "band": {
+   "file": "masks/band.png",
+   "camera": {
+    "azimuth_deg": 0.0,
+    "elevation_deg": 2.0,
+    "distance_m": 0.42,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.093047134578228,
+     0.1589999943971634
+    ]
+   }
+  },
+  "sss": {
+   "file": "masks/sss.png",
+   "camera": {
+    "azimuth_deg": 0.0,
+    "elevation_deg": 0.0,
+    "distance_m": 0.4,
+    "focal_mm": 85.0,
+    "target": [
+     0.0,
+     -0.09907031059265137,
+     0.10000000149011612
+    ]
+   }
+  }
+ }
+}

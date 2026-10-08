@@ -50,6 +50,32 @@ def score(out, target, regions, sigma):
     return res
 
 
+def sweep(frames, skins=('fair', 'medium', 'deep'),
+          pairs=(('flash', 'softbox'), ('softbox', 'flash'), ('strobe', 'softbox'), ('softbox', 'rim'),
+                 ('flash', 'rim'), ('rim', 'softbox'))):
+    """Mesh PSNR gain over no restore for each mode, over every skin tone and lighting change."""
+    modes = {'additive RGB': dict(mode='additive'), 'log-luminance': dict(mode='multiplicative', luminance_only=True),
+             'level-matched (default)': dict(mode='matched')}
+    gains = {k: [] for k in modes}
+    for skin in skins:
+        for a, b in pairs:
+            src = load(os.path.join(frames, 'macro', f'{skin}_{a}.png'))
+            tgt = load(os.path.join(frames, 'macro', f'{skin}_{b}.png'))
+            reg = region_masks(os.path.join(frames, 'masks', 'macro.png'), tgt.shape)
+            garment = np.clip(reg['mesh'] + reg['lace'] + reg['holo'], 0, 1)
+            ml = np.clip(reg['mesh'] + reg['lace'], 0, 1)
+            period = fs.estimate_period(src, reg['mesh'])
+            sigma = max(0.6, 0.5 * period)
+            refined = fs.blur(tgt, 0.9 * period / 2.0)
+            refined = garment[..., None] * refined + (1 - garment[..., None]) * tgt
+            base = score(refined, tgt, {'mesh': reg['mesh']}, sigma)['mesh']['psnr']
+            for k, kw in modes.items():
+                out = fs.restore_detail(refined, src, ml, sigma, guard=3.0, feather=1.5, **kw)[0]
+                gains[k].append(score(out, tgt, {'mesh': reg['mesh']}, sigma)['mesh']['psnr'] - base)
+    return {k: dict(mean_gain_db=round(float(np.mean(v)), 2), worst_gain_db=round(float(np.min(v)), 2),
+                    best_gain_db=round(float(np.max(v)), 2), cases=len(v)) for k, v in gains.items()}
+
+
 def main():
     frames, out = sys.argv[1], sys.argv[2]
     args = sys.argv[3:]
@@ -70,13 +96,15 @@ def main():
     mesh_lace = np.clip(regions['mesh'] + regions['lace'], 0, 1)
     variants = {
         'refined (no restore)': refined,
-        'briefing: additive RGB, all garment incl. holo': fs.restore_detail(
-            refined, src, garment, sigma, luminance_only=False, guard=0, feather=1.5, mode='additive')[0],
-        'additive luminance, holo excluded': fs.restore_detail(
-            refined, src, mesh_lace, sigma, guard=0, feather=1.5, mode='additive')[0],
-        'multiplicative luminance + guard, holo excluded (node default)': fs.restore_detail(
+        'briefing: additive RGB, holo included': fs.restore_detail(
+            refined, src, garment, sigma, guard=0, feather=1.5, mode='additive')[0],
+        'additive RGB, holo excluded': fs.restore_detail(
+            refined, src, mesh_lace, sigma, guard=3.0, feather=1.5, mode='additive')[0],
+        'log-luminance (multiplicative), holo excluded': fs.restore_detail(
+            refined, src, mesh_lace, sigma, guard=3.0, feather=1.5, mode='multiplicative', luminance_only=True)[0],
+        'level-matched, holo excluded (node default)': fs.restore_detail(
             refined, src, mesh_lace, sigma, guard=3.0, feather=1.5)[0],
-        'same, holo included': fs.restore_detail(refined, src, garment, sigma, guard=3.0, feather=1.5)[0],
+        'level-matched, holo included': fs.restore_detail(refined, src, garment, sigma, guard=3.0, feather=1.5)[0],
     }
     for shift in (1, 2, 3):
         variants[f'node default, source shifted {shift} px'] = fs.restore_detail(
@@ -84,15 +112,15 @@ def main():
     results = dict(setup=dict(opt, weave_period_px=round(period, 2), sigma_px=round(sigma, 2)), variants={})
     for name, img in variants.items():
         results['variants'][name] = score(img, tgt, regions, sigma)
-    json.dump(results, open(os.path.join(out, 'freqsep_eval.json'), 'w'), indent=1)
+    results['sweep'] = sweep(frames)
     # crops for the page: source / refined / restored / target, plus the holo stale-glint case
     # crops for the page (centre of the macro: mesh, satin channel and the holo band), pixels doubled
     h, w = tgt.shape[:2]
     ch, cw = int(h * 0.36), int(w * 0.36)
     y0, x0 = int(h * 0.5) - ch // 2, int(w * 0.5) - cw // 2
     for name, img in (('source', src), ('target', tgt), ('refined', refined),
-                      ('restored', variants['multiplicative luminance + guard, holo excluded (node default)']),
-                      ('briefing', variants['briefing: additive RGB, all garment incl. holo']),
+                      ('restored', variants['level-matched, holo excluded (node default)']),
+                      ('briefing', variants['briefing: additive RGB, holo included']),
                       ('shift2', variants['node default, source shifted 2 px'])):
         crop = (np.clip(img[y0:y0 + ch, x0:x0 + cw], 0, 1) * 255 + 0.5).astype(np.uint8)
         Image.fromarray(crop).resize((cw * 2, ch * 2), Image.NEAREST).save(os.path.join(out, f'fs_{name}.png'))

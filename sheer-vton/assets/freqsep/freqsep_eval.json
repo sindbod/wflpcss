@@ -1,0 +1,163 @@
+{
+ "setup": {
+  "skin": "fair",
+  "source": "flash",
+  "target": "softbox",
+  "weave_period_px": 6.18,
+  "sigma_px": 3.09,
+  "crop_px": [
+   256,
+   205,
+   288,
+   230
+  ]
+ },
+ "variants": {
+  "refined (no restore)": {
+   "mesh": {
+    "detail_rms": 0.10665,
+    "psnr": 21.26
+   },
+   "lace": {
+    "detail_rms": 0.06765,
+    "psnr": 24.49
+   },
+   "holo": {
+    "detail_rms": 0.03027,
+    "psnr": 29.43
+   }
+  },
+  "briefing: additive RGB, holo included": {
+   "mesh": {
+    "detail_rms": 0.0385,
+    "psnr": 27.19
+   },
+   "lace": {
+    "detail_rms": 0.05247,
+    "psnr": 25.6
+   },
+   "holo": {
+    "detail_rms": 0.05015,
+    "psnr": 25.11
+   }
+  },
+  "additive RGB, holo excluded": {
+   "mesh": {
+    "detail_rms": 0.03403,
+    "psnr": 28.18
+   },
+   "lace": {
+    "detail_rms": 0.04793,
+    "psnr": 26.5
+   },
+   "holo": {
+    "detail_rms": 0.03037,
+    "psnr": 29.43
+   }
+  },
+  "log-luminance (multiplicative), holo excluded": {
+   "mesh": {
+    "detail_rms": 0.05122,
+    "psnr": 18.47
+   },
+   "lace": {
+    "detail_rms": 0.0603,
+    "psnr": 20.36
+   },
+   "holo": {
+    "detail_rms": 0.03037,
+    "psnr": 29.48
+   }
+  },
+  "level-matched, holo excluded (node default)": {
+   "mesh": {
+    "detail_rms": 0.04049,
+    "psnr": 26.97
+   },
+   "lace": {
+    "detail_rms": 0.05716,
+    "psnr": 25.24
+   },
+   "holo": {
+    "detail_rms": 0.0302,
+    "psnr": 29.44
+   }
+  },
+  "level-matched, holo included": {
+   "mesh": {
+    "detail_rms": 0.03705,
+    "psnr": 27.57
+   },
+   "lace": {
+    "detail_rms": 0.05406,
+    "psnr": 25.65
+   },
+   "holo": {
+    "detail_rms": 0.05421,
+    "psnr": 24.58
+   }
+  },
+  "node default, source shifted 1 px": {
+   "mesh": {
+    "detail_rms": 0.1123,
+    "psnr": 20.22
+   },
+   "lace": {
+    "detail_rms": 0.09581,
+    "psnr": 21.47
+   },
+   "holo": {
+    "detail_rms": 0.03013,
+    "psnr": 29.48
+   }
+  },
+  "node default, source shifted 2 px": {
+   "mesh": {
+    "detail_rms": 0.1611,
+    "psnr": 17.31
+   },
+   "lace": {
+    "detail_rms": 0.11575,
+    "psnr": 19.91
+   },
+   "holo": {
+    "detail_rms": 0.03023,
+    "psnr": 29.46
+   }
+  },
+  "node default, source shifted 3 px": {
+   "mesh": {
+    "detail_rms": 0.17694,
+    "psnr": 16.51
+   },
+   "lace": {
+    "detail_rms": 0.10854,
+    "psnr": 20.29
+   },
+   "holo": {
+    "detail_rms": 0.03042,
+    "psnr": 29.4
+   }
+  }
+ },
+ "sweep": {
+  "additive RGB": {
+   "mean_gain_db": -4.75,
+   "worst_gain_db": -20.95,
+   "best_gain_db": 7.7,
+   "cases": 18
+  },
+  "log-luminance": {
+   "mean_gain_db": -1.26,
+   "worst_gain_db": -5.81,
+   "best_gain_db": 3.6,
+   "cases": 18
+  },
+  "level-matched (default)": {
+   "mean_gain_db": 2.18,
+   "worst_gain_db": -0.88,
+   "best_gain_db": 7.07,
+   "cases": 18
+  }
+ }
+}

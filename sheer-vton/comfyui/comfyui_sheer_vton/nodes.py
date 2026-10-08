@@ -60,15 +60,17 @@ class SheerFrequencyRestore:
                 'radius_px': ('FLOAT', {'default': 0.0, 'min': 0.0, 'max': 64.0, 'step': 0.1,
                                         'tooltip': 'Gaussian sigma splitting the bands; 0 = half the weave period found in the source'}),
                 'strength': ('FLOAT', {'default': 1.0, 'min': 0.0, 'max': 2.0, 'step': 0.05}),
-                'luminance_only': ('BOOLEAN', {'default': True,
-                                               'tooltip': 'carry only luminance detail, keep the refined colour'}),
+                'luminance_only': ('BOOLEAN', {'default': False,
+                                               'tooltip': 'carry only luminance detail, keep the refined colour (a net\'s detail is colour too)'}),
                 'highlight_guard': ('FLOAT', {'default': 3.0, 'min': 0.0, 'max': 10.0, 'step': 0.1,
                                               'tooltip': 'soft-clip the detail band to this many robust std devs (0 = off)'}),
                 'feather_px': ('FLOAT', {'default': 2.0, 'min': 0.0, 'max': 32.0, 'step': 0.5}),
                 'linear_light': ('BOOLEAN', {'default': False}),
-                'mode': (['multiplicative', 'additive'], {'tooltip': 'multiplicative splits log-luminance (lighting-invariant detail); additive is the classic split'}),
+                'mode': (['matched', 'additive', 'multiplicative'], {'tooltip': 'matched: detail scaled to the refined image\'s local brightness (robust); additive: the classic split; multiplicative: log split'}),
             },
-            'optional': {'exclude_mask': ('MASK',)},
+            'optional': {'exclude_mask': ('MASK',),
+                         'level_cap': ('FLOAT', {'default': 1.5, 'min': 0.5, 'max': 4.0, 'step': 0.1,
+                                                 'tooltip': 'matched mode: most the detail may be scaled up'})},
         }
 
     RETURN_TYPES = ('IMAGE', 'IMAGE', 'FLOAT')
@@ -77,7 +79,7 @@ class SheerFrequencyRestore:
     CATEGORY = CATEGORY
 
     def run(self, refined, source, mask, radius_px, strength, luminance_only, highlight_guard, feather_px,
-            linear_light, mode='multiplicative', exclude_mask=None):
+            linear_light, mode='matched', exclude_mask=None, level_cap=1.5):
         R, S = _np(refined), _np(source)
         if R.ndim == 3:
             R = R[None]
@@ -93,7 +95,7 @@ class SheerFrequencyRestore:
         for i in range(n):
             o, hp, r = freqsep.restore_detail(R[i][..., :3], S[min(i, len(S) - 1)][..., :3], masks[i], radius_px,
                                               strength, luminance_only, highlight_guard, feather_px, linear_light,
-                                              excl[i], mode)
+                                              excl[i], mode, level_cap)
             outs.append(o)
             highs.append(freqsep.high_pass_preview(hp))
             used.append(r)

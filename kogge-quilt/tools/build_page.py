@@ -829,10 +829,13 @@ def page_body():
       <h3>Quilting</h3>
       <ol>
         <li>Layer backing (right side down), batting and top, and baste.</li>
-        <li>Stitch in the ditch around the ship and along the waterline.</li>
-        <li><b>Sky:</b> straight horizontal lines {m("2.5 cm", "1″")} apart, broken by echo arcs that ripple out from the sun.</li>
-        <li><b>Sea:</b> gently wavy lines {m("1.7 cm", "⅝″")} apart in the navy, flowing round the herring.</li>
-        <li><b>Appliqué:</b> echo each arc once, a few millimetres inside the stitching.</li>
+        <li><b>Outlines first:</b> stitch in the ditch round the ship, the sun, the gulls, the tops of the waves and each herring. This holds the layers before the long lines.</li>
+        <li><b>Sky:</b> straight horizontal lines {m("2.5 cm", "1″")} apart, carried across the castles and broken by echo arcs that ripple out from the sun.</li>
+        <li><b>Sail:</b> vertical lines {m("2.5 cm", "1″")} apart: in the ditch of every stripe and down its middle.</li>
+        <li><b>Hull:</b> one line along the middle of each plank, curving round the bow and stern with the rings. One line down the mast, the yard, the flagpole and the rudder.</li>
+        <li><b>Sun and waves:</b> one line in the middle of every ring (two in the wide rings of the sun), and one along the teal band. Stitch the seam between the white and red halves of the flag in the ditch.</li>
+        <li><b>Sea:</b> gently wavy lines {m("1.7 cm", "⅝″")} apart in the navy, stopping at the herring. Give each herring a spine from tail to head and a gill line.</li>
+        <li>No two lines are more than {m("8 cm", "3″")} apart, close enough for any common batting.</li>
       </ol>
       <h3 style="margin-top:22px">Binding and sleeve</h3>
       <ol>

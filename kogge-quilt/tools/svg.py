@@ -30,18 +30,29 @@ def corner_point(corner, x, y, size):
     return (x + (size if corner in "93" else 0), y + (size if corner in "13" else 0))
 
 
+def arc_ends(corner, cx, cy, R):
+    """Ends of the quarter arc of radius R round (cx, cy), opening into the
+    unit, in the order the arc runs (clockwise on screen)."""
+    if corner == "7":
+        return (cx + R, cy), (cx, cy + R)
+    if corner == "9":
+        return (cx, cy + R), (cx - R, cy)
+    if corner == "3":
+        return (cx - R, cy), (cx, cy - R)
+    return (cx, cy - R), (cx + R, cy)
+
+
 def quarter_path(corner, cx, cy, R):
     """Quarter disc of radius R centred at (cx, cy), opening into the unit."""
-    if corner == "7":
-        p1, p2 = (cx + R, cy), (cx, cy + R)
-    elif corner == "9":
-        p1, p2 = (cx, cy + R), (cx - R, cy)
-    elif corner == "3":
-        p1, p2 = (cx - R, cy), (cx, cy - R)
-    else:
-        p1, p2 = (cx, cy - R), (cx + R, cy)
+    p1, p2 = arc_ends(corner, cx, cy, R)
     return (f"M{f(cx)},{f(cy)} L{f(p1[0])},{f(p1[1])} "
             f"A{f(R)},{f(R)} 0 0 1 {f(p2[0])},{f(p2[1])} Z")
+
+
+def quarter_arc(corner, cx, cy, R):
+    """Just the arc of a quarter disc, as an open path."""
+    p1, p2 = arc_ends(corner, cx, cy, R)
+    return f"M{f(p1[0])},{f(p1[1])} A{f(R)},{f(R)} 0 0 1 {f(p2[0])},{f(p2[1])}"
 
 
 def qc_shapes(unit, corner, x, y, s):

@@ -6,8 +6,8 @@ import math
 from modular import H, V, Leaf, Node, Rect, leaves
 from plan import (DESIGN, FABRICS, NCOLS, NROWS, ORDER, PIECES, PLANS, SECTIONS, SYSTEMS, TREE, colour_at,
                   disc_radii, qc_types, section_pins)
-from svg import (OPP, TRI, draw_exploded, explode, f, hlines, hst_shapes, label_text, leaf_shapes, qc_shapes,
-                 quarter_path, svg_wrap, wave_lines)
+from svg import (OPP, TRI, draw_exploded, explode, f, hlines, hst_shapes, label_text, leaf_shapes,
+                 qc_shapes, quarter_arc, quarter_path, svg_wrap, wave_lines)
 
 
 def whole(s, ox=0.0, oy=0.0, labels=False, seams=False, pieces=None):
@@ -23,24 +23,34 @@ def whole(s, ox=0.0, oy=0.0, labels=False, seams=False, pieces=None):
 
 
 # ------------------------------------------------------------------ hero
-def region_clip(s, ox, oy, fabrics):
-    """Clip path covering every part of the top cut from `fabrics` (appliqué included)."""
+def region_shapes(s, ox, oy, fabrics, pick=None):
+    """Mask shapes covering every part of the top cut from `fabrics`: white
+    where the fabric shows, black over the discs fused onto it.
+    pick: optional test that a solid piece must pass as well.
+
+    (A mask, not a clip path: Chrome unites the shapes of a clip path with
+    path operations, and when those fail on shared edges it quietly keeps
+    only the first shape.)"""
     out = []
     for p in PIECES:
         x, y = ox + p.rect.c0 * s, oy + p.rect.r0 * s
-        if p.kind == "solid" and p.fabric in fabrics:
-            out.append(f'<rect x="{f(x)}" y="{f(y)}" width="{f(p.rect.w * s)}" height="{f(p.rect.h * s)}"/>')
-        elif p.kind == "hst":
+        if p.kind == "solid" and p.fabric in fabrics and (pick is None or pick(p)):
+            out.append(f'<rect fill="#fff" x="{f(x)}" y="{f(y)}" width="{f(p.rect.w * s)}" height="{f(p.rect.h * s)}"/>')
+        elif p.kind == "hst" and pick is None:
             if p.a in fabrics:
-                out.append(f'<polygon points="{" ".join(f"{f(x + u * s)},{f(y + v * s)}" for u, v in TRI[p.corner])}"/>')
+                out.append(f'<polygon fill="#fff" points="{" ".join(f"{f(x + u * s)},{f(y + v * s)}" for u, v in TRI[p.corner])}"/>')
             if p.b in fabrics:
-                out.append(f'<polygon points="{" ".join(f"{f(x + u * s)},{f(y + v * s)}" for u, v in OPP[p.corner])}"/>')
-        elif p.kind == "qc" and p.unit.bg in fabrics:
-            # background minus the outer disc: approximate with the square, discs are drawn above
+                out.append(f'<polygon fill="#fff" points="{" ".join(f"{f(x + u * s)},{f(y + v * s)}" for u, v in OPP[p.corner])}"/>')
+        elif p.kind == "qc" and p.unit.bg in fabrics and pick is None:
             S = p.unit.n * s
-            out.append(f'<path clip-rule="evenodd" fill-rule="evenodd" d="M{f(x)},{f(y)} h{f(S)} v{f(S)} h{f(-S)} Z '
-                       f'{quarter_path(p.corner, *corner_xy(p, x, y, S), S)}"/>')
+            out.append(f'<rect fill="#fff" x="{f(x)}" y="{f(y)}" width="{f(S)}" height="{f(S)}"/>'
+                       f'<path fill="#000" d="{quarter_path(p.corner, *corner_xy(p, x, y, S), S)}"/>')
     return "".join(out)
+
+
+def region_mask(mid, w, h, *shapes):
+    return (f'<mask id="{mid}" maskUnits="userSpaceOnUse" x="0" y="0" width="{f(w)}" height="{f(h)}">'
+            + "".join(shapes) + "</mask>")
 
 
 def corner_xy(p, x, y, S):
@@ -53,9 +63,9 @@ def hero_svg(s=22):
     pad = s * 0.6
     W = NCOLS * s + 2 * (m + pad)
     ox = oy = m + pad
-    defs = (f'<clipPath id="{uid}-sky">{region_clip(s, ox, oy, {"S"})}</clipPath>'
-            f'<clipPath id="{uid}-sea">{region_clip(s, ox, oy, {"N"})}</clipPath>'
-            f'<filter id="{uid}-mottle" x="0" y="0" width="100%" height="100%">'
+    defs = (region_mask(f"{uid}-sky", W, W, region_shapes(s, ox, oy, {"S"}))
+            + region_mask(f"{uid}-sea", W, W, region_shapes(s, ox, oy, {"N"}))
+            + f'<filter id="{uid}-mottle" x="0" y="0" width="100%" height="100%">'
             f'<feTurbulence type="fractalNoise" baseFrequency="0.018 0.03" numOctaves="4" seed="23"/>'
             f'<feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.25 -0.52"/></filter>'
             f'<filter id="{uid}-grain" x="0" y="0" width="100%" height="100%">'
@@ -64,8 +74,8 @@ def hero_svg(s=22):
             f'<filter id="{uid}-soft" x="-10%" y="-10%" width="120%" height="125%">'
             f'<feGaussianBlur stdDeviation="{f(s * 0.35)}"/></filter>')
     q0x, q0y, qw = ox - m, oy - m, NCOLS * s + 2 * m
-    quilt = (f'<g clip-path="url(#{uid}-sky)"><path class="q-light" d="{hlines(ox, oy, NCOLS * s, NROWS * s, s * 0.5)}"/></g>'
-             f'<g clip-path="url(#{uid}-sea)"><path class="q-dark" d="{wave_lines(ox, oy, NCOLS * s, NROWS * s, s * 0.34, s * 0.07, s * 1.2)}"/></g>')
+    quilt = (f'<g mask="url(#{uid}-sky)"><path class="q-light" d="{hlines(ox, oy, NCOLS * s, NROWS * s, s * 0.5)}"/></g>'
+             f'<g mask="url(#{uid}-sea)"><path class="q-dark" d="{wave_lines(ox, oy, NCOLS * s, NROWS * s, s * 0.34, s * 0.07, s * 1.2)}"/></g>')
     body = (f'<rect x="{f(q0x + s * 0.15)}" y="{f(q0y + s * 0.35)}" width="{f(qw)}" height="{f(qw)}" class="shadow" filter="url(#{uid}-soft)"/>'
             f'<rect class="fN" x="{f(q0x)}" y="{f(q0y)}" width="{f(qw)}" height="{f(qw)}"/>'
             f'{whole(s, ox, oy)}{quilt}'
@@ -410,18 +420,114 @@ def strip_svgs(sys_key, fab, width_px=660):
 
 
 # ------------------------------------------------------------ quilting
+def ditch_path(s, ox, oy):
+    """Stitch-in-the-ditch lines: every edge between the background (sky above
+    the waterline, navy below) and a shape on it."""
+    def bg(fab, y):
+        return fab == ("S" if y < 16 else "N")
+
+    unit_at = {}
+    for p in PIECES:
+        if p.kind == "qc":
+            for r, c in p.rect.cells():
+                unit_at[(r, c)] = id(p)
+    eps = 0.01
+    along = (0.3, 0.5, 0.7)             # an edge counts only if the outline follows all of it,
+    d = []                              # not where an arc merely touches it
+    for r in range(1, NROWS):                       # horizontal grid edges
+        for c in range(NCOLS):
+            if unit_at.get((r - 1, c), -1) == unit_at.get((r, c), -2):
+                continue
+            if all(bg(colour_at(c + t, r - eps), r - 0.5) != bg(colour_at(c + t, r + eps), r + 0.5) for t in along):
+                d.append(f"M{f(ox + c * s)},{f(oy + r * s)} h{f(s)}")
+    for c in range(1, NCOLS):                       # vertical grid edges
+        for r in range(NROWS):
+            if unit_at.get((r, c - 1), -1) == unit_at.get((r, c), -2):
+                continue
+            if all(bg(colour_at(c - eps, r + t), r + t) != bg(colour_at(c + eps, r + t), r + t) for t in along):
+                d.append(f"M{f(ox + c * s)},{f(oy + r * s)} v{f(s)}")
+    for p in PIECES:
+        x, y = ox + p.rect.c0 * s, oy + p.rect.r0 * s
+        if p.kind == "hst" and bg(p.a, p.rect.r0 + 0.5) != bg(p.b, p.rect.r0 + 0.5):
+            (u1, v1), (u2, v2) = [pt for pt in TRI[p.corner] if pt in OPP[p.corner]]
+            d.append(f"M{f(x + u1 * s)},{f(y + v1 * s)} L{f(x + u2 * s)},{f(y + v2 * s)}")
+        elif p.kind == "qc" and bg(p.unit.bg, p.rect.r0 + 0.5):
+            S = p.unit.n * s
+            d.append(quarter_arc(p.corner, *corner_xy(p, x, y, S), S))
+    return " ".join(d)
+
+
 def quilting_svg(s=18):
+    """Suggested quilting: every line is at most 2.5 cm (1 inch) from the next."""
     pad = 6
     W = NCOLS * s + 2 * pad
-    sky = region_clip(s, pad, pad, {"S"})
-    sea = region_clip(s, pad, pad, {"N"})
+    X = lambda gx: f(pad + gx * s)
+    Y = lambda gy: f(pad + gy * s)
+    castles = lambda p: p.fabric == "C" and p.rect.r1 <= 11
+    sky = region_mask("qp-sky", W, W, region_shapes(s, pad, pad, {"S"}), region_shapes(s, pad, pad, {"C"}, pick=castles))
+    sea = region_mask("qp-sea", W, W, region_shapes(s, pad, pad, {"N"}))
+    sail = region_mask("qp-sail", W, W, region_shapes(s, pad, pad, {"R", "W"}))
     sun = [p for p in PIECES if p.kind == "qc" and p.unit.n == 5][0]
     cx = pad + (sun.rect.c1 if sun.corner in "93" else sun.rect.c0) * s
     cy = pad + (sun.rect.r1 if sun.corner in "13" else sun.rect.r0) * s
     echoes = "".join(f'<circle class="q-plan" cx="{f(cx)}" cy="{f(cy)}" r="{f(r * s)}"/>' for r in (5.5, 6.25, 7.0, 7.75, 8.5))
-    body = (f'<defs><clipPath id="qp-sky">{sky}</clipPath><clipPath id="qp-sea">{sea}</clipPath></defs>'
+    d = []
+    # rings: one line in the middle of every ring of the sun, bow, stern and waves, and a gill on each herring
+    for p in PIECES:
+        if p.kind != "qc" or (p.unit.n == 1 and p.unit.bg != "N"):
+            continue
+        radii = [r for r, _ in p.unit.discs()] + [0.0]
+        mids = []
+        for outer, inner in zip(radii, radii[1:]):      # one line per ring, two in wide rings
+            k = max(1, round(outer - inner))
+            mids += [inner + (outer - inner) * (i + 1) / (k + 1) for i in range(k)]
+        x, y = pad + p.rect.c0 * s, pad + p.rect.r0 * s
+        for r in mids:
+            d.append(quarter_arc(p.corner, *corner_xy(p, x, y, p.unit.n * s), r * s))
+    # hull: the lines of the bow and stern run on along the middle of each plank
+    hull = [p for p in PIECES if p.kind == "qc" and p.unit.n == 3]
+    left = min(p.rect.c1 for p in hull)
+    right = max(p.rect.c0 for p in hull)
+    top = hull[0].rect.r0
+    for r in (0.5, 1.5, 2.5):
+        d.append(f"M{X(left)},{Y(top + r)} H{X(right)}")
+    # mast, yard, flagpole and rudder: one line down the middle
+    for p in PIECES:
+        if p.kind == "solid" and p.fabric == "B" and p.rect.r0 < 11 or (p.kind == "solid" and p.fabric == "B" and p.rect.w == 1):
+            if max(p.rect.w, p.rect.h) < 2:
+                continue
+            if p.rect.w >= p.rect.h:
+                d.append(f"M{X(p.rect.c0)},{Y(p.rect.r0 + p.rect.h / 2)} H{X(p.rect.c1)}")
+            else:
+                d.append(f"M{X(p.rect.c0 + p.rect.w / 2)},{Y(p.rect.r0)} V{Y(p.rect.r1)}")
+    # flag: in the ditch between its white and red halves
+    for r in range(1, NROWS):
+        for c in range(NCOLS):
+            if {colour_at(c + 0.5, r - 0.05), colour_at(c + 0.5, r + 0.05)} == {"W", "R"}:
+                d.append(f"M{X(c)},{Y(r)} h{f(s)}")
+    # teal band: one line along the middle
+    band = [p for p in PIECES if p.kind == "solid" and p.fabric == "T"]
+    if band:
+        mid = band[0].rect.r0 + 0.5
+        d.append(f"M{X(0)},{Y(mid)} H{X(NCOLS)}")
+    # herring: a spine from the tip of the tail to the head
+    for p in PIECES:
+        if p.kind == "qc" and p.unit.bg == "N" and p.corner == "1":
+            hx, hy = p.rect.c0, p.rect.r1
+            d.append(f"M{X(hx - 1)},{Y(hy)} H{X(hx)}")
+    # sail: vertical lines in the ditch of every stripe and down its middle
+    stripes = [p for p in PIECES if p.kind == "solid" and p.fabric in "RW" and p.rect.h >= 3]
+    c0 = min(p.rect.c0 for p in stripes) - 1
+    c1 = max(p.rect.c1 for p in stripes) + 1
+    r0 = min(p.rect.r0 for p in stripes)
+    r1 = max(p.rect.r1 for p in stripes) + 1
+    sail_lines = " ".join(f"M{X(c0 + 0.5 + k * 0.5)},{Y(r0)} V{Y(r1)}" for k in range(int((c1 - c0 - 1) * 2) + 1))
+    body = (f'<defs>{sky}{sea}{sail}</defs>'
             f'<g opacity=".88">{whole(s, pad, pad)}</g>'
-            f'<g clip-path="url(#qp-sky)"><path class="q-plan" d="{hlines(pad, pad, NCOLS * s, NROWS * s, s * 0.5)}"/>{echoes}</g>'
-            f'<g clip-path="url(#qp-sea)"><path class="q-plan" d="{wave_lines(pad, pad, NCOLS * s, NROWS * s, s * 0.34, s * 0.07, s * 1.2)}"/></g>'
+            f'<g mask="url(#qp-sky)"><path class="q-plan" d="{hlines(pad, pad, NCOLS * s, NROWS * s, s * 0.5)}"/>{echoes}</g>'
+            f'<g mask="url(#qp-sea)"><path class="q-plan" d="{wave_lines(pad, pad, NCOLS * s, NROWS * s, s * 0.34, s * 0.07, s * 1.2)}"/></g>'
+            f'<g mask="url(#qp-sail)"><path class="q-plan" d="{sail_lines}"/></g>'
+            f'<path class="q-plan" d="{" ".join(d)}"/>'
+            f'<path class="q-plan q-ditch" d="{ditch_path(s, pad, pad)}"/>'
             f'<rect class="outline" x="{pad}" y="{pad}" width="{NCOLS * s}" height="{NROWS * s}"/>')
     return svg_wrap(body, W, W, cls="dia", title="Quilting plan")

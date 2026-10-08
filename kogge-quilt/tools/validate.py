@@ -36,8 +36,9 @@ from html import unescape
 
 from modular import H, V, Leaf, leaves
 from plan import (BINDING_FABRIC, FQ, LONG, NCOLS, NROWS, ORDER, PARENT, PIECES, PLANS, ROOT, SECTIONS, SYSTEMS,
-                  TREE, UNIT_NAMES, amount, backing, binding_need, boundary_sides, colour_at, fq_height, fq_usable,
-                  hst_types, piece_ids, plain_section, qc_name, qc_types, sanity)
+                  TEMPLATES, TREE, UNIT_NAMES, WEB_WIDTH, amount, backing, binding_need, boundary_sides, colour_at,
+                  fq_height, fq_usable, fusible_buy, fusible_layout, hst_types, piece_ids, plain_section, qc_name, qc_types,
+                  sanity)
 
 EDGES = ("top", "bottom", "left", "right")
 CENTRE_EDGES = {"7": ("top", "left"), "9": ("top", "right"), "1": ("bottom", "left"), "3": ("bottom", "right")}
@@ -557,6 +558,14 @@ def check_fabric(out):
         out.append(f"- {key}, binding: {strips} strips joined with diagonal seams give {fx(sys_, have)}; the quilt needs "
                    f"{fx(sys_, binding_need(sys_))} including the corners and the join: "
                    + ("enough." if have >= binding_need(sys_) else "**not enough.**"))
+    for key, sys_ in SYSTEMS.items():
+        need = fusible_layout(sys_)
+        buy, val = fusible_buy(sys_)
+        n = sum(t["total"] for t in TEMPLATES)
+        ok &= val >= need
+        out.append(f"- {key}, fusible web: the {n} tracings, laid out on a {fx(sys_, WEB_WIDTH[key])} wide roll with "
+                   f"room to rough-cut each one, take {fx(sys_, need)}; the pattern lists {buy}: "
+                   + ("enough." if val >= need else "**not enough.**"))
     return ok
 
 

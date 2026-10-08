@@ -19,7 +19,7 @@ from figures import (assembly_svg, binding_corner_svg, binding_join_svg, chart_s
                      thumb_svg)
 from modular import H, V, Leaf, leaves
 from plan import (BINDING_FABRIC, FABRICS, FQ, LONG, NCOLS, NROWS, ORDER, PARENT, PIECES, PLANS, ROOT, SECTIONS, SYSTEMS,
-                  TEMPLATE_NO, TEMPLATES, UNIT_NAMES, amount, arc_points, backing, binding_need, disc_radii, fusible_area,
+                  TEMPLATE_NO, TEMPLATES, UNIT_NAMES, WEB_WIDTH, amount, arc_points, backing, binding_need, disc_radii, fusible_buy,
                   hst_types, qc_name, qc_types, sanity, section_pins, solid_table)
 from svg import CORNER_WORDS, hst_icon, qc_icon
 
@@ -203,8 +203,6 @@ def materials():
                 f"{a_in}" + (f" <small>{FQ['in'][2]}</small>" if a_in.startswith("1 fat") else ""))
         rows.append(f'<tr><th scope="row"><span class="sw-dot sw{k}"></span>{name} <span class="code">{k}</span></th>'
                     f'<td class="num">{amt}</td><td>{role[0].upper() + role[1:]}</td></tr>')
-    web_cm = fusible_area(CM) / 45 / 100
-    web_in = fusible_area(IN) / 17 / 36
     bc, bi = backing(CM), backing(IN)
     extra = [
         ("Backing", m(f"{bc['two']} <small>or {bc['wide']} of extra-wide backing</small>",
@@ -212,8 +210,8 @@ def materials():
          "Cut two lengths of " + m(CM.fmt(bc["piece"]), IN.fmt(bi["piece"])) + ", join them side by side and trim to "
          + m(CM.dims(bc["side"], bc["side"]), IN.dims(bi["side"], bi["side"]))),
         ("Batting", m(CM.dims(bc["side"], bc["side"]), IN.dims(bi["side"], bi["side"])), "Thin cotton keeps a wall quilt flat"),
-        ("Fusible web", m(f"{math.ceil(web_cm * 10) / 10:.1f} m, 45 cm wide".replace(".", "."), f"{math.ceil(web_in * 8) / 8:g} yd, 17″ wide"),
-         "Paper-backed, for the quarter circles"),
+        ("Fusible web", m(f"{fusible_buy(CM)[0]}, {CM.fmt(WEB_WIDTH['cm'])} wide", f"{fusible_buy(IN)[0]}, {IN.fmt(WEB_WIDTH['in'])} wide"),
+         "Light, paper-backed, for the quarter circles"),
         ("Hanging sleeve", m("22 × 115 cm", "8½ × 46″"), "Leftover backing works"),
         ("Thread", "Grey cotton, 50 wt", "Plus thread to match each appliqué colour"),
     ]
@@ -261,22 +259,24 @@ def strip_cards(sys_key, fab):
                 groups[-1][1] += 1
             else:
                 groups.append([key, 1])
-        names = []
+        lines = []
         for (kind, label, b, trimmed, a, extra, r), k in groups:
+            square = abs(a - b) < 1e-9
+            shape = ("square" if square else "rectangle") + ("s" if k > 1 else "")
+            size = sy.dims(min(a, b), max(a, b))      # as in the piece lists
             if kind == "piece":
-                t = (f"{k} × " if k > 1 else "") + f"{label} at {sy.fmt(b)}"
+                t = f"{k} {shape} {size} · {label}"
                 if extra:
-                    t += f" ({sy.fmt(extra)} extra, trim to fit later)"
+                    t += f", {sy.fmt(extra)} long on purpose: trim to fit later"
             elif kind == "qcbg":
-                t = f"{k} × {label} background square{'s' if k > 1 else ''} {sy.dims(a, b, unit=False)}"
+                t = f"{k} {shape} {size} · {label} background{'s' if k > 1 else ''}"
             elif kind == "hst":
-                t = f"{k} square{'s' if k > 1 else ''} {sy.dims(a, b, unit=False)} for {label}"
+                t = f"{k} {shape} {size} · for triangle units {label}"
             else:
-                t = f"{k} square{'s' if k > 1 else ''} {sy.dims(a, b, unit=False)} for template {TEMPLATE_NO[r]} ({label})"
-            if trimmed and kind == "piece":
-                t += f", trimmed to {sy.fmt(a)} wide"
-            names.append(t)
-        cap = f'{sy.fmt(st["width"])} strip → ' + " · ".join(names)
+                t = f"{k} {shape} {size} · for template {TEMPLATE_NO[r]} ({label})"
+            lines.append(f"<li>{t}</li>")
+        cap = (f'<div><p>Cut a strip {sy.fmt(st["width"])} × WOF. From it cut:</p>'
+               f'<ul class="cutlist">{"".join(lines)}</ul></div>')
         cards.append(f'<figure class="stripfig"><div class="stripsvg">{svg}</div><figcaption><b>{n}</b>{cap}</figcaption></figure>')
     return cards
 
@@ -670,8 +670,10 @@ ol.sub li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
 .fabric-start .strips:has(+ .strips.more:empty), .fabric-start:has(~ .strips.more:empty) .strips { border-radius: 12px; }
 .stripfig { display: grid; gap: 4px; }
 .stripsvg svg { min-width: 560px; width: 100%; height: auto; display: block; }
-.stripfig figcaption { font-size: .86rem; color: var(--muted); }
-.stripfig figcaption b { display: inline-grid; vertical-align: 1px; place-items: center; min-width: 1.6em; height: 1.6em; border-radius: 50%; background: var(--ink); color: var(--paper); font: 600 .75rem/1 var(--mono); margin-right: 6px; }
+.stripfig figcaption { font-size: .86rem; color: var(--muted); display: flex; gap: 8px; align-items: flex-start; }
+.stripfig figcaption p { margin: 2px 0 0; color: var(--ink); }
+ul.cutlist { margin: 2px 0 0; padding-left: 1.1em; display: grid; gap: 1px; }
+.stripfig figcaption b { flex: none; display: inline-grid; vertical-align: 1px; place-items: center; min-width: 1.6em; height: 1.6em; border-radius: 50%; background: var(--ink); color: var(--paper); font: 600 .75rem/1 var(--mono); margin-right: 6px; }
 details.plist { margin-top: 14px; }
 details.plist summary { cursor: pointer; font-weight: 600; padding: 6px 0; }
 table { border-collapse: collapse; width: 100%; font-size: .95rem; }
@@ -880,6 +882,7 @@ def page_body():
       <li><b>Stitch.</b> Stitch along every arc about {m("2 mm", "1/16″")} inside its edge in matching thread, with an open-toe foot: a straight stitch, a narrow zigzag ({m("1.5 mm", "1/16″")} wide and long) or a blanket stitch. Zigzag and blanket stitch keep raw edges tidiest in the wash. Leave the straight edges: the seams hold them.</li>
       <li><b>Check.</b> Press from the back. Trim anything that overhangs the square; the unit still measures its cut size.</li>
     </ol>
+    <p class="note"><b>New to fusible appliqué?</b> Make one herring head (Q1) from scraps first, to learn how hot and how long your web needs, and how your machine stitches round a curve.</p>
   </div>
   <div class="blocks" style="margin-top:22px">{unit_cards()}</div>
 </section>

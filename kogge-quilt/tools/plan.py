@@ -479,6 +479,43 @@ def fusible_area(sys_):
     return sum(side * side for _, side, _, _, _ in appliqué_items(sys_))
 
 
+WEB_WIDTH = {"cm": 45.0, "in": 17.0}      # common paper-backed fusible web
+
+
+def template_side(sys_, r):
+    """Length of the straight edges of the template for radius r."""
+    R, a = r * sys_.unit, sys_.sa
+    return a + math.sqrt(R * R - a * a)
+
+
+def fusible_layout(sys_):
+    """Lay every tracing out on a roll of fusible web, as a quilter would:
+    tracings 1 cm (3/8") apart, the largest first, in rows, smaller ones
+    stacked beside the larger ones of a row. Returns the length of web used."""
+    gap = 1.0 if sys_.key == "cm" else 0.375
+    width = WEB_WIDTH[sys_.key]
+    sizes = sorted((template_side(sys_, t["r"]) + gap for t in TEMPLATES for _ in range(t["total"])), reverse=True)
+    rows = []
+    for sz in sizes:
+        for row in rows:
+            col = next((c for c in row["cols"] if c[0] >= sz - 1e-9 and c[1] + sz <= row["h"] + 1e-9), None)
+            if col:
+                col[1] += sz
+                break
+            if row["w"] + sz <= width + 1e-9:
+                row["cols"].append([sz, sz])
+                row["w"] += sz
+                break
+        else:
+            rows.append(dict(h=sz, w=sz, cols=[[sz, sz]]))
+    return sum(row["h"] for row in rows)
+
+
+def fusible_buy(sys_):
+    """Fusible web to buy: the laid-out length plus 10 %, as text and value."""
+    return sys_.length(fusible_layout(sys_) * 1.1)
+
+
 # ---------------------------------------------------------------- checks
 def sanity():
     d = DESIGN

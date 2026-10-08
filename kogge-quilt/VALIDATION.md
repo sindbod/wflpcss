@@ -118,6 +118,8 @@ The fused shapes reach the raw edges, so their straight edges are caught by the 
 - cm, binding: 6 strips joined with diagonal seams give 600.0 cm; the quilt needs 505.0 cm including the corners and the join: enough.
 - in, backing: two 56.00″ lengths joined side by side make about 81.00″ × 56.00″; after 5 % shrinkage it still reaches 2.60″ beyond the top on every side (the pattern asks for 3.00″ to trim later).
 - in, binding: 6 strips joined with diagonal seams give 227.50″; the quilt needs 202.00″ including the corners and the join: enough.
+- cm, fusible web: the 47 tracings, laid out on a 45.0 cm wide roll with room to rough-cut each one, take 131.36 cm; the pattern lists 1.5 m: enough.
+- in, fusible web: the 47 tracings, laid out on a 17.00″ wide roll with room to rough-cut each one, take 53.77″; the pattern lists 1¾ yd: enough.
 
 ## 6. Bulky points
 

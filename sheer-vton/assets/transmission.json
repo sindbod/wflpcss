@@ -1,0 +1,54 @@
+{
+ "open_fraction_face_on": 0.5501,
+ "t_squared": 0.3026,
+ "cases": [
+  {
+   "rig": "flash",
+   "skin": "fair",
+   "sss": true,
+   "transmission": 0.3165
+  },
+  {
+   "rig": "flash",
+   "skin": "fair",
+   "sss": false,
+   "transmission": 0.4226
+  },
+  {
+   "rig": "flash",
+   "skin": "deep",
+   "sss": true,
+   "transmission": 0.373
+  },
+  {
+   "rig": "flash",
+   "skin": "deep",
+   "sss": false,
+   "transmission": 0.4293
+  },
+  {
+   "rig": "softbox",
+   "skin": "fair",
+   "sss": true,
+   "transmission": 0.2147
+  },
+  {
+   "rig": "softbox",
+   "skin": "fair",
+   "sss": false,
+   "transmission": 0.2051
+  },
+  {
+   "rig": "softbox",
+   "skin": "deep",
+   "sss": true,
+   "transmission": 0.2151
+  },
+  {
+   "rig": "softbox",
+   "skin": "deep",
+   "sss": false,
+   "transmission": 0.2101
+  }
+ ]
+}

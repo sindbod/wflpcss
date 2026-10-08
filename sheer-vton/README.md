@@ -21,7 +21,7 @@ Civitai. The refiner settings are therefore untested; the graph is checked for s
 | Briefing says | Renders show |
 |---|---|
 | Hard flash gives sharp shadows under the lace seams | On-camera flash casts none (shadows fall behind the edge, as seen from the lens; the photo has none). A bare strobe 45° off-axis gives 1–2 mm lines: the garment lies within 2 mm of the skin. |
-| Skin shows "cleanly" through ~40 % opaque mesh; sheer fabric is a subtractive layer | Skin scatters light 1–4 mm under its surface, wider than the 0.4 mm openings, so light crosses the net twice: skin reads at about t² of its bare value (0.30 for this net, open fraction t = 0.55), not t. |
+| Skin shows "cleanly" through ~40 % opaque mesh; sheer fabric is a subtractive layer | Light crosses the net twice. The net is 50 % open face-on (dots included), yet fair skin behind it keeps 21 % of its light under softboxes (in and out pass unrelated openings: about t²) and 32 % under on-camera flash (both crossings could share an opening; skin's sideways scattering decorrelates them, opaque skin would keep 42 %). An alpha blend at 50 % makes mesh panels too light. |
 | Rim light: opacity shifts with fabric tension | Viewing angle dominates: 45 % coverage face-on, 85 % at 75°, 93 % at 80°. 40 % stretch only opens it from 50 % to 44 %. |
 | `[PROD_holo]` is a conductive metal thin film; white glare fading to violet and magenta | White glare with violet nearest is a diffraction grating (zeroth + first order). A clear film over aluminium stays near silver (best case 0.98 / 0.82 / 0.82). |
 | Frequency separation restores threads from the client asset | Only from a pixel-registered source (the pass-1 output), in log-luminance (the additive split carries the old lighting level), with the holo excluded (its detail is lighting). |
@@ -35,7 +35,8 @@ blender/
   osl/holo_grating.osl   diffraction foil as zeroth + first-order microfacet lobes (8 wavelength bins)
   lace_maps.py           procedural embroidered rose lace (allover + scalloped edging) -> assets/lace/
   render_matrix.py       frame sets: matrix, macro, shadow, strain, holo, sss, masks (resumable, manifest.json)
-  measure_seethrough.py  per-pixel see-through ratios in linear light (with vs without the garment)
+  measure_seethrough.py  see-through ratios in linear light (front panel with vs without the garment)
+  measure_transmission.py  the same with the net made black: skin light only (flash vs softbox, scattering vs opaque skin)
   generate_dataset.py    randomised token-captioned training frames + masks + labels.jsonl
 comfyui/
   comfyui_sheer_vton/    the node pack (copy into ComfyUI/custom_nodes/)
@@ -58,6 +59,7 @@ module that ships inside the bpy wheel; `sheer_scene.py` puts it on `sys.path`.
 python blender/lace_maps.py                                   # ~1 min, writes assets/lace/
 python blender/render_matrix.py -- out/frames                 # all sets, ~1.7 min per frame on 4 CPU cores
 python blender/measure_seethrough.py -- assets/seethrough.json
+python blender/measure_transmission.py -- assets/transmission.json
 python blender/generate_dataset.py -- out/dataset --count 200 --res 768 960 --samples 64
 python tools/pack_renders.py out/frames assets/renders
 python comfyui/eval_freqsep.py out/frames assets/freqsep             # raw PNG frames: JPEG noise would bias the scores

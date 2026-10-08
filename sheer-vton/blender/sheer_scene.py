@@ -38,11 +38,12 @@ ROOT = os.path.dirname(HERE)
 # Calibration (see assets/measured.json). Linear sRGB. The flash-lit white cat in the photo reads 0.85,
 # so scene irradiance is set to pi (a white Lambertian of albedo 1 renders 1.0). Skin albedos are diffuse
 # albedos: under the on-axis flash the scene renders fair skin at the photo's reading (0.76, 0.49, 0.38)
-# because the skin's own specular sheen and the dusk sky add to the albedo.
+# because the skin's own specular sheen and the dusk sky add to the albedo. mst: nearest Monk Skin Tone
+# swatch to the rendered bare skin under the softboxes (tools/mst_check.py).
 SKINS = {
-    'fair': dict(label='fair / porcelain', albedo=(0.545, 0.325, 0.235), mole=(0.45, 0.32, 0.26), mst=2),
+    'fair': dict(label='fair / porcelain', albedo=(0.545, 0.325, 0.235), mole=(0.45, 0.32, 0.26), mst=5),
     'medium': dict(label='medium / olive', albedo=(0.30, 0.185, 0.085), mole=(0.52, 0.42, 0.36), mst=6),
-    'deep': dict(label='deep / espresso', albedo=(0.09, 0.045, 0.026), mole=(0.6, 0.55, 0.5), mst=9),
+    'deep': dict(label='deep / espresso', albedo=(0.09, 0.045, 0.026), mole=(0.6, 0.55, 0.5), mst=8),
 }
 SKIN_ROUGHNESS = 0.5
 # dyed nylon yarn: reflectance from the flash-lit satin; bar width and translucency fitted so the scene

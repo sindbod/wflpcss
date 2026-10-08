@@ -32,4 +32,4 @@ def test_training_caption_from_scene_metadata():
     long = P.training_caption(meta)
     short = P.training_caption(meta, style='short')
     assert all(t in long for t in P.TOKENS.values()) and '55 % open' in long
-    assert 'Monk skin tone 9' in short and 'side view' in short
+    assert 'Monk skin tone 8' in short and 'side view' in short

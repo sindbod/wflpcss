@@ -13,8 +13,8 @@ then follows the briefing's pass 2 with the fixes from the review:
                   byte-identical (the VAE round trip would otherwise soften it)
   detail restore  SheerFrequencyRestore on the mesh only, holo excluded (its detail is lighting),
                   multiplicative (log-luminance) split, radius from the weave period
-  QA              SheerTransmissionQA reports whether the skin under the mesh reads physically (about t^2)
-                  or like an alpha blend (t)
+  QA              SheerTransmissionQA reports whether the skin under the mesh reads physically (between
+                  about t^2 and 0.85 t) or like an alpha blend (t)
 Run with run_workflow.py, or open the JSON in ComfyUI (it converts API-format files when loaded).
 """
 import json
@@ -33,7 +33,7 @@ DEFAULTS = dict(
     scenario='flash', skin='fair', holo_model='grating', view='front',
     seed=20261008, steps=30, cfg=5.0, sampler='dpmpp_2m', scheduler='karras',
     denoise=0.28, canny_strength=0.75, tile_strength=0.6,
-    open_fraction=0.55,
+    open_fraction=0.50,  # the product net face-on, flocked dots included
 )
 
 

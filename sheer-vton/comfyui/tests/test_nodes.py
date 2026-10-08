@@ -54,14 +54,17 @@ def test_mask_split_and_prompt():
 
 
 def test_transmission_qa_tells_double_pass_from_alpha_blend():
-    img = np.zeros((1, 20, 20, 3), np.float32)
     from comfyui_sheer_vton.freqsep import linear_to_srgb
-    skin = np.array([0.55, 0.33, 0.24])
-    img[0, :10] = linear_to_srgb(skin)
     sm = np.zeros((20, 20), np.float32)
     sm[:10] = 1
     mm = 1 - sm
-    for ratio, word in ((0.55 ** 2, 'double pass'), (0.55, 'alpha blend')):
-        img[0, 10:] = linear_to_srgb(skin * ratio)
-        out = SheerTransmissionQA().run(t(img), t(mm), t(sm), 0.55)
-        assert word in out['result'][0], out['result'][0]
+    for skin, ratio, word in (((0.55, 0.33, 0.24), 0.21, 'physical'),                 # softbox: about t^2
+                              ((0.55, 0.33, 0.24), 0.32, 'physical'),                 # flash, scattering skin
+                              ((0.55, 0.33, 0.24), 0.55, 'too transparent'),          # alpha blend at t
+                              ((0.55, 0.33, 0.24), 0.45, 'borderline'),
+                              ((0.09, 0.045, 0.026), 0.25, 'inconclusive')):          # deep skin: yarn dominates
+        img = np.zeros((1, 20, 20, 3), np.float32)
+        img[0, :10] = linear_to_srgb(np.array(skin))
+        img[0, 10:] = linear_to_srgb(np.array(skin) * ratio)
+        out = SheerTransmissionQA().run(t(img), t(mm), t(sm), 0.50)
+        assert word in out['result'][0], (ratio, out['result'][0])

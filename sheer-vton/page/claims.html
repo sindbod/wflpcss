@@ -18,7 +18,7 @@
     <div class="row"><span class="chip">Partly</span><span class="where">Caption format</span></div>
     <blockquote>“The structural borders and tension bands are composed of a highly reflective [PROD_holo] elastic fabric that exhibits dynamic rainbow color-shifts under studio lighting.”</blockquote>
     <p>A training caption should name what changes between images (light, view, skin tone) next to the tokens, so the LoRA ties the tokens to the product rather than to one set-up. Optical explanations teach nothing in a caption, and they push it past the 77-token window of the CLIP encoders in SD 1.5 and SDXL, where the rest is cut off.</p>
-    <p class="fix"><b>Use instead:</b> <span class="mono" data-k="caption_short">direct on-camera flash photograph, front view, burgundy [PROD_lace] waist panel on a dress form with [PROD_mesh] micro-dot tulle and [PROD_holo] bands, fair skin (Monk skin tone 2).</span></p>
+    <p class="fix"><b>Use instead:</b> <span class="mono" data-k="caption_short">direct on-camera flash photograph, front view, burgundy [PROD_lace] waist panel on a dress form with [PROD_mesh] micro-dot tulle and [PROD_holo] bands, fair skin (Monk skin tone 5).</span></p>
   </article>
 </div>
 
@@ -50,10 +50,11 @@
     <p>Large sources leave no cast shadows from a garment lying on the skin; only a slight darkening remains where the fabric presses in.</p>
     <button class="show" type="button" data-show="medium,softbox,three_quarter">Show the softbox set-up</button>
   </article>
-  <article class="claim" data-v="ok">
-    <div class="row"><span class="chip">Holds</span><span class="where">B · softboxes</span></div>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">B · softboxes</span></div>
     <blockquote>“The [PROD_mesh] exhibits a delicate, matte fabric texture without losing transparency over the skin.”</blockquote>
-    <p>See-through belongs to the net and the skin, not to the light: the softbox and the flash pass nearly the same share of skin light (<span class="num" data-k="see.fair_softbox">0.3</span> vs <span class="num" data-k="see.fair_flash">0.3</span> in green).</p>
+    <p>It stays see-through, but softboxes make it look denser than the flash does. Light from wide angles reaches the skin at a slant and meets the yarn's thickness, so only <span class="num" data-k="tr.fair_softbox">0.21</span> of the fair skin's light gets back through the net, against <span class="num" data-k="tr.fair_flash">0.32</span> under the flash.</p>
+    <p class="fix"><b>Use instead:</b> “the skin reads at about a fifth of its bare brightness through the net, darker than under a frontal flash.”</p>
     <button class="show" type="button" data-show="fair,softbox,front,rig,flash">Compare softbox with flash</button>
   </article>
   <article class="claim" data-v="no">
@@ -89,8 +90,8 @@
   <article class="claim" data-v="no">
     <div class="row"><span class="chip">Doesn't hold</span><span class="where">All tones</span></div>
     <blockquote>“Sheer fabrics are optical subtractive layers.”</blockquote>
-    <p>A net mixes two lights side by side: skin seen through its openings and the yarn's own colour. Only light passing through the thin yarns is filtered. And because skin scatters light 1–4 mm beneath its surface, wider than the 0.4 mm openings, light crosses the net on the way in and again on the way out. Skin under a net that is t open reads at about t², here <span class="num" data-k="t2">0.30</span> instead of <span class="num" data-k="t">0.55</span>.</p>
-    <p class="fix"><b>Do this:</b> composite mesh over skin as skin × t² plus the yarn colour × coverage, not as an alpha blend. The QA node checks generated images for this.</p>
+    <p>A net mixes two lights side by side: skin seen through its openings and the yarn's own colour. Only light passing through the thin yarns is filtered. And the light crosses the net twice. Under wide light the way in and the way out use unrelated openings, so skin under a net that is t open keeps about t²: <span class="num" data-k="tr.fair_softbox">0.21</span> here, with t = <span class="num" data-k="t">0.50</span>. Under on-camera flash both crossings could share one opening, but skin carries light 1–4 mm sideways under its surface, wider than the 0.45 mm openings, so fair skin still drops to <span class="num" data-k="tr.fair_flash">0.32</span>.</p>
+    <p class="fix"><b>Do this:</b> composite mesh over skin as skin × (t² to 0.85 t, depending on the light) plus the yarn colour × coverage, never as an alpha blend at t. The QA node checks generated images for this.</p>
     <button class="show" type="button" data-jump="probe-sss">Go to the t² probe</button>
   </article>
   <article class="claim" data-v="no">
@@ -102,7 +103,7 @@
   <article class="claim" data-v="part">
     <div class="row"><span class="chip">Partly</span><span class="where">Fair · see-through</span></div>
     <blockquote>“Micro-vascular skin tones, skin texture, and natural moles remain visible under 40% mesh opacity. High fabric-to-skin contrast.”</blockquote>
-    <p>This net covers 45 % face-on (50 % with the dots), close to the briefing's 40 %, yet it darkens fair skin to <span class="num" data-k="see.fair_softbox">0.3</span> of its bare value because of the double pass. Moles stay visible as soft dark shapes.</p>
+    <p>This net covers 50 % face-on with its dots, close to the briefing's 40 %, yet the panel over fair skin returns only <span class="num" data-k="see.fair_softbox">0.26</span> (softboxes) to <span class="num" data-k="see.fair_flash">0.37</span> (flash) of the bare skin's green light, because the light crosses the net twice. Moles stay visible as soft dark shapes.</p>
     <button class="show" type="button" data-show="fair,softbox,macro">Show the fair macro</button>
   </article>
   <article class="claim" data-v="part">
@@ -114,7 +115,7 @@
   <article class="claim" data-v="part">
     <div class="row"><span class="chip">Effect holds, cause doesn't</span><span class="where">Deep · see-through</span></div>
     <blockquote>“The high melanin skin acts as a dark backing mirror. The sheer mesh weave becomes highly pronounced and visible as a light-catching pattern over the dark skin canvas underneath.”</blockquote>
-    <p>Over deep skin the net does read lighter than the skin around it: the panel returns <span class="num" data-k="see.deep_softbox_r">1.0</span>× the bare skin's red light. But deep skin is no mirror. It reflects as much at its surface as fair skin (about 3 % straight on) and simply returns less diffuse light, so the yarn's colour and sheen take over.</p>
+    <p>The weave does turn light over deep skin: the yarn reflects about as much as deep skin does, more than the skin seen through the openings, so it reads as a light lattice; over fair skin the same net reads as a dark lattice. The panel as a whole is still darker than the bare skin (<span class="num" data-k="see.deep_softbox_r">0.81</span> of its red light). And deep skin is no mirror: it reflects as much at its surface as fair skin (about 3 % straight on) and returns less diffuse light.</p>
     <button class="show" type="button" data-show="deep,softbox,front,skin,fair">Compare deep with fair</button>
   </article>
   <article class="claim" data-v="ok">

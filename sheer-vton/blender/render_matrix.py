@@ -8,7 +8,7 @@ Sets:
   shadow  on-camera flash vs off-axis strobe at the lace border (does the lace cast visible shadows?)
   strain  the net at 0 / 12 / 25 / 40 % waist strain (tension opens the net)
   holo    waist band close-up: grating, pixelated grating and thin film over metal, under flash and rim
-  sss     mesh over skin with and without subsurface scattering (t vs t^2 attenuation)
+  sss     mesh over skin with and without subsurface scattering, under the flash and the softboxes
   masks   token masks (R mesh, G lace, B holo, A body) for every camera used above
 Frames already on disk are skipped; manifest.json records the scene description of every frame.
 """
@@ -103,13 +103,15 @@ def main():
                 frame('holo', f'{kind}_{rig}')
         sc.set_holo('grating')
     if 'sss' in sets:
-        sc.set_rig('softbox')
-        for skin in ('fair', 'deep'):
-            sc.set_skin(skin)
-            for on in (True, False):
-                sc.set_sss(on)
-                probe_view('sss', 0.0, 0.10, 0.0, 0.0, 0.40, 85.0)
-                frame('sss', f'{skin}_{"sss" if on else "lambert"}')
+        # flash: in and out could share one opening, so skin scattering decides; softboxes: never
+        for rig in ('flash', 'softbox'):
+            sc.set_rig(rig)
+            for skin in ('fair', 'deep'):
+                sc.set_skin(skin)
+                for on in (True, False):
+                    sc.set_sss(on)
+                    probe_view('sss', 0.0, 0.10, 0.0, 0.0, 0.40, 85.0)
+                    frame('sss', f'{skin}_{rig}_{"sss" if on else "lambert"}')
         sc.set_sss(True)
     if 'masks' in sets:
         views = dict((v, None) for v in VIEWS + ('macro',))

@@ -156,8 +156,13 @@ class SheerMaskSplit:
 
 
 def transmission_report(image, mesh_mask, skin_mask, open_fraction):
-    """Compare how much skin shows through the mesh with the alpha-blend (t) and double-pass (t^2) models.
-    Uses the green channel, where a red/burgundy yarn contributes almost nothing of its own."""
+    """Compare how much skin light shows through the mesh with what a real net lets through.
+
+    Measured on renders (assets/transmission.json): a net that is t open passes about t^2 of the bare skin's
+    light under wide light (in and out cross different openings) and up to about 0.85 t under on-camera
+    flash, where only the skin's own sideways scattering decorrelates the two crossings. An alpha blend
+    at the open fraction gives t or more. Uses the green channel, where a red / burgundy yarn adds almost
+    nothing of its own; over dark skin the yarn's light dominates and the test says so."""
     lin = freqsep.srgb_to_linear(image[..., :3])
     m, s = mesh_mask > 0.5, skin_mask > 0.5
     if m.sum() < 16 or s.sum() < 16:
@@ -166,21 +171,28 @@ def transmission_report(image, mesh_mask, skin_mask, open_fraction):
     g_skin = float(np.median(lin[..., 1][s]))
     ratio = g_mesh / max(g_skin, 1e-6)
     t = open_fraction
-    near = 'double pass (physical)' if abs(ratio - t * t) < abs(ratio - t) else 'alpha blend (too transparent)'
-    rep = (f'green see-through ratio {ratio:.3f}; double-pass prediction t^2 = {t * t:.3f}, '
-           f'alpha-blend prediction t = {t:.3f} -> closer to {near}')
-    return rep, ratio
+    head = f'green see-through ratio {ratio:.3f} (net open fraction t = {t:.2f}; physical range about {t * t:.2f} to {0.85 * t:.2f})'
+    if g_skin < 0.15:
+        return head + ' -> inconclusive: the skin is too dark, the yarn\'s own light dominates', ratio
+    if ratio <= 0.85 * t:
+        verdict = 'physical (the net is crossed twice)'
+    elif ratio >= 0.95 * t:
+        verdict = 'too transparent (alpha-blend look)'
+    else:
+        verdict = 'borderline'
+    return f'{head} -> {verdict}', ratio
 
 
 class SheerTransmissionQA:
-    DESCRIPTION = ('Measures skin seen through the mesh against bare skin. Skin scatters light millimetres under its '
-                   'surface, so light crosses the net twice and the skin reads at about t^2 of its bare brightness '
-                   '(t = open fraction), not t as an alpha blend would give.')
+    DESCRIPTION = ('Measures skin seen through the mesh against bare skin. Light crosses the net twice, so skin under a '
+                   'net that is t open reads between about t^2 (wide light) and 0.85 t (on-camera flash), not t or more '
+                   'as an alpha blend gives.')
 
     @classmethod
     def INPUT_TYPES(cls):
         return {'required': {'image': ('IMAGE',), 'mesh_mask': ('MASK',), 'skin_mask': ('MASK',),
-                             'open_fraction': ('FLOAT', {'default': 0.55, 'min': 0.05, 'max': 0.95, 'step': 0.01})}}
+                             'open_fraction': ('FLOAT', {'default': 0.50, 'min': 0.05, 'max': 0.95, 'step': 0.01,
+                                                         'tooltip': 'open fraction of the net seen straight on, dots included'})}}
 
     RETURN_TYPES = ('STRING', 'FLOAT')
     RETURN_NAMES = ('report', 'ratio')

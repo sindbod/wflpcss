@@ -15,6 +15,7 @@ from PIL import Image
 from scipy import ndimage
 
 COLOURS = {'mesh': (232, 69, 127), 'lace': (63, 164, 90), 'holo': (59, 143, 224)}
+MST = {'fair': 5, 'medium': 6, 'deep': 8}  # measured with mst_check.py (frames rendered before that carry 2 / 6 / 9)
 
 
 def overlay(mask_path, out_path):
@@ -47,6 +48,8 @@ def main():
                 overlay(p, os.path.join(dst, 'overlays', f'{name}.png'))
                 rec['file'] = f'masks/{name}.png'
             else:
+                if 'skin' in rec and rec['skin'].get('tone') in MST:
+                    rec['skin']['monk_skin_tone_approx'] = MST[rec['skin']['tone']]
                 im = Image.open(p).convert('RGB')
                 im.save(os.path.join(dst, set_name, f'{name}.jpg'), quality=88, subsampling=0, optimize=True)
                 rec['file'] = f'{set_name}/{name}.jpg'

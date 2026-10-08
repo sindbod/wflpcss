@@ -86,13 +86,18 @@ def main():
         results['variants'][name] = score(img, tgt, regions, sigma)
     json.dump(results, open(os.path.join(out, 'freqsep_eval.json'), 'w'), indent=1)
     # crops for the page: source / refined / restored / target, plus the holo stale-glint case
+    # crops for the page (centre of the macro: mesh, satin channel and the holo band), pixels doubled
     h, w = tgt.shape[:2]
-    cy, cx = h // 2, w // 2
+    ch, cw = int(h * 0.36), int(w * 0.36)
+    y0, x0 = int(h * 0.5) - ch // 2, int(w * 0.5) - cw // 2
     for name, img in (('source', src), ('target', tgt), ('refined', refined),
                       ('restored', variants['multiplicative luminance + guard, holo excluded (node default)']),
                       ('briefing', variants['briefing: additive RGB, all garment incl. holo']),
                       ('shift2', variants['node default, source shifted 2 px'])):
-        Image.fromarray((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)).save(os.path.join(out, f'fs_{name}.png'))
+        crop = (np.clip(img[y0:y0 + ch, x0:x0 + cw], 0, 1) * 255 + 0.5).astype(np.uint8)
+        Image.fromarray(crop).resize((cw * 2, ch * 2), Image.NEAREST).save(os.path.join(out, f'fs_{name}.png'))
+    results['setup']['crop_px'] = [y0, x0, ch, cw]
+    json.dump(results, open(os.path.join(out, 'freqsep_eval.json'), 'w'), indent=1)
     print(json.dumps(results, indent=1))
 
 

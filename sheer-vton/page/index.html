@@ -202,7 +202,7 @@ footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line);
     <header><span class="eyebrow">What the renders show</span><h2 id="h-find">Six findings</h2></header>
     <ol class="findings">
       <li><span class="fig">0 mm</span><h3>On-camera flash casts no seam shadows</h3><p>The flash sits by the lens, so shadows fall behind what casts them. Your photo has none. A hard strobe 45° off-axis gives crisp lines, but only 1–2 mm wide.</p></li>
-      <li><span class="fig num" data-k="find.t2">≈ 0.3</span><h3>Skin under the net reads at about t², not t</h3><p>Light diffuses millimetres inside skin, wider than the 0.4 mm openings, so it crosses the net twice. An alpha blend makes the mesh look too transparent.</p></li>
+      <li><span class="fig num" data-k="find.tr">21–32 %</span><h3>Skin under the net reads darker than the net is open</h3><p>The net is 50 % open, yet fair skin behind it keeps only this share of its light. Light crosses the net twice, and skin spreads it sideways in between. An alpha blend makes the mesh too transparent.</p></li>
       <li><span class="fig num">45 → 85 %</span><h3>Angle closes the net, tension barely opens it</h3><p>Coverage rises from face-on to 75° because the yarn has thickness. Stretching it 40 % opens it only from 50 % to 44 %.</p></li>
       <li><span class="fig">0th order</span><h3>The briefing's holo is a diffraction foil</h3><p>White glare with violet nearest it is a grating's zeroth and first order. A clear film on bright metal stays near silver with a faint tint.</p></li>
       <li><span class="fig num" data-k="find.fs">6×</span><h3>Frequency separation needs three fixes</h3><p>Restore from the pass-1 output (pixel-registered), split log-luminance instead of RGB, and keep the holo out. Each is measured below.</p></li>
@@ -258,10 +258,8 @@ footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line);
 
     <div class="probe" id="probe-shadow">
       <h3>Seam shadows: on-camera flash vs hard strobe</h3>
-      <div class="two">
-        <div class="grid2" id="shadow-grid"></div>
-        <p>A 100 mm close-up of the left channel's foot, the bottom band and the bare skin below it. Under the near-coaxial flash nothing casts a visible shadow. The strobe 45° to the left throws a hairline under the band and channel: they sit 1.7–1.8 mm off the skin, so even 45° light only moves their shadow by about that much. At catalogue distance that is less than a pixel.</p>
-      </div>
+      <div class="grid4" id="shadow-grid"></div>
+      <p>A 100 mm close-up of the left channel's foot, the bottom band and the bare skin below it. Under the near-coaxial flash nothing casts a visible shadow. The strobe 45° to the left throws a hairline under the band and channel: they sit 1.7–1.8 mm off the skin, so even 45° light only moves their shadow by about that much. At catalogue distance that is less than a pixel.</p>
     </div>
 
     <div class="probe" id="probe-cover">
@@ -270,16 +268,16 @@ footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line);
         <div><svg class="chart" id="chart-cover" viewBox="0 0 520 300" role="img" aria-label="Net coverage against viewing angle"></svg></div>
         <div class="grid2" id="strain-grid"></div>
       </div>
-      <p>Coverage of this tulle (0.6 mm cells, 0.155 mm yarn, 0.09 mm thick) from the OSL net shader, which widens each yarn's footprint by its thickness times tan θ along the ray. It explains the darker lower belly in your photo and the opaque, glowing edges under rim light. Tension, at right, opens the cells but not the yarn.</p>
+      <p>Coverage of this tulle (0.6 mm cells, 0.155 mm yarn, 0.09 mm thick) from the OSL net shader, which widens each yarn's footprint by its thickness times tan θ along the ray. It explains the darker lower belly in your photo and the opaque, glowing edges under rim light. Tension, at right, opens the cells but not the yarn: on fair skin under softboxes the panel's see-through only rises from <span class="num" data-k="strain.from">0.25</span> to <span class="num" data-k="strain.to">0.28</span> between 0 and 40 % strain.</p>
     </div>
 
     <div class="probe" id="probe-sss">
-      <h3>Why skin under the net reads at t²</h3>
+      <h3>Why skin under the net reads darker than the net is open</h3>
       <div class="two">
-        <div><svg class="chart" id="chart-see" viewBox="0 0 520 300" role="img" aria-label="Skin see-through ratio per tone"></svg></div>
-        <div class="grid2" id="sss-grid"></div>
+        <div><svg class="chart" id="chart-see" viewBox="0 0 520 300" role="img" aria-label="Skin light through the net, per light and skin"></svg></div>
+        <p>Here the net is made black, so the panel shows only skin light that got through it, as a share of the bare skin (front panel, linear light). Light crosses the net twice. Under softboxes the way in and the way out use unrelated openings, so the share is about t² whatever the skin does. Under on-camera flash both crossings could use the same opening, and opaque skin would keep 0.42. Real skin carries light millimetres sideways under its surface, so fair skin drops to 0.32; deep skin, which scatters less far, to 0.37. The QA node in the refiner checks generated images against this range.</p>
       </div>
-      <p>Each bar is the per-pixel ratio of the front panel rendered with and without the garment, green channel (the burgundy yarn adds almost no green). With subsurface scattering the ratio sits near t² for every tone; with the same skin made opaque it moves toward t. The QA node in the refiner measures the same ratio on generated images.</p>
+      <div class="grid4" id="sss-grid"></div>
     </div>
 
     <div class="probe" id="probe-holo">
@@ -387,18 +385,27 @@ flowchart TD
   const SKINS = D.skins, RIGS = D.rigs, VIEWS = D.views;
   const state = { skin: 'fair', rig: 'flash', view: 'front', cmp: '', cmpVal: '', ov: false, tab: 'c' };
   try { const s = JSON.parse(localStorage.getItem('sheer-vton-viewer') || 'null'); if (s) Object.assign(state, s); } catch (e) { /* no storage */ }
+  if (!SKINS.some((x) => x.id === state.skin)) state.skin = 'fair';
+  if (!RIGS.some((x) => x.id === state.rig)) state.rig = 'flash';
+  if (!VIEWS.some((x) => x.id === state.view)) state.view = 'front';
+  if (!['', 'rig', 'skin'].includes(state.cmp)) state.cmp = '';
   const save = () => { try { localStorage.setItem('sheer-vton-viewer', JSON.stringify(state)); } catch (e) { /* no storage */ } };
   const src = (skin, rig, view) => view === 'macro' ? `renders/macro/${skin}_${rig}.jpg` : `renders/matrix/${skin}_${rig}_${view}.jpg`;
   const labelOf = (dim, id) => (dim === 'rig' ? RIGS : dim === 'skin' ? SKINS : VIEWS).find((x) => x.id === id)?.short || id;
 
+  const segs = [];
   function seg(host, items, key) {
-    host.innerHTML = '';
     for (const it of items) {
-      const b = el('button', { type: 'button', 'aria-pressed': String(state[key] === it.id), title: it.label, text: it.short });
+      const b = el('button', { type: 'button', 'aria-pressed': 'false', title: it.label, text: it.short });
+      b.dataset.id = it.id;
       b.addEventListener('click', () => { state[key] = it.id; if (state.cmp === key && state.cmpVal === it.id) state.cmpVal = ''; render(); });
       host.append(b);
     }
+    segs.push([host, key]);
   }
+  seg($('#seg-skin'), SKINS, 'skin');
+  seg($('#seg-rig'), RIGS, 'rig');
+  seg($('#seg-view'), VIEWS, 'view');
   const imgA = $('#img-a'), imgB = $('#img-b'), imgOv = $('#img-ov');
   function setImg(img, url) {
     if (img.getAttribute('src') === url) return;
@@ -411,9 +418,7 @@ flowchart TD
     return esc.replace(/\[PROD_(mesh|lace|holo)\]/g, '<span class="t">[PROD_$1]</span>');
   }
   function render() {
-    seg($('#seg-skin'), SKINS, 'skin');
-    seg($('#seg-rig'), RIGS, 'rig');
-    seg($('#seg-view'), VIEWS, 'view');
+    for (const [host, key] of segs) for (const b of host.children) b.setAttribute('aria-pressed', String(state[key] === b.dataset.id));
     setImg(imgA, src(state.skin, state.rig, state.view));
     imgA.alt = `${labelOf('skin', state.skin)} skin, ${labelOf('rig', state.rig)}, ${labelOf('view', state.view)}`;
     $('#lab-a').textContent = state.cmp ? labelOf(state.cmp, state[state.cmp]) : `${labelOf('rig', state.rig)} · ${labelOf('skin', state.skin)}`;
@@ -486,8 +491,8 @@ flowchart TD
   for (const [skin, rig, label] of [['fair', 'flash', 'Fair · flash'], ['fair', 'strobe', 'Fair · strobe 45°'], ['deep', 'flash', 'Deep · flash'], ['deep', 'strobe', 'Deep · strobe 45°']])
     $('#shadow-grid').append(tile(`renders/shadow/${skin}_${rig}.jpg`, label));
   for (const s of D.strain) $('#strain-grid').append(tile(`renders/strain/${s.file}`, `${s.pct} % strain`, `Net at ${s.pct} percent waist strain`));
-  for (const [file, label] of [['fair_sss', 'Fair · scattering skin'], ['fair_lambert', 'Fair · opaque skin'], ['deep_sss', 'Deep · scattering skin'], ['deep_lambert', 'Deep · opaque skin']])
-    $('#sss-grid').append(tile(`renders/sss/${file}.jpg`, label));
+  for (const rig of ['flash', 'softbox']) for (const [skin, sk] of [['fair', 'Fair'], ['deep', 'Deep']]) for (const [m, ml] of [['sss', 'scattering'], ['lambert', 'opaque']])
+    $('#sss-grid').append(tile(`renders/sss/${skin}_${rig}_${m}.jpg`, `${sk} · ${ml} · ${rig}`));
   for (const rig of ['flash', 'rim']) for (const [k, label] of [['grating', 'Diffraction foil'], ['grating_pixel', 'Glitter foil'], ['film', 'Film on aluminium']])
     $('#holo-grid').append(tile(`renders/holo/${k}_${rig}.jpg`, `${label} · ${rig === 'flash' ? 'flash' : 'rim'}`));
 
@@ -510,21 +515,21 @@ flowchart TD
     svg.append(sv('text', { x: x(last.theta), y: y(last.along) + 20, 'text-anchor': 'end' }, 'along the bars'));
   }
   function seeChart() {
-    const svg = $('#chart-see'), W = 520, H = 300, L = 48, R = 16, T = 18, B = 52;
-    const S = D.seethrough; if (!S) { svg.append(sv('text', { x: 20, y: 40 }, 'measurement pending')); return; }
-    const t = S.open_fraction_face_on, t2 = S.t_squared;
-    const cases = S.cases.filter((c) => c.strain === S.cases[0].strain && (c.sss || c.rig === 'softbox'));
-    const y = (v) => T + (1 - v / 0.7) * (H - T - B);
+    const svg = $('#chart-see'), W = 520, H = 300, L = 44, R = 12, T = 18, B = 56;
+    const S = D.transmission; if (!S) { svg.append(sv('text', { x: 20, y: 40 }, 'measurement pending')); return; }
+    const t = D.t_open, t2 = t * t;
+    const y = (v) => T + (1 - v / 0.6) * (H - T - B);
     for (const v of [0, 0.2, 0.4, 0.6]) { svg.append(sv('line', { class: 'grid', x1: L, x2: W - R, y1: y(v), y2: y(v) })); svg.append(sv('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, v.toFixed(1))); }
-    const n = cases.length, bw = (W - L - R) / n;
+    const cases = S.cases, n = cases.length, bw = (W - L - R) / n;
     cases.forEach((c, i) => {
-      const v = c.ratio_rgb[1], x0 = L + i * bw + bw * 0.18, w = bw * 0.64;
+      const v = c.transmission, x0 = L + i * bw + bw * 0.16, w = bw * 0.68;
       svg.append(sv('rect', { class: c.sss ? 'bar' : 'bar2', x: x0, y: y(v), width: w, height: y(0) - y(v) }));
       svg.append(sv('text', { x: x0 + w / 2, y: y(v) - 5, 'text-anchor': 'middle' }, v.toFixed(2)));
-      svg.append(sv('text', { x: x0 + w / 2, y: H - B + 16, 'text-anchor': 'middle' }, c.skin));
-      svg.append(sv('text', { x: x0 + w / 2, y: H - B + 30, 'text-anchor': 'middle' }, c.sss ? c.rig : 'opaque'));
+      svg.append(sv('text', { x: x0 + w / 2, y: H - B + 15, 'text-anchor': 'middle' }, c.skin));
+      svg.append(sv('text', { x: x0 + w / 2, y: H - B + 28, 'text-anchor': 'middle' }, c.sss ? 'scatter' : 'opaque'));
+      if (i % 4 === 0) svg.append(sv('text', { class: 'lab', x: x0 + 2 * bw - bw * 0.16, y: H - B + 46, 'text-anchor': 'middle' }, c.rig === 'flash' ? 'on-camera flash' : 'softboxes'));
     });
-    for (const [v, lab] of [[t, `t = ${t.toFixed(2)} (alpha blend)`], [t2, `t² = ${t2.toFixed(2)} (double pass)`]]) {
+    for (const [v, lab] of [[t, `t = ${t.toFixed(2)}: alpha blend`], [t2, `t² = ${t2.toFixed(2)}`]]) {
       svg.append(sv('line', { class: 'ref', x1: L, x2: W - R, y1: y(v), y2: y(v) }));
       svg.append(sv('text', { class: 'lab', x: W - R, y: y(v) - 5, 'text-anchor': 'end' }, lab));
     }

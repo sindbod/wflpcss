@@ -22,16 +22,16 @@ sys.path.insert(0, os.path.join(ROOT, 'comfyui'))
 from comfyui_sheer_vton import prompts as P  # noqa: E402
 
 DIST = os.path.join(ROOT, 'dist')
-SKINS = [dict(id='fair', short='Fair', label='Fair / porcelain (Monk 2)'),
+SKINS = [dict(id='fair', short='Fair', label='Fair, photo-calibrated (Monk 5)'),
          dict(id='medium', short='Medium olive', label='Medium / olive (Monk 6)'),
-         dict(id='deep', short='Deep', label='Deep / espresso (Monk 9)')]
+         dict(id='deep', short='Deep', label='Deep / espresso (Monk 8)')]
 RIGS = [dict(id='flash', short='A flash', label='A · on-camera flash at dusk'),
         dict(id='strobe', short='A′ strobe', label='A′ · bare strobe 45° left'),
         dict(id='softbox', short='B softbox', label='B · large softboxes'),
         dict(id='rim', short='C rim', label='C · rim / backlight')]
 VIEWS = [dict(id='front', short='Front', label='Front'), dict(id='three_quarter', short='¾', label='Three-quarter'),
          dict(id='side', short='Side', label='Side'), dict(id='macro', short='Macro', label='Macro close-up')]
-TEXT_EXT = ('.py', '.osl', '.json', '.md', '.txt', '.jsonl')
+TEXT_EXT = ('.py', '.osl', '.json', '.md', '.txt', '.jsonl', '.mjs')
 
 
 def text_bundle(base, rel_dirs, extra=None):
@@ -67,6 +67,9 @@ def main():
     coverage = json.load(open(os.path.join(ROOT, 'assets', 'coverage_curve.json')))
     st_path = os.path.join(ROOT, 'assets', 'seethrough.json')
     see = json.load(open(st_path)) if os.path.exists(st_path) else None
+    tr_path = os.path.join(ROOT, 'assets', 'transmission.json')
+    trans = json.load(open(tr_path)) if os.path.exists(tr_path) else None
+    t_open = round(1.0 - coverage['angle'][0]['dots_diag'], 3)  # face-on, dots included
 
     # prompts for every viewer state, and the full matrix for download
     corrected, briefing = {}, {}
@@ -98,9 +101,11 @@ def main():
     strain = [dict(file=f'{n}.jpg', pct=int(round(r['waist_strain'] * 100))) for n, r in sorted(manifest.get('strain', {}).items())]
 
     nums = dict(frames=dict(count=str(sum(len(v) for k, v in manifest.items() if k != 'masks'))))
-    p, w = 0.6, 0.155
-    t = ((p - w) / p) ** 2
-    nums.update(t=f'{t:.2f}', t2=f'{t * t:.2f}', find=dict(t2=f'≈ {t * t:.2f}'))
+    nums.update(t=f'{t_open:.2f}', t2=f'{t_open * t_open:.2f}', find={})
+    if trans:
+        tr = {f"{c['skin']}_{c['rig']}" + ('' if c['sss'] else '_opaque'): f"{c['transmission']:.2f}" for c in trans['cases']}
+        nums['tr'] = tr
+        nums['find']['tr'] = f"{round(100 * float(tr['fair_softbox']))}–{round(100 * float(tr['fair_flash']))} %"
     if see:
         def g(rig, skin, ch=1, sss=True):
             for c in see['cases']:
@@ -109,6 +114,9 @@ def main():
             return None
         nums['see'] = dict(fair_flash=g('flash', 'fair'), fair_softbox=g('softbox', 'fair'),
                            deep_softbox_r=g('softbox', 'deep', 0), medium_softbox=g('softbox', 'medium'))
+        by_strain = {c['strain']: c['ratio_rgb'][1] for c in see['cases'] if c['skin'] == 'fair' and c['rig'] == 'softbox' and c['sss']}
+        if 0.0 in by_strain and 0.4 in by_strain:
+            nums['strain'] = {'from': f'{by_strain[0.0]:.2f}', 'to': f'{by_strain[0.4]:.2f}'}
     if fs:
         v = fs['variants']
         add = v['additive luminance, holo excluded']['mesh']['detail_rms']
@@ -126,7 +134,7 @@ def main():
                   dusk_sky='Dusk sky')
     data = dict(
         skins=SKINS, rigs=RIGS, views=VIEWS, prompts=dict(corrected=corrected, briefing=briefing), frames=frames,
-        strain=strain, coverage=coverage, seethrough=see, fs=fs, film=measured['thin_film_on_metal']['rows'],
+        strain=strain, coverage=coverage, seethrough=see, transmission=trans, t_open=t_open, fs=fs, film=measured['thin_film_on_metal']['rows'],
         photo=[dict(label=labels[k], rgb=photo[k]) for k in labels if k in photo],
         fits=measured['calibration']['fits'], target_mesh=measured['calibration']['target_mesh'], nums=nums,
     )

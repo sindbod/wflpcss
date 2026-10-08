@@ -59,8 +59,8 @@ SCENARIOS = {
             'Direct on-camera flash photograph, flash-lit subject against a darker ambient background. Hard frontal '
             'light with no visible cast shadows from the garment, because the flash sits on the lens axis and every '
             'shadow falls straight behind what casts it; a soft specular sheen runs down the centre of the torso.'),
-        mesh=('{mesh} panels: the skin shows through the open net but darker and tinted toward the yarn colour; the '
-              'net looks denser and more opaque where the body curves away from the camera.'),
+        mesh=('{mesh} panels: the skin shows through the open net at about a third of its bare brightness, tinted '
+              'toward the yarn colour; the net looks denser and more opaque where the body curves away from the camera.'),
         lace='{lace} embroidery, cords and satin channels read deep burgundy with small hard highlights.',
         negative='cast shadows under the seams, shadow outlines around the lace, glowing mesh, see-through mesh at the body edges',
     ),
@@ -83,8 +83,9 @@ SCENARIOS = {
             'Commercial catalogue photograph, large softboxes and a white sweep, soft wrap-around light. No visible '
             'cast shadows from the garment, which lies within millimetres of the skin; only a slight darkening where '
             'the fabric presses into the body.'),
-        mesh=('{mesh} panels: even, matte see-through; the skin reads at about a third of its bare brightness '
-              'through the net and shifts toward the yarn colour, while the dots and yarn stay crisp.'),
+        mesh=('{mesh} panels: even, matte see-through; the skin reads at about a fifth of its bare brightness '
+              'through the net, darker than under a frontal flash because light from wide angles meets the yarn '
+              'twice, and shifts toward the yarn colour, while the dots and yarn stay crisp.'),
         lace='{lace} embroidery shows its relief as soft sheen on the raised cords and satin-stitch petals.',
         negative='hard shadows, harsh highlights, glowing mesh, rainbow everywhere on the bands',
     ),
@@ -133,8 +134,8 @@ HOLO = {
 
 SKIN = {
     'fair': dict(
-        label='fair', mst=2,
-        corrected=('Fair skin: under the net it keeps its pink undertone but drops to roughly a third of its bare '
+        label='fair', mst=5,
+        corrected=('Fair skin: under the net it keeps its pink undertone but drops to a fifth to a third of its bare '
                    'brightness and shifts toward the yarn colour; moles and freckles stay visible as soft shapes. '
                    'Shadows on the skin are warm and slightly more saturated than the lit skin, cooled only by blue '
                    'ambient light.')),
@@ -143,10 +144,11 @@ SKIN = {
         corrected=('Medium olive skin: under the net it keeps its golden-olive undertone and darkens the same way; '
                    'the yarn colour takes a larger share of the panel colour than on fair skin.')),
     'deep': dict(
-        label='deep', mst=9,
-        corrected=("Deep skin: under the net it darkens further and the yarn's own colour and sheen dominate, so the "
-                   'net reads as a lighter, burgundy-tinted pattern over the skin. Bare skin shows specular highlights '
-                   'as strong as on fair skin, which stand out more against it.')),
+        label='deep', mst=8,
+        corrected=('Deep skin: under the net it darkens by the same factor, but the yarn is now as bright as the skin '
+                   'seen through the openings, so the yarn colour and sheen dominate and the weave reads as a lighter '
+                   'burgundy lattice. Bare skin shows specular highlights as strong as on fair skin, which stand out more '
+                   'against it.')),
 }
 
 VIEWS = {

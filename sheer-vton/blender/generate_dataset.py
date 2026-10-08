@@ -32,7 +32,7 @@ from comfyui_sheer_vton import prompts  # noqa: E402
 # Blender (X, Y, Z) -> three.js (x, y, z) = (X, Z, -Y)
 B2T = Matrix(((1, 0, 0, 0), (0, 0, 1, 0), (0, -1, 0, 0), (0, 0, 0, 1)))
 ANCHORS = ('fair', 'medium', 'deep')
-MST = (2, 6, 9)
+MST = (5, 6, 8)  # nearest Monk Skin Tone of the three anchors (tools/mst_check.py)
 
 
 def skin_at(s):

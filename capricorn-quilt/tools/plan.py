@@ -54,6 +54,7 @@ class System:
     binding_w: float
     round_to: float    # yardage rounding step
     extra: float       # straightening / shrinkage allowance per fabric
+    long_extra: float  # extra length for long strips that are trimmed to fit later
 
     def cut(self, n):
         return n * self.unit + 2 * self.sa
@@ -101,9 +102,9 @@ def fmt_yards(yd: Fraction):
 
 SYSTEMS = {
     "cm": System("cm", unit=5.0, sa=0.75, hst_cut=8.0, hst8_cut=16.0, wof=105.0, binding_w=6.0,
-                 round_to=10.0, extra=15.0),
+                 round_to=10.0, extra=15.0, long_extra=2.0),
     "in": System("in", unit=2.0, sa=0.25, hst_cut=3.0, hst8_cut=6.0, wof=40.0, binding_w=2.5,
-                 round_to=4.5, extra=6.0),
+                 round_to=4.5, extra=6.0, long_extra=0.75),
 }
 
 # ------------------------------------------------------------------- build
@@ -183,6 +184,91 @@ def piece_table():
 
 HST_COUNT = COUNTS[("HST",)]
 
+
+def trim_later_labels():
+    """Long single strips that are sewn to a pieced unit: cut them long, trim to fit."""
+    out = {FRAME_LEAVES["bottom"].label, FRAME_LEAVES["left"].label, FRAME_LEAVES["right"].label}
+    first = WINDOW_TREE.children[0]
+    if isinstance(first, Leaf):
+        out.add(first.label)
+    right = BAND_TREE.children[-1]
+    if isinstance(right, Node):
+        for c in (right.children[0], right.children[-1]):
+            if isinstance(c, Leaf) and c.kind == "L":
+                out.add(c.label)
+    return out
+
+
+TRIM_LATER = trim_later_labels()
+
+
+# ------------------------------------------------------- seam crossings
+def edge_colour(code, side):
+    """Colour along one edge of a cell ('L' or 'D'); each HST edge is one colour."""
+    if code == "#":
+        return "L"
+    if code == ".":
+        return "D"
+    light = {"7": ("top", "left"), "9": ("top", "right"), "1": ("bottom", "left"), "3": ("bottom", "right")}[code]
+    return "L" if side in light else "D"
+
+
+def cell(r, c):
+    if 0 <= r < NROWS and 0 <= c < NCOLS:
+        return GRID[r][c]
+    return None
+
+
+def diag_ends(code):
+    """Corners where an HST's diagonal seam ends."""
+    if code in ("7", "3"):
+        return {"tr", "bl"}
+    if code in ("9", "1"):
+        return {"tl", "br"}
+    return set()
+
+
+def crossing_kind(gy, gx, seam):
+    """At grid point (gx, gy) on a horizontal ('h') or vertical ('v') seam: does a
+    visible outline continue across the seam ('line'), end on it ('point') or neither?"""
+    nw, ne, sw, se = cell(gy - 1, gx - 1), cell(gy - 1, gx), cell(gy, gx - 1), cell(gy, gx)
+    if seam == "h":
+        a = bool(nw and ne and edge_colour(nw, "right") != edge_colour(ne, "left")) \
+            or bool(nw and "br" in diag_ends(nw)) or bool(ne and "bl" in diag_ends(ne))
+        b = bool(sw and se and edge_colour(sw, "right") != edge_colour(se, "left")) \
+            or bool(sw and "tr" in diag_ends(sw)) or bool(se and "tl" in diag_ends(se))
+    else:
+        a = bool(nw and sw and edge_colour(nw, "bottom") != edge_colour(sw, "top")) \
+            or bool(nw and "br" in diag_ends(nw)) or bool(sw and "tr" in diag_ends(sw))
+        b = bool(ne and se and edge_colour(ne, "bottom") != edge_colour(se, "top")) \
+            or bool(ne and "bl" in diag_ends(ne)) or bool(se and "tl" in diag_ends(se))
+    if a and b:
+        return "line"
+    if a or b:
+        return "point"
+    return None
+
+
+def piece_ids():
+    pid = [[None] * NCOLS for _ in range(NROWS)]
+    for i, lf in enumerate(all_leaves()):
+        for r, c in lf.rect.cells():
+            pid[r][c] = i
+    return pid
+
+
+def match_points(gy, c0, c1):
+    """Grid x positions on the horizontal seam at row line gy where an outline of the
+    design continues across the seam and a seam meets it from both sides."""
+    pid = piece_ids()
+    out = []
+    for gx in range(c0 + 1, c1):
+        above = pid[gy - 1][gx - 1] != pid[gy - 1][gx]
+        below = pid[gy][gx - 1] != pid[gy][gx]
+        if above and below and crossing_kind(gy, gx, "h") == "line":
+            out.append(gx)
+    return out
+
 # ---------------------------------------------------------------- cutting
 @dataclass
 class Cut:
@@ -191,6 +277,7 @@ class Cut:
     b: float      # along the strip
     rotated: bool = False
     trimmed: bool = False  # cut from a wider strip, extra width trimmed off
+    extra: float = 0.0     # cut this much longer, trim to the pieced unit later
 
 
 def cutting_plan(sys_: System):
@@ -202,13 +289,14 @@ def cutting_plan(sys_: System):
         for row in piece_table():
             if row["fabric"] != fab:
                 continue
+            extra = sys_.long_extra if row["label"] in TRIM_LATER else 0.0
             for _ in range(row["count"]):
-                items.append((sys_.cut(row["a"]), sys_.cut(row["b"]), row["label"]))
+                items.append((sys_.cut(row["a"]), sys_.cut(row["b"]) + extra, row["label"], extra))
         for _ in range(hst_pairs):
-            items.append((sys_.hst_cut, sys_.hst_cut, "□"))
+            items.append((sys_.hst_cut, sys_.hst_cut, "□", 0.0))
         items.sort(key=lambda t: (-t[0], -t[1], t[2]))
         strips = []
-        for a, b, label in items:
+        for a, b, label, extra in items:
             # Candidate strips: same width (piece runs along the strip) or as wide as the
             # piece is long (piece turned across the strip).  Fill the leftovers of the
             # widest strips first, best fit within the same width.
@@ -223,18 +311,18 @@ def cutting_plan(sys_: System):
                 if rot:
                     s["cuts"].append(Cut(label, b, a, True)); s["free"] -= a
                 else:
-                    s["cuts"].append(Cut(label, a, b)); s["free"] -= b
+                    s["cuts"].append(Cut(label, a, b, extra=extra)); s["free"] -= b
                 continue
             # Last resort before a new strip: cut the piece from the leftover of a
             # wider strip and trim away the extra width.
             wider = [s for s in strips if s["width"] > a + 1e-9 and s["free"] >= b - 1e-9 and s["cuts"][0].label != "□"]
             if wider and label != "□":
                 s = min(wider, key=lambda s: (s["width"], s["free"]))
-                s["cuts"].append(Cut(label, a, b, trimmed=True)); s["free"] -= b
+                s["cuts"].append(Cut(label, a, b, trimmed=True, extra=extra)); s["free"] -= b
                 continue
             if b > sys_.wof:
                 raise ValueError(f"{label} is longer than the usable fabric width")
-            strips.append(dict(width=a, free=sys_.wof - b, cuts=[Cut(label, a, b)]))
+            strips.append(dict(width=a, free=sys_.wof - b, cuts=[Cut(label, a, b, extra=extra)]))
         if fab == "D":
             n_bind = math.ceil((4 * NCOLS * sys_.unit + (25 if sys_.key == "cm" else 10)) / sys_.wof)
             for _ in range(n_bind):
@@ -286,6 +374,7 @@ def sanity():
                 assert used <= sys_.wof + 1e-9, (key, fab, s)
                 for c in s["cuts"]:
                     assert abs(c.a - s["width"]) < 1e-9 or (c.trimmed and c.a < s["width"])
+                    assert c.extra == 0 or c.label in TRIM_LATER
     return True
 
 

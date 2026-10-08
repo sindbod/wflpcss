@@ -15,7 +15,8 @@ from collections import defaultdict
 from pathlib import Path
 
 from figures import (assembly_svg, band_svg, block_flat_svg, block_svg, chart_svg, constellation_svg,
-                     hero_svg, hst_method_svg, section_svg, strip_svgs, window_map_svg, window_thumb_svg)
+                     hero_svg, hst_method_svg, section_pins, section_svg, strip_svgs, window_map_svg,
+                     window_thumb_svg)
 from plan import (BAND_TREE, BLOCK_INFO, BLOCK_TREES, FRAME_LEAVES, GRID, HST_COUNT, NCOLS, NROWS, PLANS,
                   ROOT, SYSTEMS, WINDOW, WINDOW_TREE, all_leaves, piece_table, sanity)
 from quilt import H, Leaf, leaves
@@ -224,15 +225,17 @@ def strip_cards(sys_key, fab):
         else:
             groups = []
             for c in st["cuts"]:
-                key = (c.label, c.b, c.trimmed, c.a)
+                key = (c.label, c.b, c.trimmed, c.a, c.extra)
                 if groups and groups[-1][0] == key:
                     groups[-1][1] += 1
                 else:
                     groups.append([key, 1])
             names = []
-            for (label, b, trimmed, a), k in groups:
+            for (label, b, trimmed, a, extra), k in groups:
                 t = f'{k} × {label}' if k > 1 else label
                 t += f' at {sy.fmt(b)}'
+                if extra:
+                    t += f' ({sy.fmt(extra)} extra, trim to fit later)'
                 if trimmed:
                     t += f', trimmed to {sy.fmt(a)} wide'
                 names.append(t)
@@ -276,6 +279,7 @@ def block_cards():
         <ol>
           <li>Join the triangles in two rows of two, exactly as shown, so all three pinwheels spin the same way.</li>
           <li>Join the rows. Pin the centre so the four points meet. Each block measures {unf_dims(2, 2)}.</li>
+          <li>Eight seams meet in the centre. Press the last seam open, or spin it: undo the two stitches inside the seam allowance at the centre and press the seams around in a circle, so the centre lies flat.</li>
         </ol>
       </article>
       <article class="card">
@@ -295,9 +299,18 @@ def section_cards():
     for i, node in enumerate(WINDOW_TREE.children, 1):
         r = node.rect
         if isinstance(node, Leaf):
-            how = f'<ol class="joins"><li>One piece: {chip(node)}</li></ol>'
+            how = (f'<ol class="joins"><li>One piece: {chip(node)}. It is cut {m(CM.fmt(CM.long_extra), IN.fmt(IN.long_extra))} long: '
+                   f'trim it to the width of section 2 before you join the two.</li></ol>')
         else:
             how = steps_html(node)
+        top, bottom = section_pins(i)
+        pins = []
+        if top:
+            pins.append(f'{len(top)} with section {i - 1} <span class="pinkey down" aria-hidden="true"></span>')
+        if bottom:
+            pins.append(f'{len(bottom)} with section {i + 1} <span class="pinkey up" aria-hidden="true"></span>')
+        if pins:
+            how += f'<p class="pins">Pin points: {" · ".join(pins)}</p>'
         cards.append(f"""
       <article class="sec" id="s{i}">
         <div class="sec-head"><span class="secno">{i}</span><div><h3>Section {i}</h3><p>{SECTION_NOTES[i - 1]}</p></div>
@@ -309,6 +322,8 @@ def section_cards():
 
 
 # ------------------------------------------------------------------- page
+PIN_TOTAL = 0
+
 CSS = r"""
 :root {
   /* Layout: a pattern booklet. One reading column, diagrams laid on cutting-mat panels, a sticky ruler bar for units. */
@@ -426,6 +441,12 @@ svg.dia { display: block; max-width: 100%; height: auto; margin-inline: auto; }
 .thumbsel { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 svg.thumb { display: block; flex: none; border-radius: 3px; }
 .sqdiag { stroke: var(--seamline); stroke-width: 1; stroke-dasharray: 3 3; fill: none; }
+.extra { fill: var(--paper); opacity: .5; }
+.pin { fill: var(--pen); }
+.pinkey { display: inline-block; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; vertical-align: 1px; margin-inline: 2px; }
+.pinkey.down { border-top: 7px solid var(--pen); }
+.pinkey.up { border-bottom: 7px solid var(--pen); }
+p.pins { margin: 10px 0 0; font-size: .92rem; color: var(--muted); }
 .wrongside { fill: #fff; opacity: .42; }
 .bracket { fill: none; stroke: var(--muted); stroke-width: 1.2; }
 .outline { fill: none; stroke: var(--ink); stroke-width: 1.5; }
@@ -603,6 +624,8 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
 
 
 def page_body():
+    global PIN_TOTAL
+    PIN_TOTAL = sum(len(section_pins(i)[1]) for i in range(1, len(WINDOW_TREE.children) + 1))
     pl = PLANS
     hst_pairs = math.ceil(HST_COUNT / 2)
     total_hst = hst_pairs * 2
@@ -663,7 +686,7 @@ def page_body():
 <section class="part" id="before">
   <div class="part-head"><span class="step">Before you begin</span><h2>How this pattern works</h2></div>
   <ul class="conv">
-    <li><b>Seam allowance</b>All sizes include {m("0.75 cm", "¼″")} seams. Test it: two {m("6.5 cm", "2½″")} squares sewn together must measure {m("11.5 cm", "4½″")} across.</li>
+    <li><b>Seam allowance</b>All sizes include {m("0.75 cm", "¼″")} seams. Test before you start: sew six {m("6.5 cm", "2½″")} scrap squares into a row. It must be {m("31.5 cm", "12½″")} long, exactly as long as a D6 strip. Shorter means your seam is too wide, longer means too narrow. This is the check that matters most: {m("1 mm", "1/32″")} off per seam makes the busiest sections {m("2.4 cm", "¾″")} shorter than the plain strips.</li>
     <li><b>Grid</b>One grid unit is {m("5 cm", "2″")} finished. Every piece is a whole number of units, so every seam lines up with the grid.</li>
     <li><b>Piece codes</b>L = light fabric, D = dark fabric, numbered from smallest to largest. Label each stack as you cut.</li>
     <li><b>WOF</b>Width of fabric: cut strips selvage to selvage. The plans need {m("105 cm", "40″")} of usable width.</li>
@@ -674,7 +697,8 @@ def page_body():
 
 <section class="part" id="cutting">
   <div class="part-head"><span class="step">Cutting</span><h2>Cut the strips, then the pieces</h2>
-    <p class="prose">Each diagram is one strip cut across the width of the fabric, with the pieces in cutting order. Grey areas are left over. Pieces marked “trimmed” are cut to length from a wider strip and then trimmed to width.</p></div>
+    <p class="prose">Each diagram is one strip cut across the width of the fabric, with the pieces in cutting order. Grey areas are left over. Pieces marked “trimmed” are cut to length from a wider strip and then trimmed to width.</p>
+    <p class="prose">The four long strips <span class="chip D">D10</span> <span class="chip L">L6</span> <span class="chip L">L7</span> <span class="chip L">L8</span> are cut {m(CM.fmt(CM.long_extra), IN.fmt(IN.long_extra))} longer than they finish (the pale end in the diagrams). Each one is sewn to a pieced part, so you trim it to the length you measure on that part.</p></div>
   {cutting_block("L", "Fabric L, light", m(pl["cm"]["L"]["buy"], pl["in"]["L"]["buy"]) + " · ibex, frame, sky band")}
   {cutting_block("D", "Fabric D, dark", m(pl["cm"]["D"]["buy"], pl["in"]["D"]["buy"]) + " · night window, star centres, binding")}
   <p class="note">Backing and batting: cut both to {m("120 × 120 cm", "48 × 48″")}. Hanging sleeve: one strip {m("22 × 95 cm", "8½ × 38″")}.</p>
@@ -708,7 +732,7 @@ def page_body():
   <div class="cols" style="margin-top:20px">
     <ol class="prose">
       <li>Middle row, left to right: <span class="seq"><span class="chip L">L2</span><span class="chip blk">Nashira</span><span class="chip L">L10</span><span class="chip blk">Dabih</span><span class="chip L">L2</span><span class="chip blk">Algedi</span><span class="chip L">L9</span></span>. It measures {unf_dims(14, 2)}. Note that L10 lies on its side here.</li>
-      <li>Sew an <span class="chip L">L6</span> strip to the top and another to the bottom. The unit measures {unf_dims(14, 4)}.</li>
+      <li>Measure the middle row through its centre and trim both <span class="chip L">L6</span> strips to that length. Sew one to the top and one to the bottom. The unit measures {unf_dims(14, 4)}.</li>
       <li>Join <span class="chip L">L10</span>, the Deneb Algedi block and this unit, left to right.</li>
     </ol>
     <p class="note">The finished band measures {band_unf}. Its light background and the light side strips of the frame become one colour field, so the stars float in a light sky.</p>
@@ -723,7 +747,8 @@ def page_body():
     <div class="prose">
       <p>In each diagram below, the pieces are spread apart along the seams you sew. Most sections are a single row joined left to right. Section 11 has one column to make first: the edelweiss block over a <span class="chip D">D3</span>.</p>
       <p>Triangles appear as small icons in the sewing order. For example, {chip(Leaf(WINDOW, "HST", corner="9"))} is a triangle unit with the light half at the top right.</p>
-      <p class="note"><b>Keep the lines straight.</b> The horn, the neck and the legs run across section seams. Pin at every triangle point and every seam that must meet before you join two sections.</p>
+      <p class="note"><b>Keep the lines straight.</b> The triangle marks <span class="pinkey down" aria-hidden="true"></span><span class="pinkey up" aria-hidden="true"></span> in each diagram show the {PIN_TOTAL} seams where the horn, head, neck, body or legs continue into the next section. Pin those first, then both ends, then ease in any difference between the pins. If a section is more than {m("3 mm", "⅛″")} off its size, re-sew a seam rather than stretching it.</p>
+      <p>Sections 10 and 11 have the most pin points. Sew them first as a test: if the legs line up there, the rest will too.</p>
       <p>The finished window measures {win_unf}.</p>
     </div>
   </div>
@@ -735,8 +760,8 @@ def page_body():
   <div class="cols">
     <figure class="panel">{assembly_svg()}<figcaption>Wide gaps are sewn last: window and L8 first, then the side strips, then the sky band.</figcaption></figure>
     <ol class="prose">
-      <li>Sew <span class="chip L">L8</span> to the bottom edge of the window. The ibex now stands on solid ground.</li>
-      <li>Sew an <span class="chip L">L7</span> strip to the left and right edges. Each runs from the top of the window to the bottom of L8.</li>
+      <li>Measure the window across its middle and trim <span class="chip L">L8</span> to that length. Sew it to the bottom edge. The ibex now stands on solid ground.</li>
+      <li>Measure the height of window and L8 through the middle and trim both <span class="chip L">L7</span> strips to that length. Sew them to the left and right edges.</li>
       <li>Sew the sky band to the top. Match its ends with the side strips.</li>
       <li>The quilt top measures {top_unf}. Stay-stitch around the edge, about {m("0.3 cm", "⅛″")} from the raw edge, to keep the outer seams from opening.</li>
     </ol>
@@ -778,7 +803,7 @@ def page_body():
 </section>
 
 <footer>
-  <p>Steinbock is an original design made as a companion to the patchwork lion zodiac quilt. Every measurement, cutting plan and diagram on this page is generated from one design grid and checked against it: each grid cell is covered exactly once, with the right fabric.</p>
+  <p>Steinbock is an original design made as a companion to the patchwork lion zodiac quilt. Every measurement, cutting plan and diagram on this page is generated from one design grid and checked against it: each grid cell is covered exactly once, with the right fabric. The quilt was also sewn in software, seam by seam in the order given here, with real seam allowances and realistic sewing errors.</p>
   <p>Star positions: Wolfram StarData. Names: δ Cap Deneb Algedi, γ Cap Nashira, β Cap Dabih, α Cap Algedi.</p>
 </footer>
 </main>

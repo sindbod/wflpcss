@@ -4,7 +4,7 @@ from __future__ import annotations
 import math
 
 from plan import (BAND_TREE, BLOCK_TREES, BLOCKS, FRAME, FRAME_LEAVES, GRID, NCOLS, NROWS, PLANS, SYSTEMS,
-                  WINDOW, WINDOW_TREE, all_leaves)
+                  WINDOW, WINDOW_TREE, all_leaves, match_points)
 from quilt import H, V, Leaf, Node, Rect, leaves
 from svg import DTRI, TRI, cell_shapes, draw_exploded, draw_flat, explode, f, label_text, svg_wrap
 
@@ -194,9 +194,43 @@ def exploded_svg(tree, s, gap=8, title=None, expand_blocks=False):
     return svg_wrap(body, w, h, cls="dia exploded", title=title)
 
 
-def section_svg(i, s=40):
+def section_pins(i):
+    """Seams where an outline continues into the section above / below."""
     node = WINDOW_TREE.children[i - 1]
-    return exploded_svg(node, s, gap=7, title=f"Section {i}, exploded")
+    r = node.rect
+    top = match_points(r.r0, r.c0, r.c1) if i > 1 else []
+    bottom = match_points(r.r1, r.c0, r.c1) if i < len(WINDOW_TREE.children) else []
+    return top, bottom
+
+
+def section_svg(i, s=40, gap=7, pad=2):
+    node = WINDOW_TREE.children[i - 1]
+    body, w, h = draw_exploded(node, s, gap=gap, block_trees=BLOCK_TREES, expand_blocks=False, pad=pad)
+    items, _, _ = explode(node, s, gap, BLOCK_TREES, False)
+    top, bottom = section_pins(i)
+    mg = 13
+
+    def seam_x(gx, row_attr, row):
+        right = left = None
+        for lf, x, y, tag in items:
+            if tag not in (None, "frame") or getattr(lf.rect, row_attr) != row:
+                continue
+            if lf.rect.c1 == gx:
+                right = x + lf.rect.w * s
+            if lf.rect.c0 == gx:
+                left = x
+        return pad + (right + left) / 2
+
+    marks = []
+    for gx in top:
+        x = seam_x(gx, "r0", node.rect.r0)
+        marks.append(f'<polygon class="pin" points="{f(x - 5)},{f(mg - 9)} {f(x + 5)},{f(mg - 9)} {f(x)},{f(mg - 2)}"/>')
+    for gx in bottom:
+        x = seam_x(gx, "r1", node.rect.r1)
+        y = mg + h
+        marks.append(f'<polygon class="pin" points="{f(x - 5)},{f(y + 9)} {f(x + 5)},{f(y + 9)} {f(x)},{f(y + 2)}"/>')
+    inner = f'<g transform="translate(0 {mg})">{body}</g>' + "".join(marks)
+    return svg_wrap(inner, w, h + 2 * mg, cls="dia exploded", title=f"Section {i}, exploded, with pin marks")
 
 
 def band_svg(s=42):
@@ -337,6 +371,9 @@ def strip_svgs(sys_key, fab, width_px=660):
             parts.append(f'<rect class="cutedge" x="{f(x)}" y="0" width="{f(w)}" height="{f(ph)}"/>')
             if c.trimmed:
                 parts.append(f'<rect class="waste" x="{f(x)}" y="{f(ph)}" width="{f(w)}" height="{f(h - ph)}"/>')
+            if c.extra:
+                xe = x + (c.b - c.extra) * k
+                parts.append(f'<rect class="extra" x="{f(xe)}" y="0" width="{f(c.extra * k)}" height="{f(ph)}"/>')
             if c.label == "□":
                 parts.append(f'<path class="sqdiag" d="M{f(x + 5)},{f(5)} L{f(x + w - 5)},{f(ph - 5)}"/>')
             else:

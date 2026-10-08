@@ -1,0 +1,47 @@
+{
+ "about": "Linear sRGB medians from the example photo (840 x 1120 webp, decoded with the sRGB curve). The photo itself is kept out of the repository and the page. Flash at dusk; the white cat reads 0.85, so readings are close to albedo times the flash irradiance.",
+ "photo": {
+  "white_cat": [0.847, 0.831, 0.815],
+  "bare_skin_keyhole": [0.791, 0.540, 0.434],
+  "bare_skin_thigh": [0.761, 0.479, 0.376],
+  "bare_skin_chest": [0.672, 0.402, 0.305],
+  "mesh_over_skin_belly": [0.376, 0.188, 0.171],
+  "mesh_over_skin_lower_belly": [0.296, 0.133, 0.122],
+  "satin_belt": [0.100, 0.0097, 0.016],
+  "satin_belt_highlight_p90": [0.275, 0.051, 0.073],
+  "lace_cup": [0.150, 0.031, 0.038],
+  "dusk_sky": [0.181, 0.314, 0.462]
+ },
+ "observations": [
+  "No cast shadows from the lace, channels or straps are visible on the skin: the flash is on the lens axis.",
+  "The lower belly, which turns away from the camera, reads darker through the mesh than the belly facing it (0.133 vs 0.188 in green).",
+  "The satin highlight is tinted (red:green:blue about 1 : 0.24 : 0.32 after removing the base colour), not white."
+ ],
+ "calibration": {
+  "method": "Scene irradiance pi (white albedo 1 renders 1.0). Fair-skin albedo iterated until the front-centre skin under the on-axis flash renders the photo's bare-skin reading; then the net's bar width and the yarn's translucency fitted to the photo's mesh-over-skin colour. Render values are scene-linear means at the same places (front centre, z = 0.355 m for skin, z = 0.09 m for mesh).",
+  "target_skin": [0.76, 0.49, 0.38],
+  "render_skin": [0.763, 0.493, 0.382],
+  "fair_skin_albedo": [0.545, 0.325, 0.235],
+  "target_mesh": [0.376, 0.188, 0.171],
+  "fits": [
+   {"bar_width_mm": 0.22, "coverage": 0.60, "render_mesh": [0.338, 0.147, 0.174], "note": "first estimate from a plain alpha-blend reading of the photo: too dark"},
+   {"bar_width_mm": 0.18, "coverage": 0.51, "render_mesh": [0.380, 0.177, 0.195]},
+   {"bar_width_mm": 0.165, "coverage": 0.47, "render_mesh": [0.371, 0.179, 0.167]},
+   {"bar_width_mm": 0.155, "coverage": 0.45, "render_mesh": [0.384, 0.189, 0.174], "chosen": true}
+  ],
+  "yarn": {"reflect": [0.10, 0.010, 0.016], "transmit": [0.20, 0.004, 0.10]},
+  "net": {"pitch_mm": 0.6, "bar_width_mm": 0.155, "bar_thickness_mm": 0.09, "dot_pitch_mm": 9.0, "dot_radius_mm": 0.85, "dot_height_mm": 0.35, "offset_from_skin_mm": 0.5}
+ },
+ "thin_film_on_metal": {
+  "about": "Blender Principled BSDF thin film, normal-incidence reflectance (linear RGB) of a smooth surface under white light.",
+  "rows": [
+   {"metal": "aluminium (0.91, 0.92, 0.92)", "film": "none", "rgb": [0.91, 0.92, 0.92]},
+   {"metal": "aluminium", "film": "n 1.5, 380 nm", "rgb": [0.906, 0.913, 0.842]},
+   {"metal": "aluminium", "film": "n 2.4, 380 nm", "rgb": [0.956, 0.758, 0.893]},
+   {"metal": "aluminium", "film": "n 2.4, 250 nm", "rgb": [0.976, 0.818, 0.817]},
+   {"metal": "titanium-like (0.55, 0.50, 0.45)", "film": "none", "rgb": [0.55, 0.50, 0.45]},
+   {"metal": "titanium-like", "film": "n 2.4, 380 nm", "rgb": [0.563, 0.208, 0.388]},
+   {"metal": "titanium-like", "film": "n 2.4, 250 nm", "rgb": [0.723, 0.146, 0.499]}
+  ]
+ }
+}

@@ -1,0 +1,114 @@
+/* Hexagonal tulle (warp-knit net) with optional flocked dots, as a coverage mask.
+ *
+ * The net is treated as real geometry squashed into one sheet: every bar is a flat yarn of width
+ * BarWidth and thickness BarThick, every flocked dot a short cylinder of radius DotRadius and height
+ * DotHeight. For the ray that hits the sheet (camera, light or bounce) the footprint of a bar widens by
+ * (BarThick / 2) tan(theta) along the ray's in-plane direction, so the open area shrinks at grazing
+ * angles exactly as a real net does, and lights at grazing angles see the same denser net when they
+ * cast its shadow. Stretch scales the cells (the openings) but not the yarn, so stretched net is more
+ * transparent.
+ *
+ * UV is the garment's material coordinate in millimetres (unstretched pattern), Tangent the world
+ * direction of +U. Alpha is 1 on yarn or dot, 0 in an opening. */
+
+#include "stdcycles.h"
+
+shader tulle(
+    point UV = point(0, 0, 0),
+    vector Tangent = vector(1, 0, 0),
+    float Pitch = 0.6,
+    float BarWidth = 0.22,
+    float BarThick = 0.09,
+    float StretchU = 1.0,
+    float StretchV = 1.0,
+    int Dots = 1,
+    float DotPitchU = 10.0,
+    float DotPitchV = 10.0,
+    float DotRadius = 0.9,
+    float DotHeight = 0.35,
+    output float Alpha = 0.0,
+    output float Dot = 0.0,
+    output normal YarnNormal = N)
+{
+  normal Nn = normalize(N);
+  vector T = Tangent - dot(Tangent, Nn) * Nn;
+  T = length(T) > 1e-6 ? normalize(T) : normalize(cross(Nn, vector(0, 0, 1)));
+  /* +V runs up the body (world +Z) on every garment surface of the scene */
+  vector up = vector(0, 0, 1);
+  vector B = up - dot(up, Nn) * Nn - dot(up, T) * T;
+  B = length(B) > 1e-6 ? normalize(B) : normalize(cross(Nn, T));
+
+  /* in-plane travel of the ray per unit height above the sheet (physical units) */
+  vector Iv = normalize(I);
+  float cn = max(fabs(dot(Iv, Nn)), 0.02);
+  vector Dt = Iv - dot(Iv, Nn) * Nn;
+  float du = dot(Dt, T) / cn;
+  float dv = dot(Dt, B) / cn;
+
+  float su = max(StretchU, 0.2), sv = max(StretchV, 0.2);
+  float x = UV[0], y = UV[1];
+
+  /* nearest cell centre of a pointy-top hexagonal lattice with centre spacing Pitch */
+  float p = Pitch, h3 = Pitch * sqrt(3.0);
+  float ax = p * round(x / p), ay = h3 * round(y / h3);
+  float bx = p * (floor(x / p) + 0.5), by = h3 * (floor(y / h3) + 0.5);
+  float da = (x - ax) * (x - ax) + (y - ay) * (y - ay);
+  float db = (x - bx) * (x - bx) + (y - by) * (y - by);
+  float qx = da < db ? x - ax : x - bx;
+  float qy = da < db ? y - ay : y - by;
+
+  /* the cell's nearest face (bar): normals at 0, 60, 120 degrees */
+  float s0 = qx, s1 = 0.5 * qx + 0.8660254 * qy, s2 = -0.5 * qx + 0.8660254 * qy;
+  float nx = 1.0, ny = 0.0, s = s0;
+  if (fabs(s1) > fabs(s)) { nx = 0.5; ny = 0.8660254; s = s1; }
+  if (fabs(s2) > fabs(s)) { nx = -0.5; ny = 0.8660254; s = s2; }
+  float dm = 0.5 * p - fabs(s);
+
+  /* to physical units: a line with material normal n has physical normal S^-1 n */
+  float mx = nx / su, my = ny / sv;
+  float L = sqrt(mx * mx + my * my);
+  float dp = dm / L;
+  mx /= L; my /= L;
+  float dil = 0.5 * BarThick * fabs(mx * du + my * dv);
+  float halfw = 0.5 * BarWidth;
+  int bar = dp < halfw + dil;
+
+  /* flocked dots on a half-drop grid; footprint is the capsule from the dot centre to its top as seen
+   * along the ray */
+  int dot_hit = 0;
+  vector dotN = vector(0, 0, 0);
+  if (Dots) {
+    float cx0 = DotPitchU * round(x / DotPitchU), cy0 = DotPitchV * round(y / DotPitchV);
+    float cx1 = DotPitchU * (floor(x / DotPitchU) + 0.5), cy1 = DotPitchV * (floor(y / DotPitchV) + 0.5);
+    float e0 = (x - cx0) * (x - cx0) + (y - cy0) * (y - cy0);
+    float e1 = (x - cx1) * (x - cx1) + (y - cy1) * (y - cy1);
+    float px = (e0 < e1 ? x - cx0 : x - cx1) * su;
+    float py = (e0 < e1 ? y - cy0 : y - cy1) * sv;
+    float hx = DotHeight * du, hy = DotHeight * dv;
+    float hh = hx * hx + hy * hy;
+    float t = hh > 1e-12 ? clamp((px * hx + py * hy) / hh, 0.0, 1.0) : 0.0;
+    float rx = px - t * hx, ry = py - t * hy;
+    float r = sqrt(rx * rx + ry * ry);
+    if (r < DotRadius) {
+      dot_hit = 1;
+      float k = r / DotRadius;
+      dotN = (rx * T + ry * B) / max(r, 1e-6) * (0.75 * k);
+    }
+  }
+
+  Alpha = (bar || dot_hit) ? 1.0 : 0.0;
+  Dot = dot_hit ? 1.0 : 0.0;
+  if (dot_hit) {
+    YarnNormal = normalize(Nn * sqrt(max(1.0 - dot(dotN, dotN), 0.05)) + dotN);
+  }
+  else if (bar) {
+    /* round yarn: the normal leans away from the bar's centre line, towards the cell interior */
+    float f = clamp(dp / halfw, 0.0, 1.0);
+    vector Mw = mx * T + my * B;
+    float sg = s > 0.0 ? 1.0 : -1.0;
+    YarnNormal = normalize(Nn * sqrt(max(1.0 - 0.8 * f * f, 0.05)) - sg * Mw * (0.9 * f));
+  }
+  else {
+    YarnNormal = Nn;
+  }
+}

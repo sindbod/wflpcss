@@ -1,0 +1,600 @@
+<title>Sheer VTON Ground Truth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an atelier's lab notebook. Findings first; then a workbench with the claims on the left and a sticky
+   render stage on the right that every "show" button drives; then probes, the refiner and the calibration. */
+:root {
+  --bg: #f6f2f3; --surface: #ffffff; --sunken: #ede6e8; --ink: #1d1517; --muted: #66575c; --line: #e0d4d8;
+  --accent: #7c1d35; --accent-ink: #ffffff; --accent-soft: #f4e2e7;
+  --ok: #22654d; --part: #855800; --no: #a2243a; --na: #56606d;
+  --tok-mesh: #e8457f; --tok-lace: #3fa45a; --tok-holo: #3b8fe0;
+  --stage: #121012;
+  --f-display: 'Bodoni Moda', Didot, 'Bodoni 72', 'Times New Roman', serif;
+  --f-body: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --f-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141012; --surface: #1c1618; --sunken: #241d20; --ink: #f1e9eb; --muted: #b3a3a8; --line: #3a2f33;
+    --accent: #e98aa2; --accent-ink: #1d1517; --accent-soft: #3a2029;
+    --ok: #71cba9; --part: #e6b850; --no: #f38fa2; --na: #a9b3c0;
+    --stage: #0b090a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141012; --surface: #1c1618; --sunken: #241d20; --ink: #f1e9eb; --muted: #b3a3a8; --line: #3a2f33;
+  --accent: #e98aa2; --accent-ink: #1d1517; --accent-soft: #3a2029;
+  --ok: #71cba9; --part: #e6b850; --no: #f38fa2; --na: #a9b3c0;
+  --stage: #0b090a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.55 var(--f-body); margin: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 500; text-wrap: balance; margin: 0; line-height: 1.12; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+h3 { font-size: 1.25rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, .mono { font-family: var(--f-mono); font-size: 0.86em; }
+.eyebrow { font: 600 0.72rem/1 var(--f-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.12rem; max-width: 64ch; color: var(--ink); }
+.muted { color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; }
+section { margin-top: 64px; display: grid; gap: 20px; }
+section > header { display: grid; gap: 8px; max-width: 72ch; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* header */
+.top { display: grid; gap: 18px; }
+.top .meta { display: flex; flex-wrap: wrap; gap: 6px 18px; font: 500 0.8rem/1.4 var(--f-mono); color: var(--muted); }
+.tokens-line { display: flex; flex-wrap: wrap; gap: 8px; }
+.tok { font: 500 0.82rem/1 var(--f-mono); padding: 6px 9px; border-radius: 4px; border: 1px solid var(--line); background: var(--surface); display: inline-flex; gap: 7px; align-items: center; }
+.tok i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+
+/* findings */
+.findings { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.findings li { background: var(--surface); padding: 18px 18px 20px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.findings .fig { font: 500 1.9rem/1 var(--f-display); color: var(--accent); font-variant-numeric: tabular-nums; }
+.findings h3 { font: 600 1rem/1.3 var(--f-body); }
+.findings p { font-size: 0.93rem; color: var(--muted); }
+
+/* workbench */
+.bench { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 32px; align-items: start; }
+.claims { display: grid; gap: 28px; min-width: 0; }
+.group { display: grid; gap: 12px; }
+.group > h3 { font-size: 1.35rem; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.claim { display: grid; gap: 8px; padding: 14px 16px 16px; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--vc, var(--na)); border-radius: var(--r); min-width: 0; }
+.claim[data-v="ok"] { --vc: var(--ok); } .claim[data-v="part"] { --vc: var(--part); } .claim[data-v="no"] { --vc: var(--no); } .claim[data-v="na"] { --vc: var(--na); }
+.claim .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.chip { font: 600 0.7rem/1 var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 7px 4px; border-radius: 3px; color: var(--vc); border: 1px solid currentColor; }
+.where { font: 500 0.78rem/1 var(--f-mono); color: var(--muted); }
+.claim blockquote { margin: 0; font: italic 500 1.02rem/1.45 var(--f-display); color: var(--ink); }
+.claim p { font-size: 0.94rem; }
+.claim .fix { font-size: 0.92rem; padding: 8px 10px; background: var(--sunken); border-radius: 4px; }
+.claim .fix b { font-weight: 600; }
+.show { justify-self: start; display: inline-flex; gap: 6px; align-items: center; border: 1px solid var(--line); background: transparent; padding: 6px 10px; border-radius: 4px; font-size: 0.84rem; font-weight: 600; color: var(--accent); cursor: pointer; }
+.show:hover { background: var(--accent-soft); }
+.show::before { content: ""; width: 7px; height: 7px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; transform: rotate(45deg); }
+.legend-v { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 0.85rem; color: var(--muted); }
+.legend-v span { display: inline-flex; gap: 6px; align-items: center; }
+.legend-v i { width: 10px; height: 10px; border-radius: 2px; background: var(--c); }
+
+.stage-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); display: grid; gap: 12px; min-width: 0; }
+.stage { position: relative; background: var(--stage); border-radius: var(--r); overflow: hidden; height: min(66vh, 720px); max-width: 100%; user-select: none; touch-action: pan-y; }
+.stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+.stage .b { clip-path: inset(0 0 0 var(--wipe, 50%)); }
+.stage .ov { pointer-events: none; }
+.stage .wipe-line { position: absolute; top: 0; bottom: 0; left: var(--wipe, 50%); width: 2px; margin-left: -1px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.35); pointer-events: none; }
+.stage .lab { position: absolute; top: 10px; font: 600 0.72rem/1 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: #fff; background: rgba(0,0,0,.55); padding: 6px 8px; border-radius: 3px; pointer-events: none; }
+.stage .lab.l { left: 10px; } .stage .lab.r { right: 10px; }
+.stage .wait { position: absolute; inset: auto 10px 10px auto; font: 500 .72rem/1 var(--f-mono); color: #ddd; background: rgba(0,0,0,.5); padding: 5px 7px; border-radius: 3px; }
+.controls { display: grid; gap: 8px; }
+.ctl { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; align-items: center; }
+.ctl > span { font: 600 0.72rem/1 var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg button { border: 1px solid var(--line); background: var(--surface); padding: 6px 9px; border-radius: 4px; font-size: 0.84rem; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.seg button:disabled { opacity: .45; cursor: not-allowed; }
+.compare-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 0.86rem; }
+.compare-row select { font: inherit; padding: 5px 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 4px; }
+.compare-row input[type=range] { flex: 1 1 140px; accent-color: var(--accent); }
+.check { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.check input { accent-color: var(--accent); }
+.prompt-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); display: grid; }
+.tabs { display: flex; border-bottom: 1px solid var(--line); }
+.tabs button { flex: 1; background: transparent; border: 0; padding: 9px 10px; font-size: 0.84rem; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.prompt-body { padding: 12px 14px; display: grid; gap: 8px; }
+.prompt-text { font: 400 0.84rem/1.5 var(--f-mono); max-height: 11.5em; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.prompt-text .t { color: var(--accent); font-weight: 500; }
+.prompt-foot { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); }
+.btn { border: 1px solid var(--line); background: var(--surface); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.84rem; font-weight: 600; }
+.btn:hover { border-color: var(--accent); }
+.frame-meta { font: 400 0.76rem/1.5 var(--f-mono); color: var(--muted); }
+
+/* figures */
+.figs { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+figure { margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+figure img { width: 100%; border-radius: 4px; display: block; background: var(--stage); }
+.tile img { aspect-ratio: 4 / 5; object-fit: cover; }
+figcaption { font-size: 0.86rem; color: var(--muted); }
+figcaption b { color: var(--ink); font-weight: 600; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.tile { position: relative; }
+.tile span { position: absolute; left: 6px; top: 6px; font: 600 .66rem/1 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: #fff; background: rgba(0,0,0,.55); padding: 4px 6px; border-radius: 3px; }
+.probe { display: grid; gap: 14px; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); min-width: 0; }
+.probe .two { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.probe p { font-size: 0.94rem; max-width: 70ch; }
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { fill: var(--muted); font: 500 11px var(--f-mono); }
+.chart .ax { stroke: var(--line); }
+.chart .grid { stroke: var(--line); stroke-dasharray: 2 3; }
+.chart .l1 { stroke: var(--accent); fill: none; stroke-width: 2; }
+.chart .l2 { stroke: var(--muted); fill: none; stroke-width: 2; stroke-dasharray: 5 4; }
+.chart .ref { stroke: var(--part); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.chart .dot { fill: var(--accent); }
+.chart .bar { fill: var(--accent); }
+.chart .bar2 { fill: var(--muted); }
+.chart .lab { fill: var(--ink); font-weight: 600; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 0.72rem/1.2 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+td.n { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.best td { background: var(--accent-soft); }
+.sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; border: 1px solid var(--line); }
+
+/* pipeline */
+.pipe { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.mermaid-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; overflow-x: auto; }
+.nodes { display: grid; gap: 10px; }
+.node { padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); display: grid; gap: 4px; }
+.node code { color: var(--accent); font-weight: 500; }
+.node p { font-size: 0.9rem; color: var(--muted); }
+.downloads { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.dl { display: grid; gap: 4px; text-align: left; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); cursor: pointer; }
+.dl:hover { border-color: var(--accent); }
+.dl b { font-size: 0.95rem; }
+.dl span { font-size: 0.82rem; color: var(--muted); }
+.dl-note { font-size: 0.86rem; color: var(--muted); }
+.status { font-size: 0.86rem; color: var(--muted); min-height: 1.4em; }
+.limits { display: grid; gap: 10px; max-width: 76ch; padding-left: 18px; margin: 0; }
+.limits li { font-size: 0.94rem; }
+footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 0.85rem; color: var(--muted); display: grid; gap: 6px; }
+
+@media (max-width: 960px) {
+  .findings, .downloads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage-col { position: static; order: -1; }
+  .stage { height: auto; aspect-ratio: 4 / 5; }
+  .pipe, .probe .two { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  .wrap { padding-inline: 16px; }
+  .findings, .downloads { grid-template-columns: minmax(0, 1fr); }
+  .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ctl { grid-template-columns: minmax(0, 1fr); gap: 5px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">Sheer mesh · lace · holo VTON briefing, checked against physics</span>
+    <h1>Sheer VTON Ground Truth</h1>
+    <p class="lede">Path-traced references for the briefing's three materials on a dress form, calibrated to your example photo, on three skin tones under the briefing's lights. Every claim in the briefing is checked against these renders, and the ComfyUI refiner is rebuilt where they disagree.</p>
+    <div class="tokens-line">
+      <span class="tok"><i style="background: var(--tok-mesh)"></i>[PROD_mesh] micro-dot tulle</span>
+      <span class="tok"><i style="background: var(--tok-lace)"></i>[PROD_lace] embroidered lace + satin channels</span>
+      <span class="tok"><i style="background: var(--tok-holo)"></i>[PROD_holo] holographic elastic</span>
+    </div>
+    <div class="meta"><span>Blender Cycles, random-walk skin scattering</span><span><span data-k="frames.count">66</span> frames</span><span>3 skin tones × 4 lights × 4 views</span><span>photo-calibrated mesh: Δ &lt; 2 %</span></div>
+  </header>
+
+  <section aria-labelledby="h-find">
+    <header><span class="eyebrow">What the renders show</span><h2 id="h-find">Six findings</h2></header>
+    <ol class="findings">
+      <li><span class="fig">0 mm</span><h3>On-camera flash casts no seam shadows</h3><p>The flash sits by the lens, so shadows fall behind what casts them. Your photo has none. A hard strobe 45° off-axis gives crisp lines, but only 1–2 mm wide.</p></li>
+      <li><span class="fig num" data-k="find.t2">≈ 0.3</span><h3>Skin under the net reads at about t², not t</h3><p>Light diffuses millimetres inside skin, wider than the 0.4 mm openings, so it crosses the net twice. An alpha blend makes the mesh look too transparent.</p></li>
+      <li><span class="fig num">45 → 85 %</span><h3>Angle closes the net, tension barely opens it</h3><p>Coverage rises from face-on to 75° because the yarn has thickness. Stretching it 40 % opens it only from 50 % to 44 %.</p></li>
+      <li><span class="fig">0th order</span><h3>The briefing's holo is a diffraction foil</h3><p>White glare with violet nearest it is a grating's zeroth and first order. A clear film on bright metal stays near silver with a faint tint.</p></li>
+      <li><span class="fig num" data-k="find.fs">6×</span><h3>Frequency separation needs three fixes</h3><p>Restore from the pass-1 output (pixel-registered), split log-luminance instead of RGB, and keep the holo out. Each is measured below.</p></li>
+      <li><span class="fig">[PROD_*]</span><h3>Tokens are inert until trained</h3><p>A base model reads them as noise. The generator writes token-captioned frames with masks for a LoRA, and the refiner graph loads it.</p></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="h-bench">
+    <header><span class="eyebrow">Claim by claim</span><h2 id="h-bench">The briefing against the renders</h2>
+      <p class="muted">Quotes are verbatim. "Show" puts the evidence on the stage; drag across the stage to compare.</p>
+      <div class="legend-v"><span style="--c: var(--ok)"><i></i>Holds</span><span style="--c: var(--part)"><i></i>Partly</span><span style="--c: var(--no)"><i></i>Doesn't hold</span><span style="--c: var(--na)"><i></i>Not testable here</span></div>
+    </header>
+    <div class="bench">
+      <div class="claims" id="claims"><!--CLAIMS--></div>
+      <aside class="stage-col" aria-label="Render viewer">
+        <div class="stage" id="stage">
+          <img id="img-a" alt="">
+          <img id="img-b" class="b" alt="" hidden>
+          <img id="img-ov" class="ov" alt="" hidden>
+          <div class="wipe-line" id="wipe-line" hidden></div>
+          <span class="lab l" id="lab-a"></span><span class="lab r" id="lab-b" hidden></span>
+          <span class="wait" id="wait" hidden>loading</span>
+        </div>
+        <div class="controls">
+          <div class="ctl"><span>Skin</span><div class="seg" id="seg-skin"></div></div>
+          <div class="ctl"><span>Light</span><div class="seg" id="seg-rig"></div></div>
+          <div class="ctl"><span>View</span><div class="seg" id="seg-view"></div></div>
+          <div class="compare-row">
+            <label for="cmp-dim">Compare</label>
+            <select id="cmp-dim"><option value="">off</option><option value="rig">with light</option><option value="skin">with skin</option></select>
+            <select id="cmp-val" hidden aria-label="Compare with"></select>
+            <input type="range" id="wipe" min="0" max="100" value="50" aria-label="Wipe position" hidden>
+            <label class="check"><input type="checkbox" id="ov">Token outlines</label>
+          </div>
+        </div>
+        <div class="prompt-box">
+          <div class="tabs" role="tablist">
+            <button role="tab" id="tab-c" aria-selected="true">Corrected prompt</button>
+            <button role="tab" id="tab-b" aria-selected="false">Briefing prompt</button>
+          </div>
+          <div class="prompt-body">
+            <div class="prompt-text" id="prompt"></div>
+            <div class="prompt-foot"><span id="prompt-note"></span><button class="btn" id="copy">Copy</button></div>
+          </div>
+        </div>
+        <div class="frame-meta" id="frame-meta"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-probe">
+    <header><span class="eyebrow">Probes</span><h2 id="h-probe">Four effects, isolated</h2></header>
+
+    <div class="probe" id="probe-shadow">
+      <h3>Seam shadows: on-camera flash vs hard strobe</h3>
+      <div class="two">
+        <div class="grid2" id="shadow-grid"></div>
+        <p>A 100 mm close-up of the left channel's foot, the bottom band and the bare skin below it. Under the near-coaxial flash nothing casts a visible shadow. The strobe 45° to the left throws a hairline under the band and channel: they sit 1.7–1.8 mm off the skin, so even 45° light only moves their shadow by about that much. At catalogue distance that is less than a pixel.</p>
+      </div>
+    </div>
+
+    <div class="probe" id="probe-cover">
+      <h3>How open the net is: viewing angle vs tension</h3>
+      <div class="two">
+        <div><svg class="chart" id="chart-cover" viewBox="0 0 520 300" role="img" aria-label="Net coverage against viewing angle"></svg></div>
+        <div class="grid2" id="strain-grid"></div>
+      </div>
+      <p>Coverage of this tulle (0.6 mm cells, 0.155 mm yarn, 0.09 mm thick) from the OSL net shader, which widens each yarn's footprint by its thickness times tan θ along the ray. It explains the darker lower belly in your photo and the opaque, glowing edges under rim light. Tension, at right, opens the cells but not the yarn.</p>
+    </div>
+
+    <div class="probe" id="probe-sss">
+      <h3>Why skin under the net reads at t²</h3>
+      <div class="two">
+        <div><svg class="chart" id="chart-see" viewBox="0 0 520 300" role="img" aria-label="Skin see-through ratio per tone"></svg></div>
+        <div class="grid2" id="sss-grid"></div>
+      </div>
+      <p>Each bar is the per-pixel ratio of the front panel rendered with and without the garment, green channel (the burgundy yarn adds almost no green). With subsurface scattering the ratio sits near t² for every tone; with the same skin made opaque it moves toward t. The QA node in the refiner measures the same ratio on generated images.</p>
+    </div>
+
+    <div class="probe" id="probe-holo">
+      <h3>Three holographic models under flash and rim light</h3>
+      <div class="grid3" id="holo-grid"></div>
+      <div class="table-wrap"><table id="film-table"></table></div>
+      <p>Diffraction foil (one grating along the band), glitter foil (0.8 mm cells with random grating directions) and a TiO₂-like film on aluminium. Under the flash only the gratings give white glare with spectral fringes. Under rim light the film's grazing reflection goes silver-white. The table shows why: the brighter the metal, the weaker the film's colour.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-fs">
+    <header><span class="eyebrow">Post-AI step</span><h2 id="h-fs">Frequency separation, scored on ground truth</h2>
+      <p>The macro camera rendered under the flash stands in for the pass-1 output; the same camera under softboxes is the target; the target with its weave blurred away is the refiner's output. Each variant restores detail from the flash frame and is scored against the target. Error is the RMS of the detail band; lower is better.</p></header>
+    <div class="table-wrap"><table id="fs-table"></table></div>
+    <div class="grid3" id="fs-grid"></div>
+  </section>
+
+  <section aria-labelledby="h-pipe">
+    <header><span class="eyebrow">ComfyUI</span><h2 id="h-pipe">The refiner, rebuilt</h2>
+      <p>Pass 1 can be any VTON model; its output and a token mask go in. Core nodes plus four Sheer VTON nodes, checked against ComfyUI's own node definitions (inputs, outputs and link types). The diffusion steps were not run here.</p></header>
+    <div class="pipe">
+      <div class="mermaid-box"><pre class="mermaid">
+flowchart TD
+  P1["Pass 1: any VTON model"] --> L1["LoadImage: pass-1 output"]
+  M["Token mask: R mesh, G lace, B holo"] --> S["SheerMaskSplit"]
+  L1 --> C["Canny"] --> CN1["ControlNet canny 0.75"]
+  L1 --> CN2["ControlNet tile 0.6"]
+  T["SheerTokenPrompt: corrected"] --> E["CLIPTextEncode +/-"]
+  CK["SDXL checkpoint"] --> LO["LoraLoader: token LoRA"] --> E
+  E --> CN1 --> CN2 --> K
+  L1 --> V["VAEEncode"] --> N["SetLatentNoiseMask: mesh + holo"] --> K["KSampler denoise 0.28"]
+  S --> N
+  K --> D["VAEDecode"] --> X["ImageCompositeMasked over pass 1"]
+  X --> F["SheerFrequencyRestore: mesh only, holo excluded"]
+  L1 --> F
+  F --> O["SaveImage"]
+  F --> Q["SheerTransmissionQA: t² check"]
+</pre></div>
+      <div class="nodes">
+        <div class="node"><code>SheerFrequencyRestore</code><p>Restores the weave from the pass-1 image. Defaults: log-luminance split, radius from the weave period, highlight guard, an exclude mask for the holo. Refuses sources that are not the same size as the refined image.</p></div>
+        <div class="node"><code>SheerTokenPrompt</code><p>Builds the refiner prompt from the tokens, the lighting scenario, the skin tone and the holo model, in the briefing's wording or the corrected wording.</p></div>
+        <div class="node"><code>SheerMaskSplit</code><p>Turns a token mask image into mesh, lace, holo, mesh + holo and garment masks.</p></div>
+        <div class="node"><code>SheerTransmissionQA</code><p>Measures how much skin shows through the mesh relative to bare skin and reports whether it reads physically (t²) or like an alpha blend (t).</p></div>
+      </div>
+    </div>
+    <div class="downloads" id="downloads">
+      <button class="dl" data-dl="workflow"><b>Refiner graph</b><span>sheer_vton_refiner.api.json · ComfyUI API format</span></button>
+      <button class="dl" data-dl="comfyui"><b>ComfyUI node pack</b><span>nodes, tests, graph builder, validator, runner · .zip</span></button>
+      <button class="dl" data-dl="blender"><b>Ground-truth scene</b><span>Cycles scene, OSL shaders, lace generator, render and dataset scripts · .zip</span></button>
+      <button class="dl" data-dl="prompts"><b>Prompt matrix</b><span>briefing vs corrected, every light × skin × view × holo · .json</span></button>
+      <button class="dl" data-dl="frames"><b>Ground-truth frames</b><span>every render shown here, masks and manifest · .zip</span></button>
+      <button class="dl" data-dl="dataset"><b>Training sample</b><span>randomised frames, token masks, captions, labels.jsonl · .zip</span></button>
+    </div>
+    <p class="status" id="dl-status" aria-live="polite"></p>
+  </section>
+
+  <section aria-labelledby="h-cal">
+    <header><span class="eyebrow">Calibration</span><h2 id="h-cal">What was measured in your photo</h2>
+      <p>Linear sRGB medians from the example photo. The photo itself is not stored here or in the repository. The white cat reads 0.85, so the flash puts readings close to albedo.</p></header>
+    <div class="table-wrap"><table id="cal-table"></table></div>
+    <div class="table-wrap"><table id="fit-table"></table></div>
+  </section>
+
+  <section aria-labelledby="h-lim">
+    <header><span class="eyebrow">Limits</span><h2 id="h-lim">What this does and doesn't show</h2></header>
+    <ul class="limits">
+      <li>No diffusion model ran. This sandbox has no GPU, and Hugging Face and Civitai are blocked by its network policy. The pass-2 settings (denoise 0.25–0.35, ControlNet weights) are untested. The graph is only checked for structure, against ComfyUI's own node definitions.</li>
+      <li>The renders are path-traced physics, not photographs. The mesh, yarn and fair skin are fitted to one editorial photo whose colour grade is unknown. The medium and deep skin albedos are literature-style estimates, not measurements.</li>
+      <li>The body is a smooth dress form. Real bodies add curvature, folds and fabric that lifts off the skin; lifted fabric is where seam shadows grow wider than 2 mm.</li>
+      <li>The diffraction foil uses a paraxial lobe model: exact for light returning to its source, as with the flash, and approximate elsewhere. The lace is procedural, not a scan of the product.</li>
+      <li>Try-on of intimate apparel should only run on images of adult models who agreed to that use. Keep the pipeline away from arbitrary uploaded photos of people.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Code: <span class="mono">sheer-vton/</span> on branch <span class="mono">ccr-89a75c12-2l1m7b</span> of sindbod/wflpcss.</span>
+    <span>Rendering: Blender 5.2 Cycles (CPU, OSL), Khronos PBR Neutral view transform. Tests: pytest, 27 passing.</span>
+  </footer>
+</div>
+
+<script type="application/json" id="data">/*DATA*/</script>
+<script src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById('data').textContent);
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const el = (tag, attrs = {}, kids = []) => {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'text') e.textContent = v; else if (k === 'html') e.innerHTML = v; else e.setAttribute(k, v);
+    }
+    for (const k of [].concat(kids)) if (k) e.append(k);
+    return e;
+  };
+  const fmt = (x, d = 2) => (x == null || Number.isNaN(x)) ? '–' : Number(x).toFixed(d);
+
+  // ---------- numbers in text
+  for (const n of $$('[data-k]')) {
+    const v = n.dataset.k.split('.').reduce((o, k) => (o == null ? o : o[k]), D.nums);
+    if (v != null) n.textContent = v;
+  }
+
+  // ---------- viewer
+  const SKINS = D.skins, RIGS = D.rigs, VIEWS = D.views;
+  const state = { skin: 'fair', rig: 'flash', view: 'front', cmp: '', cmpVal: '', ov: false, tab: 'c' };
+  try { const s = JSON.parse(localStorage.getItem('sheer-vton-viewer') || 'null'); if (s) Object.assign(state, s); } catch (e) { /* no storage */ }
+  const save = () => { try { localStorage.setItem('sheer-vton-viewer', JSON.stringify(state)); } catch (e) { /* no storage */ } };
+  const src = (skin, rig, view) => view === 'macro' ? `renders/macro/${skin}_${rig}.jpg` : `renders/matrix/${skin}_${rig}_${view}.jpg`;
+  const labelOf = (dim, id) => (dim === 'rig' ? RIGS : dim === 'skin' ? SKINS : VIEWS).find((x) => x.id === id)?.short || id;
+
+  function seg(host, items, key) {
+    host.innerHTML = '';
+    for (const it of items) {
+      const b = el('button', { type: 'button', 'aria-pressed': String(state[key] === it.id), title: it.label, text: it.short });
+      b.addEventListener('click', () => { state[key] = it.id; if (state.cmp === key && state.cmpVal === it.id) state.cmpVal = ''; render(); });
+      host.append(b);
+    }
+  }
+  const imgA = $('#img-a'), imgB = $('#img-b'), imgOv = $('#img-ov');
+  function setImg(img, url) {
+    if (img.getAttribute('src') === url) return;
+    $('#wait').hidden = false;
+    img.onload = img.onerror = () => { $('#wait').hidden = true; };
+    img.src = url;
+  }
+  function promptHTML(text) {
+    const esc = text.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    return esc.replace(/\[PROD_(mesh|lace|holo)\]/g, '<span class="t">[PROD_$1]</span>');
+  }
+  function render() {
+    seg($('#seg-skin'), SKINS, 'skin');
+    seg($('#seg-rig'), RIGS, 'rig');
+    seg($('#seg-view'), VIEWS, 'view');
+    setImg(imgA, src(state.skin, state.rig, state.view));
+    imgA.alt = `${labelOf('skin', state.skin)} skin, ${labelOf('rig', state.rig)}, ${labelOf('view', state.view)}`;
+    $('#lab-a').textContent = state.cmp ? labelOf(state.cmp, state[state.cmp]) : `${labelOf('rig', state.rig)} · ${labelOf('skin', state.skin)}`;
+    const cmpSel = $('#cmp-dim'), valSel = $('#cmp-val');
+    cmpSel.value = state.cmp;
+    valSel.hidden = !state.cmp; $('#wipe').hidden = !state.cmp; $('#wipe-line').hidden = !state.cmp; imgB.hidden = !state.cmp; $('#lab-b').hidden = !state.cmp;
+    if (state.cmp) {
+      const items = (state.cmp === 'rig' ? RIGS : SKINS).filter((x) => x.id !== state[state.cmp]);
+      if (!items.find((x) => x.id === state.cmpVal)) state.cmpVal = items[0].id;
+      valSel.innerHTML = '';
+      for (const it of items) valSel.append(el('option', { value: it.id, text: it.label }));
+      valSel.value = state.cmpVal;
+      const o = { skin: state.skin, rig: state.rig }; o[state.cmp] = state.cmpVal;
+      setImg(imgB, src(o.skin, o.rig, state.view));
+      imgB.alt = `Compared: ${labelOf(state.cmp, state.cmpVal)}`;
+      $('#lab-b').textContent = labelOf(state.cmp, state.cmpVal);
+    }
+    imgOv.hidden = !state.ov;
+    if (state.ov) imgOv.src = `renders/overlays/${state.view}.png`;
+    $('#ov').checked = state.ov;
+    // prompt
+    const key = `${state.rig}|${state.skin}|${state.view}`;
+    const isC = state.tab === 'c';
+    $('#tab-c').setAttribute('aria-selected', String(isC)); $('#tab-b').setAttribute('aria-selected', String(!isC));
+    const p = isC ? D.prompts.corrected[key] : D.prompts.briefing[`${state.rig}|${state.skin}`];
+    $('#prompt').innerHTML = p ? promptHTML(p.positive) : '<span class="muted">The briefing has no off-axis strobe scenario: it is added here because seam shadows need one.</span>';
+    $('#prompt-note').textContent = p ? `Negative: ${p.negative.length > 90 ? p.negative.slice(0, 88) + '…' : p.negative}` : '';
+    $('#copy').hidden = !p;
+    const fm = D.frames[key];
+    $('#frame-meta').textContent = fm ? `${fm.file} · camera az ${fm.az}° el ${fm.el}° · ${fm.dist} m · ${fm.focal} mm · ${fm.res} · ${fm.samples} spp` : '';
+    save();
+  }
+  $('#cmp-dim').addEventListener('change', (e) => { state.cmp = e.target.value; state.cmpVal = ''; render(); });
+  $('#cmp-val').addEventListener('change', (e) => { state.cmpVal = e.target.value; render(); });
+  const stage = $('#stage');
+  const setWipe = (pct) => { stage.style.setProperty('--wipe', `${pct}%`); $('#wipe').value = pct; };
+  $('#wipe').addEventListener('input', (e) => setWipe(e.target.value));
+  let dragging = false;
+  const wipeAt = (ev) => { const r = stage.getBoundingClientRect(); setWipe(Math.max(0, Math.min(100, ((ev.clientX - r.left) / r.width) * 100))); };
+  stage.addEventListener('pointerdown', (ev) => { if (!state.cmp) return; dragging = true; stage.setPointerCapture(ev.pointerId); wipeAt(ev); });
+  stage.addEventListener('pointermove', (ev) => { if (dragging) wipeAt(ev); });
+  stage.addEventListener('pointerup', () => { dragging = false; });
+  $('#ov').addEventListener('change', (e) => { state.ov = e.target.checked; render(); });
+  $('#tab-c').addEventListener('click', () => { state.tab = 'c'; render(); });
+  $('#tab-b').addEventListener('click', () => { state.tab = 'b'; render(); });
+  $('#copy').addEventListener('click', async () => {
+    const text = $('#prompt').textContent;
+    try { await navigator.clipboard.writeText(text); $('#copy').textContent = 'Copied'; }
+    catch (e) { const r = document.createRange(); r.selectNodeContents($('#prompt')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $('#copy').textContent = 'Selected: press Ctrl+C'; }
+    setTimeout(() => { $('#copy').textContent = 'Copy'; }, 1800);
+  });
+  const smooth = () => (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
+  for (const b of $$('[data-show]')) {
+    b.addEventListener('click', () => {
+      const [skin, rig, view, cmp, cmpVal, ov] = b.dataset.show.split(',');
+      Object.assign(state, { skin, rig, view, cmp: cmp || '', cmpVal: cmpVal || '', ov: ov === '1' });
+      setWipe(50);
+      render();
+      if (matchMedia('(max-width: 960px)').matches) stage.scrollIntoView({ behavior: smooth(), block: 'start' });
+    });
+  }
+  for (const b of $$('[data-jump]')) {
+    b.addEventListener('click', () => { const t = document.getElementById(b.dataset.jump); if (t) t.scrollIntoView({ behavior: smooth(), block: 'start' }); });
+  }
+  setWipe(50);
+  render();
+
+  // ---------- probe figures
+  const tile = (url, label, alt) => el('figure', { class: 'tile' }, [el('img', { src: url, alt: alt || label, loading: 'lazy' }), el('span', { text: label })]);
+  for (const [skin, rig, label] of [['fair', 'flash', 'Fair · flash'], ['fair', 'strobe', 'Fair · strobe 45°'], ['deep', 'flash', 'Deep · flash'], ['deep', 'strobe', 'Deep · strobe 45°']])
+    $('#shadow-grid').append(tile(`renders/shadow/${skin}_${rig}.jpg`, label));
+  for (const s of D.strain) $('#strain-grid').append(tile(`renders/strain/${s.file}`, `${s.pct} % strain`, `Net at ${s.pct} percent waist strain`));
+  for (const [file, label] of [['fair_sss', 'Fair · scattering skin'], ['fair_lambert', 'Fair · opaque skin'], ['deep_sss', 'Deep · scattering skin'], ['deep_lambert', 'Deep · opaque skin']])
+    $('#sss-grid').append(tile(`renders/sss/${file}.jpg`, label));
+  for (const rig of ['flash', 'rim']) for (const [k, label] of [['grating', 'Diffraction foil'], ['grating_pixel', 'Glitter foil'], ['film', 'Film on aluminium']])
+    $('#holo-grid').append(tile(`renders/holo/${k}_${rig}.jpg`, `${label} · ${rig === 'flash' ? 'flash' : 'rim'}`));
+
+  // ---------- charts
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
+  function coverChart() {
+    const svg = $('#chart-cover'), W = 520, H = 300, L = 48, R = 16, T = 18, B = 40;
+    const x = (t) => L + (t / 90) * (W - L - R), y = (c) => T + (1 - (c - 0.4) / 0.6) * (H - T - B);
+    for (const c of [0.4, 0.55, 0.7, 0.85, 1.0]) { svg.append(sv('line', { class: 'grid', x1: L, x2: W - R, y1: y(c), y2: y(c) })); svg.append(sv('text', { x: L - 8, y: y(c) + 4, 'text-anchor': 'end' }, `${Math.round(c * 100)}%`)); }
+    for (const t of [0, 15, 30, 45, 60, 75, 90]) svg.append(sv('text', { x: x(t), y: H - B + 18, 'text-anchor': 'middle' }, `${t}°`));
+    svg.append(sv('text', { x: (L + W - R) / 2, y: H - 6, 'text-anchor': 'middle' }, 'viewing angle from the surface normal'));
+    svg.append(sv('line', { class: 'ax', x1: L, x2: W - R, y1: H - B, y2: H - B }));
+    const pts = (k) => D.coverage.angle.map((p) => `${x(p.theta)},${y(p[k])}`).join(' ');
+    svg.append(sv('polyline', { class: 'l1', points: pts('across') }));
+    svg.append(sv('polyline', { class: 'l2', points: pts('along') }));
+    for (const p of D.coverage.angle) svg.append(sv('circle', { class: 'dot', cx: x(p.theta), cy: y(p.across), r: 3 }));
+    const last = D.coverage.angle[D.coverage.angle.length - 1];
+    svg.append(sv('text', { class: 'lab', x: x(last.theta) - 10, y: y(last.across) + 4, 'text-anchor': 'end' }, 'across the bars'));
+    svg.append(sv('text', { x: x(last.theta), y: y(last.along) + 20, 'text-anchor': 'end' }, 'along the bars'));
+  }
+  function seeChart() {
+    const svg = $('#chart-see'), W = 520, H = 300, L = 48, R = 16, T = 18, B = 52;
+    const S = D.seethrough; if (!S) { svg.append(sv('text', { x: 20, y: 40 }, 'measurement pending')); return; }
+    const t = S.open_fraction_face_on, t2 = S.t_squared;
+    const cases = S.cases.filter((c) => c.strain === S.cases[0].strain && (c.sss || c.rig === 'softbox'));
+    const y = (v) => T + (1 - v / 0.7) * (H - T - B);
+    for (const v of [0, 0.2, 0.4, 0.6]) { svg.append(sv('line', { class: 'grid', x1: L, x2: W - R, y1: y(v), y2: y(v) })); svg.append(sv('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, v.toFixed(1))); }
+    const n = cases.length, bw = (W - L - R) / n;
+    cases.forEach((c, i) => {
+      const v = c.ratio_rgb[1], x0 = L + i * bw + bw * 0.18, w = bw * 0.64;
+      svg.append(sv('rect', { class: c.sss ? 'bar' : 'bar2', x: x0, y: y(v), width: w, height: y(0) - y(v) }));
+      svg.append(sv('text', { x: x0 + w / 2, y: y(v) - 5, 'text-anchor': 'middle' }, v.toFixed(2)));
+      svg.append(sv('text', { x: x0 + w / 2, y: H - B + 16, 'text-anchor': 'middle' }, c.skin));
+      svg.append(sv('text', { x: x0 + w / 2, y: H - B + 30, 'text-anchor': 'middle' }, c.sss ? c.rig : 'opaque'));
+    });
+    for (const [v, lab] of [[t, `t = ${t.toFixed(2)} (alpha blend)`], [t2, `t² = ${t2.toFixed(2)} (double pass)`]]) {
+      svg.append(sv('line', { class: 'ref', x1: L, x2: W - R, y1: y(v), y2: y(v) }));
+      svg.append(sv('text', { class: 'lab', x: W - R, y: y(v) - 5, 'text-anchor': 'end' }, lab));
+    }
+  }
+  coverChart(); seeChart();
+
+  // ---------- tables
+  function table(host, head, rows, cls) {
+    host.innerHTML = '';
+    host.append(el('thead', {}, el('tr', {}, head.map((h) => el('th', { text: h })))));
+    const tb = el('tbody');
+    for (const r of rows) {
+      const tr = el('tr', r.best ? { class: 'best' } : {});
+      r.cells.forEach((c, i) => tr.append(el('td', Object.assign({ class: (cls && cls[i]) || '' }, typeof c === 'string' ? { text: c } : { html: c.html }))));
+      tb.append(tr);
+    }
+    host.append(tb);
+  }
+  const sw = (rgb) => { const s = rgb.map((v) => Math.round(255 * (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055))); return `<span class="sw" style="background: rgb(${s.join(',')})"></span>`; };
+  table($('#film-table'), ['Metal', 'Film', 'Reflectance at normal incidence (linear RGB)'],
+    D.film.map((r) => ({ cells: [r.metal, r.film, { html: `${sw(r.rgb)}<span class="mono">${r.rgb.map((v) => v.toFixed(3)).join('  ')}</span>` }] })), ['', '', 'n']);
+  if (D.fs) {
+    const regs = ['mesh', 'lace', 'holo'];
+    const rows = Object.entries(D.fs.variants).map(([name, r]) => ({ best: name.includes('node default') && !name.includes('shifted'),
+      cells: [name, ...regs.map((k) => (r[k] ? fmt(r[k].detail_rms * 1000, 1) : '–')), ...regs.map((k) => (r[k] ? fmt(r[k].psnr, 1) : '–'))] }));
+    table($('#fs-table'), ['Variant', 'Mesh error ×1000', 'Lace', 'Holo', 'Mesh PSNR dB', 'Lace', 'Holo'], rows, ['', 'n', 'n', 'n', 'n', 'n', 'n']);
+    for (const [f, label] of [['source', 'Source: flash (pass-1 stand-in)'], ['refined', 'Refined: target, weave lost'], ['target', 'Target: softbox'],
+      ['restored', 'Node default'], ['briefing', 'Briefing: additive RGB incl. holo'], ['shift2', 'Node default, source 2 px off']])
+      $('#fs-grid').append(tile(`fs/fs_${f}.jpg`, label));
+  } else { $('#fs-table').replaceWith(el('p', { class: 'muted', text: 'Evaluation pending.' })); }
+  table($('#cal-table'), ['Region', 'Linear RGB', ''], D.photo.map((r) => ({ cells: [r.label, { html: `<span class="mono">${r.rgb.map((v) => v.toFixed(3)).join('  ')}</span>` }, { html: sw(r.rgb) }] })), ['', 'n', '']);
+  table($('#fit-table'), ['Net bar width', 'Coverage face-on', 'Rendered mesh over skin', 'Photo'],
+    D.fits.map((f) => ({ best: !!f.chosen, cells: [`${f.bar_width_mm} mm`, `${Math.round(f.coverage * 100)} %`, { html: `${sw(f.render_mesh)}<span class="mono">${f.render_mesh.map((v) => v.toFixed(3)).join('  ')}</span>` }, { html: `${sw(D.target_mesh)}<span class="mono">${D.target_mesh.map((v) => v.toFixed(3)).join('  ')}</span>` }] })), ['n', 'n', 'n', 'n']);
+
+  // ---------- downloads
+  const status = $('#dl-status');
+  let downloads = null;
+  const dlButtons = $$('[data-dl]');
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('downloads').then((d) => { downloads = d; if (!d) { dlButtons.forEach((b) => { b.disabled = true; }); status.textContent = "Downloads aren't available in this view. Everything is in the repository under sheer-vton/."; } }).catch(() => {});
+  } else { status.textContent = 'Downloads work inside the Claude viewer. Everything is also in the repository under sheer-vton/.'; dlButtons.forEach((b) => { b.disabled = true; }); }
+  async function fetchBytes(url) { const r = await fetch(url); if (!r.ok) throw new Error(`${url}: ${r.status}`); return new Uint8Array(await r.arrayBuffer()); }
+  async function bundleZip(bundleUrl, prefix) {
+    const bundle = await (await fetch(bundleUrl)).json();
+    const files = {};
+    for (const [path, text] of Object.entries(bundle.text || {})) files[`${prefix}/${path}`] = fflate.strToU8(text);
+    for (const [path, url] of Object.entries(bundle.fetch || {})) files[`${prefix}/${path}`] = await fetchBytes(url);
+    return new Blob([fflate.zipSync(files, { level: 6 })], { type: 'application/zip' });
+  }
+  const makers = {
+    workflow: async () => ({ filename: 'sheer_vton_refiner.api.json', data: await (await fetch('data/sheer_vton_refiner.api.json')).text() }),
+    prompts: async () => ({ filename: 'sheer_vton_prompts.json', data: await (await fetch('data/prompt_matrix.json')).text() }),
+    comfyui: async () => ({ filename: 'sheer_vton_comfyui.zip', data: await bundleZip('data/bundle_comfyui.json', 'sheer_vton_comfyui') }),
+    blender: async () => ({ filename: 'sheer_vton_blender.zip', data: await bundleZip('data/bundle_blender.json', 'sheer_vton_blender') }),
+    frames: async () => ({ filename: 'sheer_vton_frames.zip', data: await bundleZip('data/bundle_frames.json', 'sheer_vton_frames') }),
+    dataset: async () => ({ filename: 'sheer_vton_training_sample.zip', data: await bundleZip('data/bundle_dataset.json', 'sheer_vton_training_sample') }),
+  };
+  for (const b of dlButtons) {
+    b.addEventListener('click', async () => {
+      if (!downloads) return;
+      b.disabled = true; status.textContent = 'Preparing…';
+      try {
+        const f = await makers[b.dataset.dl]();
+        const r = await downloads.save(f);
+        status.textContent = r && r.status === 'saved' ? `Saved ${f.filename}.` : '';
+      } catch (e) {
+        const code = e && e.code;
+        status.textContent = code === 'declined' ? 'Save cancelled.' : code === 'rate_limited' ? 'A save prompt is already open.' : `Couldn't prepare the file (${(e && (e.code || e.message)) || 'error'}).`;
+      } finally { b.disabled = false; }
+    });
+  }
+})();
+</script>

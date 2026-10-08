@@ -1,0 +1,152 @@
+<div class="group">
+  <h3>1 · Token system</h3>
+  <article class="claim" data-v="ok">
+    <div class="row"><span class="chip">Holds once trained</span><span class="where">[PROD_mesh] · [PROD_lace]</span></div>
+    <blockquote>“[PROD_mesh]: Triggers the ultra-fine hex-weave or micro-dot sheer canvas that allows skin visualization.”</blockquote>
+    <p>Splitting the garment into three tokens is sound: the three materials behave differently under every light. But a base model reads “[PROD_mesh]” as a few meaningless word pieces until a LoRA, a DreamBooth run or a textual-inversion embedding has learned it from captioned images.</p>
+    <p class="fix"><b>Do this:</b> train the tokens on product photos plus generated frames, and load the LoRA in pass 2. The training sample below has captions, token masks and labels.</p>
+    <button class="show" type="button" data-show="fair,softbox,front,,,1">Show the token masks</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">[PROD_holo]</span></div>
+    <blockquote>“[PROD_holo]: Triggers the highly reflective, conductive metal thin-film interference behavior.”</blockquote>
+    <p>Reflective and colourful pull against each other here. A clear film over bright metal only tints the reflection: a TiO₂-like film on aluminium reaches (0.98, 0.82, 0.82) at best. Saturated violet and magenta need a dim metal such as titanium or steel under the film. The rainbow and white glare the briefing asks for in Scenario A come from a diffraction foil, which is what most holographic elastic is.</p>
+    <p class="fix"><b>Do this:</b> decide which product it is and caption that: “holographic diffraction foil” (white glare, rainbow fringes) or “thin-film coated metal” (soft tint shifts).</p>
+    <button class="show" type="button" data-jump="probe-holo">Go to the holo probe</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">Caption format</span></div>
+    <blockquote>“The structural borders and tension bands are composed of a highly reflective [PROD_holo] elastic fabric that exhibits dynamic rainbow color-shifts under studio lighting.”</blockquote>
+    <p>A training caption should name what changes between images (light, view, skin tone) next to the tokens, so the LoRA ties the tokens to the product rather than to one set-up. Optical explanations teach nothing in a caption, and they push it past the 77-token window of the CLIP encoders in SD 1.5 and SDXL, where the rest is cut off.</p>
+    <p class="fix"><b>Use instead:</b> <span class="mono" data-k="caption_short">direct on-camera flash photograph, front view, burgundy [PROD_lace] waist panel on a dress form with [PROD_mesh] micro-dot tulle and [PROD_holo] bands, fair skin (Monk skin tone 2).</span></p>
+  </article>
+</div>
+
+<div class="group">
+  <h3>2 · Lighting matrix</h3>
+  <article class="claim" data-v="no">
+    <div class="row"><span class="chip">Doesn't hold</span><span class="where">A · hard flash</span></div>
+    <blockquote>“Sharp, distinct shadows cast directly onto the skin beneath the [PROD_lace] panel seams.”</blockquote>
+    <p>Not with an on-camera flash. The flash sits beside the lens, so each shadow falls straight behind the edge that casts it, out of the camera's sight; your photo shows none. A bare strobe 45° off-axis does throw crisp shadows, but only 1–2 mm wide, because lace, channels and bands lie within 2 mm of the skin.</p>
+    <p class="fix"><b>Use instead:</b> “Hard frontal light with no visible cast shadows from the garment.” If seam shadows are wanted, move the light off-axis (A′ here).</p>
+    <button class="show" type="button" data-show="fair,flash,front,rig,strobe">Compare flash with strobe</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">A · hard flash</span></div>
+    <blockquote>“Pronounced skin pore texture and natural skin tones are cleanly visible through the translucent [PROD_mesh] panels.”</blockquote>
+    <p>Visible, but darker and redder than “cleanly” suggests. Under the flash the panel passes <span class="num" data-k="see.fair_flash">0.3</span> of the bare skin's green light, and the burgundy yarn adds its own colour. Pores are 0.1–0.3 mm across and the net's cells 0.6 mm, so pore texture comes through broken up.</p>
+    <button class="show" type="button" data-show="fair,flash,macro">Show the macro under flash</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Holds for a grating</span><span class="where">A · hard flash</span></div>
+    <blockquote>“The [PROD_holo] surfaces generate sharp, blinding silver-white specular glares at direct reflective angles, fading out to rich violet and deep magenta iridescent edges.”</blockquote>
+    <p>This describes a diffraction foil lit from the lens: the white zeroth order where the band faces the camera, then the first-order spectrum beside it, violet nearest the glare and red furthest out. A thin film never gives a white glare with coloured edges; it colours the glare itself. Magenta isn't in the spectrum, so on a grating it only appears where orders overlap.</p>
+    <p class="fix"><b>Use instead:</b> “a white mirror glare where the band faces the lens, with narrow spectral rainbow fringes either side, violet nearest the glare and red furthest out.”</p>
+    <button class="show" type="button" data-show="fair,flash,front">Show the bands under flash</button>
+  </article>
+  <article class="claim" data-v="ok">
+    <div class="row"><span class="chip">Holds</span><span class="where">B · softboxes</span></div>
+    <blockquote>“Large overhead softboxes create smooth, seamless gradients of light. Subtle, soft-edged ambient occlusion shadows form where the fabric touches the skin.”</blockquote>
+    <p>Large sources leave no cast shadows from a garment lying on the skin; only a slight darkening remains where the fabric presses in.</p>
+    <button class="show" type="button" data-show="medium,softbox,three_quarter">Show the softbox set-up</button>
+  </article>
+  <article class="claim" data-v="ok">
+    <div class="row"><span class="chip">Holds</span><span class="where">B · softboxes</span></div>
+    <blockquote>“The [PROD_mesh] exhibits a delicate, matte fabric texture without losing transparency over the skin.”</blockquote>
+    <p>See-through belongs to the net and the skin, not to the light: the softbox and the flash pass nearly the same share of skin light (<span class="num" data-k="see.fair_softbox">0.3</span> vs <span class="num" data-k="see.fair_flash">0.3</span> in green).</p>
+    <button class="show" type="button" data-show="fair,softbox,front,rig,flash">Compare softbox with flash</button>
+  </article>
+  <article class="claim" data-v="no">
+    <div class="row"><span class="chip">Doesn't hold</span><span class="where">B · softboxes</span></div>
+    <blockquote>“The [PROD_holo] bands show a clean, broad, continuous liquid-metal rainbow gradient (cyan, magenta, yellow) wrapping smoothly around the model's body contours.”</blockquote>
+    <p>Neither holo model does this. Big sources smear a grating's spectrum into pale fringes along the edges of each reflected softbox, and a film over bright metal stays near silver. A continuous cyan-magenta-yellow sweep is the look of a multilayer dichroic film, which is a different product.</p>
+    <p class="fix"><b>Use instead:</b> “broad bright reflections of the softboxes, fringed with soft spectral colour that shifts along the band as it curves around the body.”</p>
+    <button class="show" type="button" data-show="fair,softbox,front">Show the bands under softboxes</button>
+  </article>
+  <article class="claim" data-v="ok">
+    <div class="row"><span class="chip">Holds</span><span class="where">C · rim light</span></div>
+    <blockquote>“A strong rim light catches the edge of the body, causing the microscopic loose fibers of the [PROD_mesh] boundaries to glow softly.”</blockquote>
+    <p>At the silhouette the net is seen edge-on, closes up (93 % coverage at 80°) and scatters the backlight forward.</p>
+    <button class="show" type="button" data-show="fair,rim,side">Show the rim-lit side view</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">C · rim light</span></div>
+    <blockquote>“The sheer panels filter the background light, shifting color opacity based on fabric tension.”</blockquote>
+    <p>Tension changes it a little: stretching the net 40 % opens it from 50 % to 44 % coverage. Across a body the viewing angle changes it far more: 45 % face-on, 85 % at 75°.</p>
+    <p class="fix"><b>Use instead:</b> “the net looks denser and more opaque where the body curves away from the camera.”</p>
+    <button class="show" type="button" data-jump="probe-cover">Go to angle vs tension</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Holds for a grating</span><span class="where">C · rim light</span></div>
+    <blockquote>“The [PROD_holo] materials act as a dark conductive metal surface reflecting only the extreme edge-lit highlights as bright neon iridescent threads.”</blockquote>
+    <p>Right for a diffraction foil, which can throw saturated colour from a backlight toward the lens. A film over metal reflects almost everything at grazing angles, so its rim highlights go silver-white.</p>
+    <button class="show" type="button" data-jump="probe-holo">Go to the holo probe</button>
+  </article>
+</div>
+
+<div class="group">
+  <h3>3 · Skin rules</h3>
+  <article class="claim" data-v="no">
+    <div class="row"><span class="chip">Doesn't hold</span><span class="where">All tones</span></div>
+    <blockquote>“Sheer fabrics are optical subtractive layers.”</blockquote>
+    <p>A net mixes two lights side by side: skin seen through its openings and the yarn's own colour. Only light passing through the thin yarns is filtered. And because skin scatters light 1–4 mm beneath its surface, wider than the 0.4 mm openings, light crosses the net on the way in and again on the way out. Skin under a net that is t open reads at about t², here <span class="num" data-k="t2">0.30</span> instead of <span class="num" data-k="t">0.55</span>.</p>
+    <p class="fix"><b>Do this:</b> composite mesh over skin as skin × t² plus the yarn colour × coverage, not as an alpha blend. The QA node checks generated images for this.</p>
+    <button class="show" type="button" data-jump="probe-sss">Go to the t² probe</button>
+  </article>
+  <article class="claim" data-v="no">
+    <div class="row"><span class="chip">Doesn't hold</span><span class="where">Fair · shadows</span></div>
+    <blockquote>“Fabric cast-shadows: Cold-toned, low-saturation deep burgundy/gray.”</blockquote>
+    <p>Shadows on skin are warmer and more saturated than lit skin: light that diffuses inside the skin and leaks into the shadow edge comes back reddened. They only turn cool where blue ambient light fills them, as the dusk sky does in your photo.</p>
+    <button class="show" type="button" data-show="fair,strobe,three_quarter">Show shadows under the strobe</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">Fair · see-through</span></div>
+    <blockquote>“Micro-vascular skin tones, skin texture, and natural moles remain visible under 40% mesh opacity. High fabric-to-skin contrast.”</blockquote>
+    <p>This net covers 45 % face-on (50 % with the dots), close to the briefing's 40 %, yet it darkens fair skin to <span class="num" data-k="see.fair_softbox">0.3</span> of its bare value because of the double pass. Moles stay visible as soft dark shapes.</p>
+    <button class="show" type="button" data-show="fair,softbox,macro">Show the fair macro</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">Medium · see-through</span></div>
+    <blockquote>“Subsurface olive tones blend with the fabric hue, darkening the mesh's apparent low-light color while highlights retain the pure textile thread color.”</blockquote>
+    <p>The panel does drift toward the yarn colour as the skin darkens. The highlights on the yarn are its sheen, though: lighter and less saturated than the dyed thread.</p>
+    <button class="show" type="button" data-show="medium,flash,macro">Show the medium macro</button>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Effect holds, cause doesn't</span><span class="where">Deep · see-through</span></div>
+    <blockquote>“The high melanin skin acts as a dark backing mirror. The sheer mesh weave becomes highly pronounced and visible as a light-catching pattern over the dark skin canvas underneath.”</blockquote>
+    <p>Over deep skin the net does read lighter than the skin around it: the panel returns <span class="num" data-k="see.deep_softbox_r">1.0</span>× the bare skin's red light. But deep skin is no mirror. It reflects as much at its surface as fair skin (about 3 % straight on) and simply returns less diffuse light, so the yarn's colour and sheen take over.</p>
+    <button class="show" type="button" data-show="deep,softbox,front,skin,fair">Compare deep with fair</button>
+  </article>
+  <article class="claim" data-v="ok">
+    <div class="row"><span class="chip">Holds</span><span class="where">Deep · shadows</span></div>
+    <blockquote>“Fabric cast-shadows: Rich, ultra-deep dark espresso shadows with minimal contrast variance.”</blockquote>
+    <p>With little diffuse light to begin with, shadow edges on deep skin carry little absolute contrast.</p>
+    <button class="show" type="button" data-show="deep,strobe,three_quarter">Show deep skin under the strobe</button>
+  </article>
+</div>
+
+<div class="group">
+  <h3>4 · ComfyUI dual pass</h3>
+  <article class="claim" data-v="ok">
+    <div class="row"><span class="chip">Holds</span><span class="where">Structure</span></div>
+    <blockquote>“[Pass 1: Base VTON Node] … (Extract Mask of [PROD_mesh] &amp; [PROD_holo]) … [ControlNet Canny / Tile] … [Pass 2: KSampler Refiner]”</blockquote>
+    <p>The structure is rebuilt below with core nodes: noise only inside the mesh and holo masks, ControlNet canny and tile from the pass-1 image, and the refined region pasted back over pass 1 so nothing outside the mask goes through the VAE. Two changes: the token LoRA is loaded, and the prompt is the corrected one, so the refiner isn't asked for shadows the flash can't make.</p>
+    <button class="show" type="button" data-jump="h-pipe">Go to the refiner graph</button>
+  </article>
+  <article class="claim" data-v="na">
+    <div class="row"><span class="chip">Not testable here</span><span class="where">Refiner settings</span></div>
+    <blockquote>“Denoising Strength: Strictly set between 0.25 and 0.35. Anything lower will fail to remove the digital look; anything higher will warp the lace patterns.”</blockquote>
+    <p>A plausible range for an SDXL refine of a masked region, but it depends on the model, sampler and step count. This sandbox has no GPU and can't download models, so it stays untested.</p>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">Refiner settings</span></div>
+    <blockquote>“Set Canny/SoftEdge to 0.75 (keeps the lace lines sharp) and Tile/Resample to 0.6 (forces the texture to adopt realistic photographic pixel grain).”</blockquote>
+    <p>A tile ControlNet holds the image's coarse structure while the sampler redraws the fine detail; it doesn't add grain, which comes from the sampler and the prompt. Both weights are sensible starting points, untested here.</p>
+  </article>
+  <article class="claim" data-v="part">
+    <div class="row"><span class="chip">Partly</span><span class="where">Post-AI step</span></div>
+    <blockquote>“Pass the output through a high-pass filter mask to restore the absolute sharpest pixel-level threads from the original client asset over the AI-generated lighting fields.”</blockquote>
+    <p>It works under three conditions, each measured below. The detail must come from an image registered to the pixel: the pass-1 output, not the flat product shot (2 px off turns the weave into ghosting). The split should be log-luminance, not RGB, or the old lighting's level comes back with the threads (<span class="num" data-k="fs_ratio">6×</span> lower mesh error). And the holo must stay out: its fine detail is lighting.</p>
+    <button class="show" type="button" data-jump="h-fs">Go to the scores</button>
+  </article>
+</div>

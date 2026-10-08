@@ -1,0 +1,90 @@
+/* Holographic foil (embossed, metallised diffraction grating) as a sum of microfacet lobes.
+ *
+ * Zeroth order: the metal's mirror reflection (white). First orders (m = +-1): for each of Bins
+ * wavelength bins the grating sends light where a mirror tilted by asin(m lambda / 2 Period) along the
+ * grating vector would. That paraxial mapping is exact in the Littrow geometry (light returning to its
+ * source, i.e. on-camera flash) and a close approximation near it. The bin colours are the share of
+ * white (6504 K) light in each bin (CIE 1931 via the Wyman et al. 2013 fit, linear sRGB, clipped to
+ * the gamut and normalised so all bins add up to white), so the foil conserves the light's colour.
+ *
+ * Cell > 0 gives a pixelated hologram: every Cell-millimetre square carries its own grating
+ * orientation, which is what makes "holographic glitter" foils sparkle from every direction. */
+
+#include "stdcycles.h"
+
+float lobe(float x, float mu, float s1, float s2)
+{
+  float t = (x - mu) / (x < mu ? s1 : s2);
+  return exp(-0.5 * t * t);
+}
+
+color cie_rgb(float l)
+{
+  float X = 1.056 * lobe(l, 599.8, 37.9, 31.0) + 0.362 * lobe(l, 442.0, 16.0, 26.7) -
+            0.065 * lobe(l, 501.1, 20.4, 26.2);
+  float Y = 0.821 * lobe(l, 568.8, 46.9, 40.5) + 0.286 * lobe(l, 530.9, 16.3, 31.1);
+  float Z = 1.217 * lobe(l, 437.0, 11.8, 36.0) + 0.681 * lobe(l, 459.0, 26.0, 13.8);
+  /* 6504 K Planck weighting (relative) */
+  float lm = l * 1e-9;
+  float planck = 1.0 / (pow(lm, 5.0) * (exp(1.4388e-2 / (lm * 6504.0)) - 1.0));
+  color c = color(3.2406 * X - 1.5372 * Y - 0.4986 * Z,
+                  -0.9689 * X + 1.8758 * Y + 0.0415 * Z,
+                  0.0557 * X - 0.2040 * Y + 1.0570 * Z);
+  return max(c, color(0.0)) * planck;
+}
+
+float hash2(float a, float b)
+{
+  return fmod(fabs(sin(a * 127.1 + b * 311.7) * 43758.5453), 1.0);
+}
+
+shader holo_grating(
+    normal Normal = N,
+    vector Tangent = vector(1, 0, 0),
+    point UV = point(0, 0, 0),
+    float Period = 1100.0,
+    float Roughness = 0.05,
+    float Zero = 0.32,
+    float First = 0.28,
+    color Metal = color(0.91, 0.92, 0.92),
+    float Orientation = 0.0,
+    float Cell = 0.0,
+    output closure color BSDF = 0)
+{
+  normal Nn = normalize(Normal);
+  vector T = Tangent - dot(Tangent, Nn) * Nn;
+  T = length(T) > 1e-6 ? normalize(T) : normalize(cross(Nn, vector(0, 0, 1)));
+  vector Bt = cross(Nn, T);
+
+  float ang = radians(Orientation);
+  if (Cell > 0.0) {
+    float cx = floor(UV[0] / Cell), cy = floor(UV[1] / Cell);
+    ang += M_PI * hash2(cx, cy);
+  }
+  vector G = cos(ang) * T + sin(ang) * Bt;
+
+  float a = max(Roughness * Roughness, 1e-4);
+  BSDF = Zero * generalized_schlick_bsdf(Nn, G, color(1.0), color(0.0), a, a, Metal, color(1.0), 5.0, "ggx");
+
+  int K = 8;
+  color cols[8];
+  color total = color(0.0);
+  for (int k = 0; k < K; k++) {
+    color acc = color(0.0);
+    for (int j = 0; j < 6; j++) {
+      acc += cie_rgb(400.0 + (k + (j + 0.5) / 6.0) * (300.0 / K));
+    }
+    cols[k] = acc;
+    total += acc;
+  }
+  for (int k = 0; k < K; k++) {
+    color c = cols[k] / max(total, color(1e-9));
+    float lam = 400.0 + (k + 0.5) * (300.0 / K);
+    float sa = clamp(lam / (2.0 * Period), 0.0, 0.98);
+    float ca = sqrt(1.0 - sa * sa);
+    normal Np = normalize(Nn * ca + G * sa);
+    normal Nm = normalize(Nn * ca - G * sa);
+    BSDF += First * c * generalized_schlick_bsdf(Np, G, color(1.0), color(0.0), a, a, Metal, color(1.0), 5.0, "ggx");
+    BSDF += First * c * generalized_schlick_bsdf(Nm, G, color(1.0), color(0.0), a, a, Metal, color(1.0), 5.0, "ggx");
+  }
+}
